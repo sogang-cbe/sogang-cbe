@@ -39,7 +39,7 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     );
   }
   if (slug === 'location') {
-    const addr = ko ? '04107 서울특별시 마포구 백범로 35 (신수동) 리치과학관 618호 기계공학과 학과사무실' : 'Ricci Hall (R) Room 618, 35 Baekbeom-ro, Mapo-gu, Seoul 04107, Korea';
+    const addr = ko ? '04107 서울특별시 마포구 백범로 35 (신수동) 리치과학관 521호 화공생명공학과 학과사무실' : 'Ricci Hall (R) Room 618, 35 Baekbeom-ro, Mapo-gu, Seoul 04107, Korea';
     return (
       <StaticPage locale={l} section="about" slug={slug}>
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 items-start">
@@ -47,8 +47,8 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
             <h2 className="!mt-0">{ko ? '학과사무실' : 'Department office'}</h2>
             <table><tbody>
               <tr><th>{ko ? '주소' : 'Address'}</th><td>{addr}</td></tr>
-              <tr><th>{ko ? '전화' : 'Phone'}</th><td><a href="tel:+8227058631">02-705-8631</a></td></tr>
-              <tr><th>{ko ? '팩스' : 'Fax'}</th><td>02-712-0799</td></tr>
+              <tr><th>{ko ? '전화' : 'Phone'}</th><td><a href="tel:+8227058631">02-705-8474</a></td></tr>
+              <tr><th>{ko ? '팩스' : 'Fax'}</th><td>02-711-0439</td></tr>
             </tbody></table>
             <h2>{ko ? '대중교통' : 'Public transport'}</h2>
             <table><tbody>

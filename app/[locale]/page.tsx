@@ -103,7 +103,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
 
       {on('news') && (
         <section id="news" className="container-site py-20 scroll-mt-24">
-          <Reveal className="mb-12"><p className="eyebrow">{T(l, 'newsTitle')}</p><h2 className="h-section mt-3">{ko ? '기계공학과 소식' : 'News from the department'}</h2></Reveal>
+          <Reveal className="mb-12"><p className="eyebrow">{T(l, 'newsTitle')}</p><h2 className="h-section mt-3">{ko ? '화공생명공학과 소식' : 'News from the department'}</h2></Reveal>
           <NewsRows locale={l} groups={groups} />
         </section>
       )}

@@ -24,7 +24,7 @@ export default async function UG({ params }: { params: { locale: Locale; slug: s
         <div className="mt-12 border-t-2 border-sg-ink pt-8">
           <p className="eyebrow">URECA Intern</p>
           <h2 className="h-sub mt-2 mb-2">{ko ? 'URECA 인턴 지원하기' : 'Apply for URECA Intern'}</h2>
-          <p className="text-[15px] text-sg-gray11 mb-6">{ko ? '기계공학과 2~4학년 학생은 아래 양식으로 지원할 수 있습니다. 지원 기간(봄학기·여름방학·가을학기·겨울방학)을 선택하고 지망 연구실을 1·2·3순위로 표시하세요. 1지망부터 순서대로 해당 교수님께서 선발 여부를 결정하며, 선발되면 학과사무실에 서약서를 제출한 후 인턴이 시작됩니다.' : 'ME students in years 2–4 may apply below. Choose the term and rank up to three labs. Professors decide in order of preference; selected students submit a pledge to the department office before starting.'}</p>
+          <p className="text-[15px] text-sg-gray11 mb-6">{ko ? '화공생명공학과 2~4학년 학생은 아래 양식으로 지원할 수 있습니다. 지원 기간(봄학기·여름방학·가을학기·겨울방학)을 선택하고 지망 연구실을 1·2·3순위로 표시하세요. 1지망부터 순서대로 해당 교수님께서 선발 여부를 결정하며, 선발되면 학과사무실에 서약서를 제출한 후 인턴이 시작됩니다.' : 'ME students in years 2–4 may apply below. Choose the term and rank up to three labs. Professors decide in order of preference; selected students submit a pledge to the department office before starting.'}</p>
           <UrecaForm locale={l} labs={labs as any} />
         </div>
       </StaticPage>
@@ -116,7 +116,7 @@ export default async function UG({ params }: { params: { locale: Locale; slug: s
           <div><p className="eyebrow">{ko ? '전공소개 자료' : 'Introduction deck'}</p><h3 className="h-sub mt-1">{ko ? '자유전공학부 학생을 위한 전공 안내' : 'Major guide for liberal-major students'}</h3></div>
           <Link href={`/${l}/board/promo`} className="text-[14px] font-semibold text-sg-cardinal hover:underline">{ko ? '전공 홍보자료 게시판 →' : 'All intro materials →'}</Link>
         </div>
-        <SlideDeck slides={introSlides} download="/docs/sogang-me-physical-ai-intro.pdf" label={ko ? '서강대 기계공학과 전공소개 (Physical AI)' : 'Sogang ME · Physical AI'} />
+        <SlideDeck slides={introSlides} download="/docs/sogang-cbe-physical-ai-intro.pdf" label={ko ? '서강대 화공생명공학과 전공소개 (Physical AI)' : 'Sogang ME · Physical AI'} />
       </section>
     </StaticPage>
   );

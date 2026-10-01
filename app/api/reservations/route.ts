@@ -65,7 +65,7 @@ export async function POST(req: Request) {
   revalidateTag('reservations'); revalidatePath('/ko/reservation'); revalidatePath('/en/reservation');
   const fac = facilities.find((f) => f.id === row.facility)?.ko || row.facility;
   const site = process.env.NEXT_PUBLIC_SITE_URL || '';
-  await notifyAdmin(`[기계공학과] 시설 예약 신청: ${fac} ${row.date} ${row.start_time}~${row.end_time}`,
+  await notifyAdmin(`[화공생명공학과] 시설 예약 신청: ${fac} ${row.date} ${row.start_time}~${row.end_time}`,
     `<p>새 시설 예약 신청이 접수되었습니다.</p><table><tr><td>시설</td><td>${esc(fac)}</td></tr><tr><td>일시</td><td>${esc(`${row.date} ${row.start_time}~${row.end_time}`)}</td></tr><tr><td>신청자</td><td>${esc(row.user_name)}</td></tr><tr><td>연락처</td><td>${esc(row.contact)}</td></tr><tr><td>목적</td><td>${esc(row.purpose)}</td></tr></table><p><a href="${site}/${process.env.ADMIN_PATH || 'adm'}/reservations">관리자 페이지에서 승인하기</a></p>`);
   return NextResponse.json({ ok: true });
 }

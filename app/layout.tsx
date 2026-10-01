@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: { default: '서강대학교 기계공학과 | Sogang Mechanical Engineering', template: '%s | 서강대학교 기계공학과' },
-  description: '서강대학교 기계공학과 — Department of Mechanical Engineering, Sogang University',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://me.sogang.ac.kr'),
+  title: { default: '서강대학교 화공생명공학과 | Sogang Chemical and Biomolecular Engineering', template: '%s | 서강대학교 화공생명공학과' },
+  description: '서강대학교 화공생명공학과 — Department of Chemical and Biomolecular Engineering, Sogang University',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://chemeng.sogang.ac.kr'),
   verification: { google: '47UcS297K2L18VMhMwqUu706jSsxjW-lU-4XBrLNAy4' },
 };
 

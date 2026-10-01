@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: '*', allow: '/', disallow },
       ...AI_BOTS.map((userAgent) => ({ userAgent, disallow: ['/'] })),
     ],
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://me.sogang.ac.kr'}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://chemeng.sogang.ac.kr'}/sitemap.xml`,
   };
 }

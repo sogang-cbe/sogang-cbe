@@ -6,7 +6,7 @@ import { adminBase } from '@/lib/admin';
 import TranslateRetry from '@/components/admin/TranslateRetry';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: '관리자 · 서강대학교 기계공학과', robots: { index: false, follow: false } };
+export const metadata = { title: '관리자 · 서강대학교 화공생명공학과', robots: { index: false, follow: false } };
 
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {

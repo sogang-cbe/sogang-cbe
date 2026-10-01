@@ -27,7 +27,7 @@ export default async function BackupPage() {
       {!enabled && (
         <div className="mt-6 border-l-4 border-sg-cardinal bg-white p-4 text-[13.5px] break-keep">
           <p className="font-bold">자동 백업이 아직 꺼져 있습니다 — R2 설정이 필요합니다</p>
-          <p className="mt-1 text-sg-gray11">Cloudflare R2에 비공개 버킷 <code>sogang-me-backup</code>과 API 토큰(Object Read &amp; Write, 대상: sogang-me-backup·sogang-me-media)을 만든 뒤 Vercel 환경변수 <code>R2_ACCOUNT_ID</code>·<code>R2_ACCESS_KEY_ID</code>·<code>R2_SECRET_ACCESS_KEY</code>·<code>R2_BACKUP_BUCKET</code>을 넣고 다시 배포하면 켜집니다. 휴지통·수정 이력은 지금도 동작합니다.</p>
+          <p className="mt-1 text-sg-gray11">Cloudflare R2에 비공개 버킷 <code>sogang-cbe-backup</code>과 API 토큰(Object Read &amp; Write, 대상: sogang-cbe-backup·sogang-cbe-media)을 만든 뒤 Vercel 환경변수 <code>R2_ACCOUNT_ID</code>·<code>R2_ACCESS_KEY_ID</code>·<code>R2_SECRET_ACCESS_KEY</code>·<code>R2_BACKUP_BUCKET</code>을 넣고 다시 배포하면 켜집니다. 휴지통·수정 이력은 지금도 동작합니다.</p>
         </div>
       )}
 

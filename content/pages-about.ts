@@ -57,7 +57,7 @@ export const about: Record<string, PageContent> = {
   },
   'about/intro': {
     ko: `
-<h2>전공특성 — 기계공학 (Mechanical Engineering)</h2>
+<h2>전공특성 — 기계공학 (Chemical and Biomolecular Engineering)</h2>
 <p>공학이란 문자의 의미 그대로 무엇을 만들기 위한 원리 및 기술을 다루는 학문이고 공학의 기본 원리가 실체화된 것이 「기계」입니다. 즉, 기계공학은 시대의 발전에 따라 나타나는 새로운 과학적 원리를 인간을 위해 유용한 목적으로 사용될 수 있게 만드는 핵심적인 도구입니다. 좀더 빨리, 멀리 이동하고자 하는 인간의 꿈은 창조적인 기계공학자들의 노력을 통하여 자동차와 비행기로 실현되었고, 스마트폰, 태블릿PC, 초고화질 디스플레이 등 많은 새로운 제품이 탄생하는 데에도 기계공학은 중추적 역할을 해왔습니다. 이러한 이유에서 기계공학은 산업혁명 이래 꾸준하게 수요가 가장 많은 학문이었으며, 특정 산업의 흥망과 관련없이 공학 분야 중 항상 가장 중요한 위치를 차지하고 있습니다.</p>
 <p>또한 기계공학은 모든 공학분야가 집결되어 인간의 생활에 편리함을 주는 설비와 기계장치를 개발하는 학문이므로 모든 산업의 기초가 되는 동시에 첨단 분야를 선도해 가고 있습니다. 따라서 공학 중의 공학이라고 불리기도 하며, 기계공학의 대상은 구체적이고 목표 지향적이므로 그 이론과 적용방법이 시류에 흔들리지 않고 굳건합니다.</p>
 <h3>창의성과 상상력의 현실 구현 — 기계공학</h3>
@@ -82,7 +82,7 @@ export const about: Record<string, PageContent> = {
 <h2>졸업 후 진로</h2>
 <p>졸업 후 진로는 크게 대학원 진학과 사회 진출로 나뉩니다. 기계공학 분야는 우수 인력에 대한 사회의 요구가 어느 분야보다 많고 지속적이어서, 원하는 분야로 진출하는 데 다른 전공보다 유리합니다. 졸업생들은 자동차, 항공우주, 환경/에너지, 전자/정보통신, 벤처기업 등에 진출해 활동하고 있으며, 환경·신에너지·생명공학·나노테크·메카트로닉스·첨단 의공학의 핵심에 있는 기계공학도는 현대산업사회의 미래를 개척하는 첨병 역할을 맡게 될 것입니다.</p>`,
     en: `
-<h2>What is Mechanical Engineering?</h2>
+<h2>What is Chemical and Biomolecular Engineering?</h2>
 <p>Engineering deals with the principles and techniques of making things, and a machine is the physical embodiment of those principles. Mechanical engineering is the essential tool that turns each era's new scientific discoveries into useful things for people. Humanity's dream of travelling faster and farther became the automobile and the aircraft through the work of creative mechanical engineers, and the discipline has been central to products you might not associate with it — smartphones, tablets and ultra-high-definition displays. It has been the most consistently in-demand engineering field since the Industrial Revolution, regardless of the rise and fall of individual industries.</p>
 <p>Because it draws on every branch of engineering to build the equipment and devices that make life convenient, mechanical engineering is both the foundation of all industry and a leader in advanced fields — which is why it is sometimes called "the engineering of engineering." Its objects are concrete and goal-directed, so its theory and methods remain solid regardless of trends.</p>
 <h3>Realizing creativity and imagination</h3>
@@ -112,12 +112,12 @@ export const about: Record<string, PageContent> = {
 };
 
 export const history = [
-  { y: '1993', m: '03', ko: '기계공학과 설립, 초대 학과장 이태수 교수', en: 'Department founded; Prof. Tae-Soo Lee named first chair' },
+  { y: '1993', m: '03', ko: '화공생명공학과 설립, 초대 학과장 이태수 교수', en: 'Department founded; Prof. Tae-Soo Lee named first chair' },
   { y: '1996', m: '03', ko: '기계·전자·전산 학부제 통합', en: 'Merged into the School of Mechanical, Electronic and Computer Engineering' },
   { y: '1997', m: '02', ko: '제1회 학사 졸업생 배출', en: 'First bachelor\'s graduates' },
-  { y: '1997', m: '03', ko: '기계공학과 대학원 설립, 제2대 학과장 정시영 교수', en: 'Graduate program established; Prof. Si-Young Jeong, 2nd chair' },
+  { y: '1997', m: '03', ko: '화공생명공학과 대학원 설립, 제2대 학과장 정시영 교수', en: 'Graduate program established; Prof. Si-Young Jeong, 2nd chair' },
   { y: '1998', m: '02', ko: '제1회 석사 졸업생 배출', en: 'First master\'s graduates' },
-  { y: '1998', m: '03', ko: '기계공학과 박사과정 개설', en: 'Doctoral program opened' },
+  { y: '1998', m: '03', ko: '화공생명공학과 박사과정 개설', en: 'Doctoral program opened' },
   { y: '1999', m: '02', ko: '기계·화공 학부로 변경', en: 'Reorganized as School of Mechanical and Chemical Engineering' },
   { y: '1999', m: '03', ko: '제3대 학과장 전도영 교수', en: 'Prof. Doyoung Jeon, 3rd chair' },
   { y: '2000', m: '08', ko: '제4대 학과장 허남건 교수', en: 'Prof. Nahmkeon Hur, 4th chair' },

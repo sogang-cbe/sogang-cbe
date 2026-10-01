@@ -1,7 +1,7 @@
 /** 학과 고유명사 표기 통일표. AI 번역 프롬프트와 후처리에 함께 사용합니다. */
 export const glossary: [string, string][] = [
   ['서강대학교', 'Sogang University'],
-  ['기계공학과', 'Department of Mechanical Engineering'],
+  ['화공생명공학과', 'Department of Chemical and Biomolecular Engineering'],
   ['학과사무실', 'the department office'],
   ['자유전공학부', 'the School of Liberal Studies'],
   ['대한기계학회', 'the Korean Society of Mechanical Engineers (KSME)'],

@@ -30,7 +30,7 @@ Return ONLY a JSON object with the same keys as the input and translated string 
  *       ④ 그래도 실패한 글은 매일 03시 cron과 관리자 화면 접속 시 자동 재시도가 채운다(lib/translate-backfill). */
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 class HttpError extends Error { constructor(public status: number, public retryAfter: number) { super(`HTTP ${status}`); } }
-const UA = { 'User-Agent': 'Mozilla/5.0 (compatible; sogang-me-translator)' };
+const UA = { 'User-Agent': 'Mozilla/5.0 (compatible; sogang-cbe-translator)' };
 
 /** 여러 문장을 한 번에: 응답은 입력 순서대로의 배열. 인라인 표지(⟦n⟧)도 대부분 그대로 돌려준다. */
 async function dictBatch(texts: string[]): Promise<string[]> {

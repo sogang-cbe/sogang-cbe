@@ -5,7 +5,7 @@ export const undergraduate: Record<string, PageContent> = {
   'undergraduate/admission': {
     ko: `<p>학부 입학 정보에 대한 상세한 내용은 서강대학교 입학처 홈페이지에서 확인하실 수 있습니다.</p>
 <p><a href="https://admission.sogang.ac.kr" target="_blank" rel="noreferrer" class="btn-primary !no-underline !text-white">서강대학교 입학처 바로가기 →</a></p>
-<h2>기계공학과 소개 자료</h2>
+<h2>화공생명공학과 소개 자료</h2>
 <p>자유전공학부 학생과 기계공학에 관심 있는 예비 공학도를 위한 소개 자료는 <a href="/ko/board/notice">공지사항</a>에서 내려받을 수 있습니다.</p>`,
     en: `<p>Detailed undergraduate admission information is available on the Sogang University Office of Admissions website.</p>
 <p><a href="https://admission.sogang.ac.kr" target="_blank" rel="noreferrer" class="btn-primary !no-underline !text-white">Office of Admissions →</a></p>
@@ -138,17 +138,17 @@ export const undergraduate: Record<string, PageContent> = {
   },
   'undergraduate/activities': {
     ko: `<h2>학생회</h2>
-<p>기계공학과 학생회는 기계공학과 학우들의 의견을 대변하고 학과의 발전을 위해 기계공학과 전 구성원들과 함께 가꾸어 가고 노력하는 자치적인 학생회입니다.</p>
+<p>화공생명공학과 학생회는 화공생명공학과 학우들의 의견을 대변하고 학과의 발전을 위해 화공생명공학과 전 구성원들과 함께 가꾸어 가고 노력하는 자치적인 학생회입니다.</p>
 <h3>주요 행사</h3>
 <table><tbody>
 <tr><th>3월 초</th><td>개강총회, 총MT</td></tr><tr><th>3월 중순</th><td>새내기 체육대회</td></tr><tr><th>3월 말</th><td>해오름제</td></tr>
-<tr><th>5월</th><td>봄농활, 서서전, 대동제(주점)</td></tr><tr><th>6월</th><td>기계공학과 하계 워크샵</td></tr><tr><th>9월 말</th><td>단과대 축제</td></tr>
-<tr><th>10월 말</th><td>서강문화제</td></tr><tr><th>11월</th><td>SOFEX(한-일 교류전), 홈커밍데이</td></tr><tr><th>12월</th><td>기계공학과 동계 워크샵</td></tr>
+<tr><th>5월</th><td>봄농활, 서서전, 대동제(주점)</td></tr><tr><th>6월</th><td>화공생명공학과 하계 워크샵</td></tr><tr><th>9월 말</th><td>단과대 축제</td></tr>
+<tr><th>10월 말</th><td>서강문화제</td></tr><tr><th>11월</th><td>SOFEX(한-일 교류전), 홈커밍데이</td></tr><tr><th>12월</th><td>화공생명공학과 동계 워크샵</td></tr>
 </tbody></table>
 <h2>전공학회 MECHA</h2>
-<p>MECHA는 서강대 기계공학과 전공학회로서 자동제어 이론을 관심 분야에 접목함으로써 좀더 인간 생활에 도움이 되는 제어 시스템을 구축하는 것에 목적을 두고 있는 학회입니다. 특히 로봇과 같은 시스템을 제작하고 제어 알고리즘을 적용하여 최상의 성능을 가지도록 하는 데 목표를 두고 있습니다.</p>
-<p>기계공학 관점으로 제어에 대해 접근하려는 학생들이 모여서 이루어진 MECHA는 서강대학교 기계공학과의 탄생과 함께 시작하였습니다. 끊임없는 연구 활동은 물론이고 미래에 대한 도전 의식, 선후배간의 끈끈한 유대감, 우수한 학업성적이 자랑스러운 전통입니다. 현재 중점 연구 분야는 드론과 배틀 로봇으로, 각종 로봇 캠프 및 지능형 자동차 대회, 공모전 등에 참여하여 우수한 성적을 거두었습니다.</p>
-<p>MECHA는 기계공학과 전공 학회이지만 전자공학과 컴퓨터공학 관련 지식도 반드시 필요로 합니다. 학회 활동은 학부생을 중심으로 이루어지며 대학원생들은 명예 회원으로서 학부생들의 연구와 실험에 도움을 주고 있습니다. 현 회원은 정회원(학부생)과 명예회원(학부졸업생), 군복무 중인 회원을 포함해 50~60명 정도입니다.</p>`,
+<p>MECHA는 서강대 화공생명공학과 전공학회로서 자동제어 이론을 관심 분야에 접목함으로써 좀더 인간 생활에 도움이 되는 제어 시스템을 구축하는 것에 목적을 두고 있는 학회입니다. 특히 로봇과 같은 시스템을 제작하고 제어 알고리즘을 적용하여 최상의 성능을 가지도록 하는 데 목표를 두고 있습니다.</p>
+<p>기계공학 관점으로 제어에 대해 접근하려는 학생들이 모여서 이루어진 MECHA는 서강대학교 화공생명공학과의 탄생과 함께 시작하였습니다. 끊임없는 연구 활동은 물론이고 미래에 대한 도전 의식, 선후배간의 끈끈한 유대감, 우수한 학업성적이 자랑스러운 전통입니다. 현재 중점 연구 분야는 드론과 배틀 로봇으로, 각종 로봇 캠프 및 지능형 자동차 대회, 공모전 등에 참여하여 우수한 성적을 거두었습니다.</p>
+<p>MECHA는 화공생명공학과 전공 학회이지만 전자공학과 컴퓨터공학 관련 지식도 반드시 필요로 합니다. 학회 활동은 학부생을 중심으로 이루어지며 대학원생들은 명예 회원으로서 학부생들의 연구와 실험에 도움을 주고 있습니다. 현 회원은 정회원(학부생)과 명예회원(학부졸업생), 군복무 중인 회원을 포함해 50~60명 정도입니다.</p>`,
     en: `<h2>Student Council</h2>
 <p>The ME Student Council is an autonomous body that represents students' voices and works with every member of the department for its development.</p>
 <h3>Annual events</h3>
@@ -164,12 +164,12 @@ export const undergraduate: Record<string, PageContent> = {
   },
   'undergraduate/ureca': {
     ko: `<p class="text-lg"><strong>Undergraduate Research Experience on Campus, URECA</strong></p>
-<p>기계공학과에서는 수업만으로 적성과 진로를 탐색하는 수동적인 교육방식에서 탈피하여, 학생들에게 연구 경험의 기회를 통하여 능동적으로 적성과 진로를 탐색하는 데 도움이 되도록 학부연구프로그램(URECA)을 제공하고 있습니다. URECA는 학생들이 부족한 정보와 타인의 조언만으로 적성에 맞지 않는 진로를 택하지 않도록 도와주며, 대학원 진학에 관심 있는 학생들에게는 연구 경험을 미리 제공하여 보다 성공적인 대학원 생활이 가능하도록 합니다. 특히 연구직에 관심이 있는 모든 학생들은 반드시 URECA를 활용할 것을 권장합니다.</p>
+<p>화공생명공학과에서는 수업만으로 적성과 진로를 탐색하는 수동적인 교육방식에서 탈피하여, 학생들에게 연구 경험의 기회를 통하여 능동적으로 적성과 진로를 탐색하는 데 도움이 되도록 학부연구프로그램(URECA)을 제공하고 있습니다. URECA는 학생들이 부족한 정보와 타인의 조언만으로 적성에 맞지 않는 진로를 택하지 않도록 도와주며, 대학원 진학에 관심 있는 학생들에게는 연구 경험을 미리 제공하여 보다 성공적인 대학원 생활이 가능하도록 합니다. 특히 연구직에 관심이 있는 모든 학생들은 반드시 URECA를 활용할 것을 권장합니다.</p>
 <p>URECA는 <strong>Intern</strong>과 <strong>Fellow</strong>의 두 가지 트랙으로 운영됩니다.</p>
 <h2>URECA Intern</h2>
 <ul>
 <li>대학원 진학을 결심하지 못한 상태에서 연구 분야를 탐색하기 위한 프로그램입니다.</li>
-<li>기계공학과 2학년(2학기 종료 후) 이상이면 누구나 지원 가능합니다.</li>
+<li>화공생명공학과 2학년(2학기 종료 후) 이상이면 누구나 지원 가능합니다.</li>
 <li>1년에 4번, 겨울방학/봄학기/여름방학/가을학기 4개 텀으로 운영됩니다.</li>
 <li>횟수와 관계없이 지원 가능하고, 한 연구실에 2텀까지 연속으로 참여할 수 있습니다. 2텀 이후 계속 한 연구실에서 인턴을 희망할 경우, 반드시 다른 연구실에서 1텀 이상 인턴을 수행한 후 복귀해야 합니다. (2학기 연속 한 연구실에서 인턴 수행 시 해당 연구실에 불이익이 가해질 수 있습니다.)</li>
 <li>2텀 이후, 즉 6개월 이후 자동으로 인턴이 종료되므로 대학원 진학에 대한 의무가 발생하지 않습니다.</li>
@@ -179,12 +179,12 @@ export const undergraduate: Record<string, PageContent> = {
 <p>URECA Intern은 텀으로 운영되는 순환(Rotation) 제도로서, 자유롭게 다양한 연구분야 및 연구환경을 경험해 볼 수 있는 기회를 제공합니다. 다만 학생들의 자유를 보장하기 위하여 학술제를 통한 상품 이외의 금전적 혜택은 제공되지 않습니다.</p>
 <h2>URECA Fellow</h2>
 <ul>
-<li>서강대학교 기계공학과 대학원으로 진학을 확정한 경우, 해당 교수님과 협의하여 지원 가능합니다.</li>
+<li>서강대학교 화공생명공학과 대학원으로 진학을 확정한 경우, 해당 교수님과 협의하여 지원 가능합니다.</li>
 <li>각 연구실과 교수님이 정한 의무와 권리, 금전적 지원범위에 따라 개별적으로 운영됩니다.</li>
 <li>6학기를 종료한 이후(6학기를 마친 방학 시점부터) 지원 가능합니다.</li>
 </ul>
 <p>URECA Fellow는 사실상 대학원 진학으로 연결되므로 신중하게 결정해야 합니다. 일단 Fellow가 되면 연구실에서 정한 각종 혜택을 받을 수 있지만 그에 따른 의무가 발생합니다. 대학원 진학을 결심한 경우 미리 연구실 생활을 시작하여 해당 연구분야와 환경에 적응할 수 있고, 보다 성공적인 대학원 생활이 가능합니다.</p>
-<p>기타 문의사항은 학과사무실(R618, 02-705-8631)로 문의하기 바랍니다.</p>`,
+<p>기타 문의사항은 학과사무실(R618, 02-705-8474)로 문의하기 바랍니다.</p>`,
     en: `<p class="text-lg"><strong>Undergraduate Research Experience on Campus (URECA)</strong></p>
 <p>URECA gives undergraduates real research experience so they can explore their aptitude and career actively, rather than through coursework alone. It helps students avoid choosing an ill-fitting path based on limited information, and gives those considering graduate school an early start toward a successful research career. All students interested in research careers are strongly encouraged to take part.</p>
 <p>URECA runs on two tracks: <strong>Intern</strong> and <strong>Fellow</strong>.</p>

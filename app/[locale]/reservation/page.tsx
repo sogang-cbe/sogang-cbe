@@ -31,8 +31,8 @@ export default async function Reservation({ params, searchParams }: { params: { 
         {facilities.map((f) => <Link key={f.id} href={`/${l}/reservation?f=${f.id}&y=${y}&m=${m}`} className={`px-4 py-2 text-[13px] border ${f.id === facility ? 'bg-sg-ink text-white border-sg-ink' : 'border-sg-line hover:border-sg-ink'}`}>{ko ? f.ko : f.en}</Link>)}
       </div>
       <div className="text-[13px] text-sg-steel mb-6 space-y-1 break-keep">
-        <p>{ko ? '* 예약은 아래 신청 양식으로 요청하시거나 학과사무실(02-705-8631)로 문의해 주세요. 신청 즉시 캘린더에 「승인 대기」로 표시되어 겹치는 시간에는 신청할 수 없으며, 학과사무실 승인 후 확정으로 바뀝니다.' : '* Request a reservation with the form below or contact the department office (+82-2-705-8631). New requests appear on the calendar immediately as “pending”, overlapping requests are blocked, and slots are confirmed once approved.'}</p>
-        <p>{ko ? '* 랩미팅처럼 같은 시간에 여러 날짜를 한 번에 예약(정기 예약)하거나 여러 건을 묶어 예약하려면 학과사무실(02-705-8631, mechadmin@sogang.ac.kr)로 연락해 주세요.' : '* For recurring bookings (e.g. weekly lab meetings) or multiple bookings at once, please contact the department office (+82-2-705-8631, mechadmin@sogang.ac.kr).'}</p>
+        <p>{ko ? '* 예약은 아래 신청 양식으로 요청하시거나 학과사무실(02-705-8474)로 문의해 주세요. 신청 즉시 캘린더에 「승인 대기」로 표시되어 겹치는 시간에는 신청할 수 없으며, 학과사무실 승인 후 확정으로 바뀝니다.' : '* Request a reservation with the form below or contact the department office (+82-2-705-8631). New requests appear on the calendar immediately as “pending”, overlapping requests are blocked, and slots are confirmed once approved.'}</p>
+        <p>{ko ? '* 랩미팅처럼 같은 시간에 여러 날짜를 한 번에 예약(정기 예약)하거나 여러 건을 묶어 예약하려면 학과사무실(02-705-8474, chemeng@sogang.ac.kr)로 연락해 주세요.' : '* For recurring bookings (e.g. weekly lab meetings) or multiple bookings at once, please contact the department office (+82-2-705-8631, chemeng@sogang.ac.kr).'}</p>
       </div>
       <ReservationCalendar y={y} m={m} rows={rows as any} ko={ko} todayStr={todayStr}
         title={`${ko ? `${y}년 ${m}월` : new Date(y, m - 1).toLocaleString('en', { month: 'long', year: 'numeric' })} · ${ko ? fac.ko : fac.en}`}

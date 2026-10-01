@@ -70,7 +70,7 @@ export async function runBackup(sb: SupabaseClient, trigger = 'cron', budgetMs =
     // 1) DB 전체 — 가장 중요하므로 먼저, 끝나면 바로 '성공'으로 기록
     const tables: Record<string, any[]> = {}; const counts: Record<string, number> = {};
     for (const t of TABLES) { tables[t] = await dumpTable(sb, t); counts[t] = tables[t].length; }
-    const body = JSON.stringify({ site: 'me.sogang.ac.kr', createdAt: status.at, tables });
+    const body = JSON.stringify({ site: 'chemeng.sogang.ac.kr', createdAt: status.at, tables });
     const hash = createHash('sha256').update(JSON.stringify({ ...tables, site_settings: tables.site_settings.filter((r: any) => r.key !== 'backup') })).digest('hex');   // 백업 상태 행은 매번 바뀌므로 비교에서 뺀다
     const gz = gzipSync(body);
     const needMonthly = (await r2List(`db/monthly/${month}`)).length === 0;

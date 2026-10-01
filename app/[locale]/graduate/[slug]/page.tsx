@@ -71,7 +71,7 @@ export default async function Grad({ params }: { params: { locale: Locale; slug:
     const faculty = await getFaculty(false);
     return (
       <StaticPage locale={l} section="graduate" slug="groups">
-        <p className="prose-sg">{ko ? '서강대학교 기계공학과는 설계 및 재료역학, 열·유체 및 에너지, 제어·진동·로보틱스, 생산공학 등 4개의 기초전공분야를 바탕으로 다음과 같은 융합 및 응용연구를 수행하고 있습니다.' : 'Building on four foundational areas — design & mechanics, thermal-fluids & energy, control-vibration-robotics and manufacturing — the department conducts the following convergence and applied research.'}</p>
+        <p className="prose-sg">{ko ? '서강대학교 화공생명공학과는 설계 및 재료역학, 열·유체 및 에너지, 제어·진동·로보틱스, 생산공학 등 4개의 기초전공분야를 바탕으로 다음과 같은 융합 및 응용연구를 수행하고 있습니다.' : 'Building on four foundational areas — design & mechanics, thermal-fluids & energy, control-vibration-robotics and manufacturing — the department conducts the following convergence and applied research.'}</p>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
           {researchGroupDefs.map((g, i) => {
             const members = faculty.filter((f: any) => Array.isArray(f.groups) && f.groups.includes(g.id));

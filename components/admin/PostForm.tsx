@@ -22,7 +22,7 @@ export default function PostForm({ post, defaultBoard }: { post?: any; defaultBo
       <input type="hidden" name="thumbnail_url" value={thumb} />
       <div className="grid gap-4 md:grid-cols-[180px_1fr_160px]">
         <label className="text-[13px]">게시판<select name="board" value={board} onChange={(e) => setBoard(e.target.value)} className="input mt-1">{boards.map((b) => <option key={b} value={b}>{ui.ko[b]}</option>)}</select></label>
-        <label className="text-[13px]">작성자<input name="author" defaultValue={post?.author || '기계공학과'} className="input mt-1" /></label>
+        <label className="text-[13px]">작성자<input name="author" defaultValue={post?.author || '화공생명공학과'} className="input mt-1" /></label>
         <label className="text-[13px]">작성일<input name="created_at" type="date" defaultValue={post?.created_at?.slice(0, 10)} className="input mt-1" /></label>
       </div>
       {(showTerm || showCat || showOrder) && (

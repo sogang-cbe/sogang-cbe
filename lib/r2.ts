@@ -1,11 +1,11 @@
 import { AwsClient } from 'aws4fetch';
 
 /** Cloudflare R2(S3 호환) — 백업 전용 비공개 버킷. 서버에서만 쓴다(키는 Vercel 환경변수에만 둔다).
- *  R2_ACCOUNT_ID · R2_ACCESS_KEY_ID · R2_SECRET_ACCESS_KEY · R2_BACKUP_BUCKET(예: sogang-me-backup)
- *  R2_MEDIA_BUCKET(선택, 기본 sogang-me-media): 옛 홈페이지 사진·첨부가 있는 공개 버킷 — 백업 버킷으로 한 번씩 복사해 둔다. */
+ *  R2_ACCOUNT_ID · R2_ACCESS_KEY_ID · R2_SECRET_ACCESS_KEY · R2_BACKUP_BUCKET(예: sogang-cbe-backup)
+ *  R2_MEDIA_BUCKET(선택, 기본 sogang-cbe-media): 옛 홈페이지 사진·첨부가 있는 공개 버킷 — 백업 버킷으로 한 번씩 복사해 둔다. */
 export const r2Enabled = () => !!(process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_BACKUP_BUCKET);
 export const backupBucket = () => process.env.R2_BACKUP_BUCKET || '';
-export const mediaBucket = () => process.env.R2_MEDIA_BUCKET || 'sogang-me-media';
+export const mediaBucket = () => process.env.R2_MEDIA_BUCKET || 'sogang-cbe-media';
 
 let client: AwsClient | null = null;
 function aws() {

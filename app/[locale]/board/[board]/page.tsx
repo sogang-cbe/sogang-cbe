@@ -10,10 +10,10 @@ import { facultyNames, peopleEn } from '@/lib/names';
 export const revalidate = 600; // 60초 → 10분(2026-09-25 Supabase 전송량 절감): 글 저장·삭제는 즉시 갱신되고, 목록의 조회수만 최대 10분 늦게 바뀐다
 const PER = 15;
 const intros: Record<string, [string, string]> = {
-  promo: ['고등학생·자유전공학부 학생을 위한 기계공학과 소개 자료입니다. 클릭하면 자료 소개와 PDF 열람·다운로드로 이동합니다.', 'Introductory materials for prospective and liberal-major students. Open a card to read more or download the PDF.'],
+  promo: ['고등학생·자유전공학부 학생을 위한 화공생명공학과 소개 자료입니다. 클릭하면 자료 소개와 PDF 열람·다운로드로 이동합니다.', 'Introductory materials for prospective and liberal-major students. Open a card to read more or download the PDF.'],
   capstone: ['4학년 창의적종합설계(캡스톤디자인) 프로젝트를 학기별로 축적합니다. 각 조의 주제·조원·지도교수와 포스터를 확인할 수 있습니다.', 'Senior capstone design projects, archived by semester with topic, members, advisor and poster.'],
-  festival: ['기계공학과 학술제에 출품된 학부생 연구(URECA 인턴 · 창의적종합설계 · 연구프로젝트)와 학부생 수상 명단을 연도별로 게시합니다.', 'Undergraduate research presented at the department festival — URECA, capstone and research projects — plus award lists by year.'],
-  videos: ['자유전공학부 학생과 기계공학과 학부생이 전공 분야를 쉽게 이해할 수 있는 영상을 모았습니다. NASA 출신 Mark Rober, 로봇·Physical AI, 세부분야별 영상으로 구성되어 있습니다.', 'Videos that make mechanical engineering easy to grasp: Mark Rober, robotics & Physical AI, and one per sub-field.'],
+  festival: ['화공생명공학과 학술제에 출품된 학부생 연구(URECA 인턴 · 창의적종합설계 · 연구프로젝트)와 학부생 수상 명단을 연도별로 게시합니다.', 'Undergraduate research presented at the department festival — URECA, capstone and research projects — plus award lists by year.'],
+  videos: ['자유전공학부 학생과 화공생명공학과 학부생이 전공 분야를 쉽게 이해할 수 있는 영상을 모았습니다. NASA 출신 Mark Rober, 로봇·Physical AI, 세부분야별 영상으로 구성되어 있습니다.', 'Videos that make mechanical engineering easy to grasp: Mark Rober, robotics & Physical AI, and one per sub-field.'],
 };
 
 export default async function BoardList({ params, searchParams }: { params: { locale: Locale; board: string }; searchParams: { page?: string; q?: string; year?: string } }) {

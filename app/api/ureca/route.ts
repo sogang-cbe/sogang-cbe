@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   } catch { /* RPC 미설치 — 대체 생략 */ }
   const site = process.env.NEXT_PUBLIC_SITE_URL || '';
   const termKo: Record<string, string> = { spring: '봄학기', summer: '여름방학', fall: '가을학기', winter: '겨울방학' };
-  await notifyAdmin(`[기계공학과] URECA 인턴 지원${replaced ? ' (수정 제출)' : ''}: ${row.name} (${row.year} ${termKo[row.term] || row.term})`,
+  await notifyAdmin(`[화공생명공학과] URECA 인턴 지원${replaced ? ' (수정 제출)' : ''}: ${row.name} (${row.year} ${termKo[row.term] || row.term})`,
     `<p>${replaced ? '기존 지원서를 대체하는 <strong>수정 제출</strong>이 접수되었습니다.' : '새 URECA 인턴 지원서가 접수되었습니다.'}</p><table><tr><td>지원기간</td><td>${row.year} ${esc(termKo[row.term] || row.term)}</td></tr><tr><td>이름/학번</td><td>${esc(row.name)} / ${esc(row.student_id)}</td></tr><tr><td>현재학기</td><td>${esc(row.semester)}</td></tr><tr><td>연락처</td><td>${esc(row.phone)} / ${esc(row.email)}</td></tr><tr><td>지원 연구실</td><td>${choices.map((c: any) => `${c.rank}지망 ${esc(c.lab)} (${esc(c.prof)})`).join('<br>')}</td></tr></table><p><a href="${site}/${process.env.ADMIN_PATH || 'adm'}/ureca">관리자 페이지에서 확인</a></p>`);
   return NextResponse.json({ ok: true, replaced });
 }

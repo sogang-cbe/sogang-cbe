@@ -15,7 +15,7 @@ export function GET(req: NextRequest) {
   else if (accept) { locale = 'en'; reason = '브라우저 언어에 한국어 없음, 국가 정보 없음'; }
   return NextResponse.json(
     { decision: `/${locale}`, reason, sg_lang_cookie: cookie, accept_language: accept, ip_country: country,
-      tip: cookie === 'en' ? '헤더의 "한국어" 버튼을 한 번 누르면 이 브라우저는 이후 한국어로 열립니다.' : '이 결과가 /ko 인데도 주소창에 직접 입력한 me.sogang.ac.kr 이 /en 으로 가면, 브라우저가 기억한 리다이렉트이거나 /en 북마크입니다.' },
+      tip: cookie === 'en' ? '헤더의 "한국어" 버튼을 한 번 누르면 이 브라우저는 이후 한국어로 열립니다.' : '이 결과가 /ko 인데도 주소창에 직접 입력한 chemeng.sogang.ac.kr 이 /en 으로 가면, 브라우저가 기억한 리다이렉트이거나 /en 북마크입니다.' },
     { headers: { 'Cache-Control': 'no-store' } },
   );
 }

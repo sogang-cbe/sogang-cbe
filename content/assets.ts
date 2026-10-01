@@ -1,5 +1,5 @@
 /** Media reused from the existing department site / Sogang UI assets. Replace with department-owned uploads later (관리자 > 메인·설정).
- *  구 도메인(me.sogang.ac.kr) 만료에 대비해 원본을 Storage `legacy/`로 옮겨 참조한다 (2026-08-31).
+ *  구 도메인(chemeng.sogang.ac.kr) 만료에 대비해 원본을 Storage `legacy/`로 옮겨 참조한다 (2026-08-31).
  *  /media/ 아래 파일은 Mixkit 무료 라이선스(상업 이용·수정 가능, 출처표기 불요) 영상에서 추출·인코딩한 것:
  *  hero-design=mixkit #46952(전투기 저공비행), hero-thermal=#154(잉크 유동), hero-control=#47257(산업 로봇),
  *  page-entrance=#5900(캠퍼스), page-research=#17456(실험 튜브),

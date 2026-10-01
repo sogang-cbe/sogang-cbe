@@ -53,7 +53,7 @@ export async function savePost(fd: FormData) {
     content_ko: toHtml(str(fd, 'content_ko')), content_en: nul(toHtml(str(fd, 'content_en'))),
     video_url: nul(str(fd, 'video_url')), term: nul(str(fd, 'term')), members: nul(str(fd, 'members')), advisor: nul(str(fd, 'advisor')), category: nul(str(fd, 'category')), sort_order: Number(str(fd, 'sort_order') || 100),
     excerpt_ko: nul(str(fd, 'excerpt_ko')) || strip(str(fd, 'content_ko')),
-    thumbnail_url: nul(str(fd, 'thumbnail_url')), author: str(fd, 'author') || '기계공학과',
+    thumbnail_url: nul(str(fd, 'thumbnail_url')), author: str(fd, 'author') || '화공생명공학과',
     is_pinned: bool(fd, 'is_pinned'), show_on_home: bool(fd, 'show_on_home'), published: bool(fd, 'published'),
     images: JSON.parse(str(fd, 'images') || '[]'), attachments: JSON.parse(str(fd, 'attachments') || '[]'),
     updated_at: new Date().toISOString(),

@@ -8,7 +8,7 @@ export const revalidate = 86400; // 하루 1회(검색엔진용, 2026-09-25 전�
 const LOCALES = ['ko', 'en'] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://me.sogang.ac.kr';
+  const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://chemeng.sogang.ac.kr';
   const out: MetadataRoute.Sitemap = [];
   const push = (path: string, opts: Partial<MetadataRoute.Sitemap[number]> = {}) =>
     LOCALES.forEach((l) => out.push({ url: `${base}/${l}${path}`, ...opts }));
