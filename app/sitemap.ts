@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { nav } from '@/lib/nav';
+import { nav, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
 import { createPublicClient } from '@/lib/supabase-server';
 
 // 게시글이 수시로 추가되므로 한 시간마다 재생성한다
@@ -15,7 +15,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // 고정 페이지 (홈 + 내비게이션 전체)
   push('', { changeFrequency: 'daily', priority: 1 });
-  nav.flatMap((n) => n.sub || []).filter((s) => !s.href.startsWith('http')).forEach((s) => push(s.href, { changeFrequency: 'weekly', priority: 0.8 }));
+  // 로그인해야 보이는 곳(공용장비·자료실)과 내부 기록은 검색엔진에 올리지 않는다
+  const hidden = new Set(['/equipment', ...[...adminOnlyBoards, ...memberOnlyBoards].map((b) => `/board/${b}`)]);
+  nav.flatMap((n) => n.sub || [])
+    .filter((s) => !s.href.startsWith('http') && !hidden.has(s.href))
+    .forEach((s) => push(s.href, { changeFrequency: 'weekly', priority: 0.8 }));
   push('/reservation', { changeFrequency: 'weekly', priority: 0.5 });
 
   const sb = createPublicClient();

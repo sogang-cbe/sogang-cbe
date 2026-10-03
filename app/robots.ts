@@ -5,7 +5,8 @@ import type { MetadataRoute } from 'next';
 const AI_BOTS = ['GPTBot', 'ChatGPT-User', 'CCBot', 'ClaudeBot', 'anthropic-ai', 'Claude-Web', 'Bytespider', 'Amazonbot', 'PetalBot', 'meta-externalagent', 'Applebot-Extended', 'Google-Extended', 'Diffbot', 'ImagesiftBot', 'omgili', 'cohere-ai', 'PerplexityBot', 'YouBot', 'AI2Bot', 'Timpibot', 'DataForSeoBot', 'SemrushBot', 'AhrefsBot', 'MJ12bot', 'DotBot'];
 
 export default function robots(): MetadataRoute.Robots {
-  const disallow = ['/admin', `/${process.env.ADMIN_PATH || 'adm'}`, '/api'];
+  // 구성원 전용 화면(공용장비·자료실)과 로그인 경로는 수집하지 않게 막는다
+  const disallow = ['/admin', `/${process.env.ADMIN_PATH || 'adm'}`, '/api', '/auth', '/ko/equipment', '/en/equipment', '/ko/board/archive', '/en/board/archive', '/ko/board/internal', '/en/board/internal'];
   return {
     rules: [
       { userAgent: '*', allow: '/', disallow },
