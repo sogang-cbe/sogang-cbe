@@ -4,8 +4,31 @@ import { isLocale } from './lib/i18n';
 
 const ADMIN_PATH = process.env.ADMIN_PATH || 'adm';
 
-/** 옛 홈페이지(그누보드) URL → 새 사이트 경로 리다이렉트.
- *  구글 검색결과·외부 사이트(공과대학 등)에 남아 있는 옛 링크가 404가 되지 않게 한다. */
+/** 옛 홈페이지(chemeng.sogang.ac.kr, 이젤디자인 CMS) URL → 새 사이트 경로 리다이렉트.
+ *  구글 검색결과·외부 사이트(공과대학·연구실 등)에 남아 있는 옛 링크가 404가 되지 않게 한다.
+ *  옛 주소 모양: /kor/index.php · /kor/sub/01_01.php · /kor/sub/05_04.php?mode=view&idx=123 */
+const LEGACY_PAGES: Record<string, string> = {
+  '01_01': '/about/intro', '01_02': '/about/history', '01_03': '/about/location',
+  '02_01': '/faculty', '02_02': '/faculty/emeritus', '02_03': '/about/staff',
+  '03_01': '/about/labs', '03_02': '/about/centers',
+  '04_01': '/undergraduate/curriculum', '04_02': '/graduate/curriculum',
+  '04_03': '/undergraduate/rules', '04_04': '/graduate/rules', '04_05': '/undergraduate/lab',
+  '05_01': '/board/research', '05_02': '/board/seminar', '05_04': '/board/academic', '05_05': '/board/scholarship',
+  '06_01': '/undergraduate/activities', '06_02': '/undergraduate/activities', '06_03': '/board/gallery',
+  '07_01': '/alumni/intro', '07_02': '/alumni/intro', '07_03': '/alumni/intro', '07_04': '/board/gallery',
+  '07_05': '/alumni/officers', '07_06': '/alumni/dues', '07_07': '/alumni/intro',
+  '08_01': '/reservation', '08_02': '/board/grad_intro',
+  'sitemap': '',
+};
+/** 글 하나로 들어오는 주소(?mode=view&idx=)의 옛 페이지 → 옛 게시판 코드. 이관 때 넣은 legacy_id 로 새 글을 찾는다. */
+const LEGACY_BOARD_OF: Record<string, string> = {
+  '05_04': 'bbs07', '06_01': 'bbs10', '05_01': 'bbs04', '04_0503': 'bbs02', '05_02': 'bbs05',
+  '08_02': 'bbs14', '06_02': 'bbs15', '06_03': 'bbs10', '07_04': 'bbs13', '05_03': 'bbs06',
+  '05_05': 'bbs08', '05_06': 'bbs09', '04_0502': 'bbs01', '04_0504': 'bbs03',
+};
+/** 메뉴에 노출하지 않는 옛 게시판(교수게시판·회의록·공문서·건의) → 글 주소로도 열지 않고 홈으로 */
+const LEGACY_PRIVATE = new Set(['bbs01', 'bbs03', 'bbs06', 'bbs09']);
+
 async function legacyRedirect(req: NextRequest): Promise<NextResponse | null> {
   const { pathname, searchParams } = req.nextUrl;
   const to = (path: string, permanent = true) => {
@@ -15,47 +38,41 @@ async function legacyRedirect(req: NextRequest): Promise<NextResponse | null> {
     return NextResponse.redirect(url, permanent ? 308 : 307);
   };
 
-  // 옛 영문 홈 (/english, /english/…) → 새 영문 홈
-  if (pathname === '/english' || pathname.startsWith('/english/')) return to('/en');
-  if (pathname === '/index.php') return to('/');
+  const m = pathname.match(/^\/(kor|eng)(?:\/(?:sub\/)?([\w]+)\.php)?\/?$/);
+  if (!m) {
+    if (pathname === '/index.php') return to('/');
+    return null;
+  }
+  const l = m[1] === 'kor' ? 'ko' : 'en';
+  const page = m[2] || '';
+  if (!page || page === 'index') return to(`/${l}`);
 
-  // 옛 게시판: /bbs/board.php, /v2/bbs/board.php
-  if (pathname === '/bbs/board.php' || pathname === '/v2/bbs/board.php') {
-    const tb = searchParams.get('bo_table') || '';
-    const wr = searchParams.get('wr_id') || '';
-    if (tb.startsWith('sub6_7')) return to('/ko/reservation'); // 시설 예약 달력
-    if (tb && wr) {
-      // 이관 때 저장한 legacy_id(g5:테이블:번호 / g4:…)로 새 게시글을 찾는다
-      try {
-        const r = await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/posts?select=id,board&published=eq.true&or=(legacy_id.eq.g5:${tb}:${wr},legacy_id.eq.g4:${tb}:${wr})&limit=1`,
-          { headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}` } },
-        );
-        const d = await r.json();
-        if (Array.isArray(d) && d[0]) return to(`/ko/board/${d[0].board}/${d[0].id}`);
-      } catch { /* DB 불통이면 아래 게시판 매핑으로 */ }
-      // DB에서 못 찾은 개별 글은 307(임시) — 일시적 DB 장애로 틀린 목적지가 브라우저에 영구 캐시되지 않게
-      const tbMapMiss: Record<string, string> = { sub6_1: 'notice', sub6_2: 'scholarship', sub6_3: 'events', sub6_4: 'gallery', sub6_5: 'archive' };
-      return to(tbMapMiss[tb] ? `/ko/board/${tbMapMiss[tb]}` : '/', false);
-    }
-    const tbMap: Record<string, string> = { sub6_1: 'notice', sub6_2: 'scholarship', sub6_3: 'events', sub6_4: 'gallery', sub6_5: 'archive' };
-    if (tbMap[tb]) return to(`/ko/board/${tbMap[tb]}`);
-    return to('/');
+  // 글 하나로 들어온 주소: 이관 때 저장한 legacy_id(cbe:게시판:번호)로 새 글 번호를 찾는다
+  const idx = searchParams.get('idx');
+  const oldBoard = LEGACY_BOARD_OF[page];
+  if (idx && /^\d+$/.test(idx) && oldBoard) {
+    if (LEGACY_PRIVATE.has(oldBoard)) return to(`/${l}`);
+    try {
+      const r = await fetch(
+        `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/posts?select=id,board&published=eq.true&legacy_id=eq.cbe:${oldBoard}:${idx}&limit=1`,
+        { headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}` } },
+      );
+      const d = await r.json();
+      if (Array.isArray(d) && d[0]) return to(`/${l}/board/${d[0].board}/${d[0].id}`);
+    } catch { /* DB 불통이면 아래 게시판 목록으로 */ }
+    // 못 찾은 글은 307(임시) — 일시적 장애로 틀린 목적지가 브라우저에 영구 캐시되지 않게
+    const dest = LEGACY_PAGES[page];
+    return to(dest ? `/${l}${dest}` : `/${l}`, false);
   }
 
-  // 옛 메뉴 그룹 페이지: /bbs/group.php?gr_id=sub2, /bbs/group_eng.php?gr_id=eng_sub2 등
-  if (pathname.startsWith('/bbs/') || pathname.startsWith('/v2/bbs/')) {
-    const gr = searchParams.get('gr_id') || '';
-    const eng = pathname.includes('group_eng') || gr.startsWith('eng');
-    const n = (gr.match(/sub(\d)/) || [])[1];
-    const secMap: Record<string, string> = { '1': '/about/intro', '2': '/faculty', '3': '/undergraduate/admission', '4': '/graduate/admission', '5': '/graduate/areas', '6': '/board/notice' };
-    if (n && secMap[n]) return to(`/${eng ? 'en' : 'ko'}${secMap[n]}`);
-    return to(eng ? '/en' : '/');
-  }
+  // 학번별 이수계획표(04_0102~04_0112, 04_course_2022~2025)는 한 페이지로 합쳤다
+  if (/^04_(01\d\d|course_\d{4})$/.test(page)) return to(`/${l}/undergraduate/curriculum`);
+  if (page === '04_0503') return to(`/${l}/board/academic`);
+  if (page === '04_0502' || page === '04_0504' || page === '05_03' || page === '05_06') return to(`/${l}`);
 
-  // 그 밖의 옛 경로(/v2/…, /kor/…)는 홈으로
-  if (pathname === '/v2' || pathname.startsWith('/v2/') || pathname === '/kor' || pathname.startsWith('/kor/')) return to('/');
-  return null;
+  const dest = LEGACY_PAGES[page];
+  if (dest !== undefined) return to(`/${l}${dest}`);
+  return to(`/${l}`);
 }
 
 export async function middleware(req: NextRequest) {
@@ -123,6 +140,6 @@ export const config = {
     '/((?!api|_next/static|_next/image|images|ko(?:/|$)|en(?:/|$)|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
     { source: '/(ko|en)/:path*', has: [{ type: 'query', key: 'setlang' }] },
     // 옛 사이트 리다이렉트 대상 (점(.)이 들어간 경로는 위 일반 매처에서 제외되므로 명시)
-    '/bbs/:path*', '/v2/:path*', '/kor/:path*', '/index.php', '/english/:path*',
+    '/kor/:path*', '/eng/:path*', '/index.php',
   ],
 };

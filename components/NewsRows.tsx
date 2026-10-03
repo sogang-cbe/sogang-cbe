@@ -59,14 +59,16 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   const update = () => { const el = ref.current; if (!el) return; setPos({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8 }); };
   useEffect(() => { update(); const el = ref.current; el?.addEventListener('scroll', update, { passive: true }); window.addEventListener('resize', update); return () => { el?.removeEventListener('scroll', update); window.removeEventListener('resize', update); }; }, []);
   const step = (d: number) => { const el = ref.current; if (!el) return; const card = el.querySelector<HTMLElement>('[data-card]'); const w = card ? card.offsetWidth + 20 : 320; el.scrollBy({ left: d * w, behavior: 'smooth' }); };
-  const titles: Record<string, [string, string]> = { research: ['연구성과', 'Research Highlights'], award: ['수상', 'Awards & Honors'], alumni_news: ['동문·구성원 소식', 'Alumni & Community'] };
-  const subs: Record<string, [string, string]> = { research: ['논문·과제·연구 소식', 'Papers, projects and research news'], award: ['학생·교수 수상 소식', 'Student and faculty honors'], alumni_news: ['재학생·졸업생·교수진 소식', 'Students, alumni and faculty news'] };
+  const titles: Record<string, [string, string]> = { research: ['연구성과', 'Research Highlights'], seminar: ['세미나', 'Seminars'] };
+  const subs: Record<string, [string, string]> = { research: ['논문·수상·연구 소식', 'Papers, awards and research news'], seminar: ['학과 세미나와 초청 강연', 'Department seminars and invited talks'] };
+  const title = titles[board] || [board, board];
+  const sub = subs[board] || ['', ''];
   return (
     <div className="py-10 first:pt-0 border-b border-sg-line last:border-0">
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
-          <h3 className="font-brand text-[1.7rem] md:text-[2.1rem] leading-none">{ko ? titles[board][0] : titles[board][1]}</h3>
-          <p className="mt-2 text-[14px] text-sg-gray9">{ko ? subs[board][0] : subs[board][1]}</p>
+          <h3 className="font-brand text-[1.7rem] md:text-[2.1rem] leading-none">{ko ? title[0] : title[1]}</h3>
+          <p className="mt-2 text-[14px] text-sg-gray9">{ko ? sub[0] : sub[1]}</p>
         </div>
         <div className="flex items-center gap-2">
           <Link href={`/${locale}/board/${board}`} className="hidden sm:inline-flex items-center gap-1 mr-2 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal">{T(locale, 'more')} <span aria-hidden>+</span></Link>
