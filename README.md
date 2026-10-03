@@ -1,91 +1,52 @@
-# 서강대학교 기계공학과 홈페이지 (Sogang ME)
+# 서강대학교 화공생명공학과 홈페이지 (Sogang CBE)
 
-Next.js 14 · Supabase(DB/인증/파일) · Vercel(호스팅) · 국문/영문 · 관리자 페이지 · AI 자동 번역
+Next.js 14 · Supabase(DB/인증/파일) · Cloudflare R2(파일) · Vercel(호스팅) · 국문/영문 · 관리자 페이지 · AI 자동 번역
+
+기계공학과 홈페이지(`sgmeoffice-hub/sogang-me`)를 포크해 화공생명공학과용으로 바꾼 저장소입니다.
 
 ## 구성
 | 경로 | 내용 |
 |---|---|
 | `app/[locale]/…` | 공개 사이트 (`/ko`, `/en`) |
-| `app/admin/…` | 관리자 (실제 주소는 `.env`의 `ADMIN_PATH`, 예: `https://도메인/me-console-7f3a`) |
-| `content/` | 소개·교과과정 등 고정 페이지 본문(국/영), 연혁, 학사일정, 연구분야 데이터 |
-| `supabase/schema.sql` | DB 테이블·권한·저장소 (Supabase SQL Editor에서 1회 실행) |
-| `supabase/seed_*.sql` | 교수진 24명, 최근 게시글, 예약 예시 |
-| `scripts/migrate_gnuboard.py` | 기존 그누보드 DB 백업 → 전체 게시글 이전 |
+| `app/[locale]/equipment/…` | 공용장비 — 구성원 로그인·예약·QR 체크인 |
+| `app/admin/…` | 관리자 (실제 주소는 `.env`의 `ADMIN_PATH`, 기본 `/adm`) |
+| `app/auth/callback/` | 학교 구글 계정 로그인 되돌아오는 자리 |
+| `content/` | 고정 페이지 본문(국/영), 연혁·교과목·이수계획표·학사일정·연구센터 |
+| `content/data/*.json` | 옛 홈페이지에서 추출한 원본 데이터 (교과목 125과목, 이수계획표 13개 학번, 연혁 18건, 연구실 18곳) |
+| `supabase/setup_cbe.sql` | DB 테이블·권한·저장소 — Supabase SQL Editor에 붙여넣고 1회 실행 |
+| `supabase/seed_faculty_cbe.sql` | 교수진 시드 (전임 17 · 석학 1 · 명예 10) |
+| `scripts/upload-media.mjs` | 옛 홈페이지 첨부·이미지 중 실제로 쓰이는 것만 R2에 올림 |
+| `scripts/migrate-posts.mjs` | 옛 게시판 글 1,779건을 Supabase로 이관 |
+| `docs/HANDOFF.md` | 세션 간 인수인계 (현재 상태·다음 할 일) |
+| `docs/INHERITED-ME-*.md` | 기계공학과 원본 문서 (참고용) |
 
-## 배포 순서 (약 30분)
-1. **Supabase** (https://supabase.com) → New project (Region: Northeast Asia/Seoul)
-   - SQL Editor → `supabase/schema.sql` 붙여넣고 Run → 이어서 `seed_faculty.sql`, `seed_posts.sql` Run
-   - Authentication → Users → **Add user** (관리자 이메일/비밀번호, "Auto confirm" 체크)
-   - SQL Editor: `insert into admins (email) values ('관리자이메일');`
-   - Project Settings → API 에서 `Project URL`, `anon public`, `service_role` 키 복사
-2. **GitHub** → 새 저장소(Private 권장)에 이 폴더 업로드 (`node_modules`, `.env` 제외)
-3. **Vercel** (https://vercel.com) → Add New Project → GitHub 저장소 Import
-   - Environment Variables 에 `.env.example` 의 항목 입력:
-     `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PATH`, `NEXT_PUBLIC_SITE_URL`, (선택) `ANTHROPIC_API_KEY`
-   - Deploy → `https://프로젝트.vercel.app` 에서 확인
-4. **도메인**: Vercel → Settings → Domains → `me.sogang.ac.kr` 추가 → 학교 전산실에 CNAME(`cname.vercel-dns.com`) 등록 요청
-5. **관리자 접속**: `https://도메인/ADMIN_PATH값` → 로그인
+## 처음 세팅 순서
+1. **Supabase** — 프로젝트 생성 → SQL Editor에 `supabase/setup_cbe.sql` 전체 붙여넣고 Run → `admins` 테이블에 관리자 이메일 추가 → Authentication › Providers에서 Google 켜기(허용 도메인 `sogang.ac.kr`), Redirect URL에 `https://<도메인>/auth/callback` 추가.
+2. **Cloudflare R2** — 버킷 `sogang-cbe-media`(공개 Development URL 켜기), `sogang-cbe-backup`(비공개) 생성 → API 토큰(Object Read & Write) 발급.
+3. **Vercel 환경변수** — `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_MEDIA_BASE`(R2 공개 주소), `NEXT_PUBLIC_SITE_URL`, `ADMIN_PATH`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BACKUP_BUCKET`, `R2_MEDIA_BUCKET`.
+4. **데이터 이관** — 아래 "옛 홈페이지 이관".
+5. **교수진** — `supabase/seed_faculty_cbe.sql` 실행 후, 맨 아래 주석의 UPDATE 한 줄로 사진 주소를 R2 공개 주소로 바꿉니다.
 
-## 로컬 실행
+## 옛 홈페이지 이관
+백업(`chemeng_260914_WEB.tar.gz`)을 풀면 웹 루트는 `home2/chemeng/public` 입니다.
+
 ```bash
-cp .env.example .env.local   # 값 채우기
-npm install && npm run dev   # http://localhost:3000
+# 1) 파일 — 실제로 쓰이는 것만 올라갑니다 (첨부 1,504 + 본문 이미지)
+export R2_ACCOUNT_ID=… R2_ACCESS_KEY_ID=… R2_SECRET_ACCESS_KEY=… R2_BUCKET=sogang-cbe-media
+node scripts/upload-media.mjs /경로/home2/chemeng/public /경로/추출데이터/posts_mapped.json
+
+# 2) 게시글 — 먼저 --dry 로 건수를 확인한 뒤 실행
+export SUPABASE_URL=https://xxxx.supabase.co SUPABASE_SERVICE_KEY=… MEDIA_BASE=https://pub-xxxx.r2.dev
+node scripts/migrate-posts.mjs /경로/추출데이터/posts_mapped.json --dry
+node scripts/migrate-posts.mjs /경로/추출데이터/posts_mapped.json
 ```
 
-## 운영
-- 게시글/교수/예약/배너/메인 섹션: 관리자 페이지에서 관리
-- 영문: 관리자에서 국문만 입력하고 저장하면(또는 "AI 영문 번역" 버튼) 영문이 자동 생성됩니다. 기본은 무료 번역기(Google 웹 엔드포인트/MyMemory)이며, `ANTHROPIC_API_KEY`를 넣으면 코드 수정 없이 Claude 고품질 번역으로 전환됩니다.
-- 접속 국가가 KR이면 `/ko`, 그 외는 `/en` 으로 자동 이동, 우상단 국기 버튼으로 전환
-- 서강대 UI: `components/Logo.tsx` 의 임시 엠블럼을 공식 로고 파일(`public/images/`)로 교체, 색상은 `app/globals.css` 의 `--sg-red`
-- 기존 게시글 전체 이전: `supabase/migrate_gnuboard.md`
-- 타 서버 이전: Supabase는 표준 PostgreSQL이라 `pg_dump` 로 전량 추출 가능 (Database → Backups)
+`legacy_id`로 중복을 막으므로 두 스크립트 모두 여러 번 돌려도 안전합니다. 개인정보가 섞인 36건은 비공개로 들어가니 행정실이 확인한 뒤 공개로 바꿉니다.
 
-## 비용
-Vercel Hobby(무료) + Supabase Free(DB 500MB, 저장소 1GB)로 학과 홈페이지 트래픽은 충분합니다. 저장소가 부족해지면 Supabase Pro($25/월)로 전환.
-
-## v3 (2026-08-27) 변경 사항 — 이승엽 교수님 요청 반영
-### 새 메뉴 (학부과정 아래)
-| 메뉴 | 경로 | 데이터 |
-|---|---|---|
-| 전공소개 | `/undergraduate/majors` | `content/majors.ts` (4대 분야 원고·과목·추천교과목) + `/images/intro/*.jpg` (PDF 15쪽 렌더) |
-| 전공 홍보자료 | `/board/promo` | posts(board=`promo`), 첨부 PDF는 `/public/docs/` |
-| 창의적종합설계 | `/board/capstone` | posts(board=`capstone`) — term(`2025-2`), members, advisor, sort_order(조 번호), thumbnail(포스터) |
-| 학술제 학부생 발표 | `/board/festival` | posts(board=`festival`) — term(연도), category(ureca/capstone/project/award), members, advisor, 포스터 |
-| 기계공학도가 봐야 할 영상 | `/board/videos` | posts(board=`videos`) — video_url(YouTube), category(그룹 제목), sort_order |
-### 기능
-- 모든 게시판에 **YouTube 주소** 입력 가능 → 본문 위에 영상, 카드 썸네일 자동
-- 게시글 **줄바꿈 자동 처리** (Enter = 줄바꿈, 빈 줄 = 문단)
-- **URECA 인턴 온라인 지원** (`/undergraduate/ureca` 하단) → 관리자 > URECA 지원 (연도·기간 필터, 선발/미선발, CSV)
-- **이메일 알림**: 시설 예약·URECA 지원 접수 시 관리자 설정의 이메일로 발송. Vercel 환경변수 `RESEND_API_KEY` 필요(resend.com 무료). 미설정 시 접수만 되고 메일은 생략
-- 메인: 히어로 아래 **전공 홍보자료 카드 2개**, 소식 4줄째 **동문·구성원 소식**, **추천 영상** 섹션
-### DB 마이그레이션
-Supabase SQL Editor에서 `supabase/schema_v3.sql` → `supabase/seed_v3.sql` 순서로 실행
-### 관리자 등록 방법
-관리자 > 게시판 > 해당 게시판 선택 > "+ 새 글". 창의적종합설계·학술제·영상 게시판을 고르면 학년도/조원/지도교수/구분/순서 입력칸이 나타납니다. 포스터는 "사진 추가"로 올리고 "대표" 지정.
-### 아직 없는 원본 자료 (관리자가 추후 등록)
-- 2025-2, 2026-1 창의적종합설계 **포스터** (메일 첨부 만료 — 이승엽 교수님/박현주 선생님께 재요청)
-- 학술제 학부생 발표 자료(URECA·창의적종합설계·연구프로젝트)와 **학부생 수상자 명단** — 학과 행정팀 보유 자료
-
-## v5 (2026-08-27) 안정화 수정
-| 항목 | 내용 |
-|---|---|
-| 시설 예약 중복 | 시간 입력 즉시 겹침 경고 + 서버에서도 차단(409). 관리자 승인 목록은 확정 예약과 겹치면 붉게 표시 |
-| 과거 날짜 예약 | 달력에서 선택 불가 + 서버 검증 (KST 기준) |
-| URECA 중복 지원 | 같은 연도·학기·학번이면 마지막 제출본으로 자동 대체, 폼에 안내 문구 표시 |
-| 검색어 오류 | `%`, `,`, `(` 등 특수문자를 정제(`lib/search.ts`). 조원 이름으로도 검색됨 |
-| 연구실 수 | 메인 '대학원과정' 카드의 연구실 수를 교수 DB에서 집계 |
-| 업로드 | 이미지 자동 축소(최대 1920px, JPEG 82%), 10MB 초과 거부 |
-| 저장소 정리 | 글·교수·배너 삭제 시 첨부·본문 이미지도 Storage에서 삭제 |
-| 조회수 | 세션당 1회만 집계(`/api/view` + sessionStorage), 봇 UA 제외 |
-
-### 아직 코드로 관리하는 항목 (의도적)
-- 4개 기초전공분야 이름·설명, 7개 연구그룹 이름 (`content/pages-grad.ts`, `lib/groups.ts`)
-- 학사일정 (`content/pages-ug.ts`의 `calendar2026`) — 매년 갱신 시 요청
-- 메뉴 구조·게시판 목록 (`lib/nav.ts`), 화면 문구 (`lib/i18n.ts`)
-
-## v6 (2026-08-27) 관리 편의 개선
-- **본문 편집기 교체**: HTML 대신 워드처럼 쓰는 편집기(TipTap). 제목·목록·표·사진·링크 버튼 제공, 표는 행/열 추가·삭제 가능. 필요 시 "HTML 편집" 탭으로 전환.
-- **교수 위치**: 자유입력 → **건물 드롭다운 + 호실 번호**. 국문 "리치과학관(R) 618호", 영문 "New Ricci Hall (R) Room 618"로 자동 표기 (`lib/buildings.ts`, 영문명은 서강대 영문 홈페이지 표기 기준).
-- 메인 연구분야 카드 4개 높이 통일 (설명 길이가 달라도 대칭).
-- 영상·학술제 게시판의 분야(카테고리) 제목도 영문 페이지에서 영어로 표시 (`category_en`).
-- DB: `supabase/schema_v6.sql` 실행 필요 (기존 office 문자열에서 건물/호실 자동 분리)..
+## 개발
+```bash
+npm install
+cp .env.example .env.local   # 값 채우기
+npm run dev                  # http://localhost:3000
+npm run build                # push 전 필수
+```

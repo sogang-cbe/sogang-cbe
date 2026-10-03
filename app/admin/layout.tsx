@@ -22,11 +22,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </main>
   );
   const b = adminBase();
-  const menu = [['', '대시보드'], ['/posts', '게시판'], ['/faculty', '교수진'], ['/pages', '페이지'], ['/reservations', '시설 예약'], ['/ureca', 'URECA 지원'], ['/banners', '배너'], ['/settings', '메인·설정'], ['/backup', '백업·휴지통']];
+  const menu = [['', '대시보드'], ['/posts', '게시판'], ['/faculty', '교수진'], ['/pages', '페이지'], ['/reservations', '회의실 예약'], ['/equipment', '공용장비'], ['/members', '구성원 승인'], ['/banners', '배너'], ['/settings', '메인·설정'], ['/backup', '백업·휴지통']];
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside className="bg-sg-ink text-white p-5 lg:min-h-screen">
-        <p className="font-mono text-[11px] tracking-widest text-white/50">SOGANG ME</p>
+        <p className="font-mono text-[11px] tracking-widest text-white/50">SOGANG CBE</p>
         <p className="font-bold text-lg">관리자</p>
         <nav className="mt-6 flex lg:flex-col gap-1 overflow-x-auto">
           {menu.map(([h, t]) => <Link key={h} href={`${b}${h}`} className="px-3 py-2 text-[14px] whitespace-nowrap hover:bg-white/10">{t}</Link>)}

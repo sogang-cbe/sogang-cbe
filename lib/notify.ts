@@ -16,7 +16,7 @@ export async function notifyAdmin(subject: string, html: string) {
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST', headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: process.env.NOTIFY_FROM || 'Sogang ME <onboarding@resend.dev>', to, subject, html }),
+      body: JSON.stringify({ from: process.env.NOTIFY_FROM || 'Sogang CBE <onboarding@resend.dev>', to, subject, html }),
     });
     return { ok: r.ok };
   } catch (e: any) { console.error('notify failed', e?.message); return { ok: false }; }

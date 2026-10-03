@@ -1,28 +1,46 @@
 import Link from '@/components/Link';
 import PageHero from '@/components/PageHero';
 import PostCard, { fmtDate } from '@/components/PostCard';
-import { PromoView, CapstoneView, FestivalView, VideosView } from '@/components/BoardViews';
 import { getPosts } from '@/lib/data';
-import { boards, boardSection } from '@/lib/nav';
+import { boards, boardSection, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
 import { t, T, authorLabel, type Locale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
 import { facultyNames, peopleEn } from '@/lib/names';
-export const revalidate = 600; // 60초 → 10분(2026-09-25 Supabase 전송량 절감): 글 저장·삭제는 즉시 갱신되고, 목록의 조회수만 최대 10분 늦게 바뀐다
+import { currentMember, isApproved } from '@/lib/members';
+import MemberLogin from '@/components/MemberLogin';
+export const revalidate = 600; // 자료실(archive)만 로그인 쿠키를 읽어 요청마다 동적으로 그려지고, 나머지 게시판은 10분 캐시. 60초 → 10분(2026-09-25 Supabase 전송량 절감): 글 저장·삭제는 즉시 갱신되고, 목록의 조회수만 최대 10분 늦게 바뀐다
 const PER = 15;
 const intros: Record<string, [string, string]> = {
-  promo: ['고등학생·자유전공학부 학생을 위한 화공생명공학과 소개 자료입니다. 클릭하면 자료 소개와 PDF 열람·다운로드로 이동합니다.', 'Introductory materials for prospective and liberal-major students. Open a card to read more or download the PDF.'],
-  capstone: ['4학년 창의적종합설계(캡스톤디자인) 프로젝트를 학기별로 축적합니다. 각 조의 주제·조원·지도교수와 포스터를 확인할 수 있습니다.', 'Senior capstone design projects, archived by semester with topic, members, advisor and poster.'],
-  festival: ['화공생명공학과 학술제에 출품된 학부생 연구(URECA 인턴 · 창의적종합설계 · 연구프로젝트)와 학부생 수상 명단을 연도별로 게시합니다.', 'Undergraduate research presented at the department festival — URECA, capstone and research projects — plus award lists by year.'],
-  videos: ['자유전공학부 학생과 화공생명공학과 학부생이 전공 분야를 쉽게 이해할 수 있는 영상을 모았습니다. NASA 출신 Mark Rober, 로봇·Physical AI, 세부분야별 영상으로 구성되어 있습니다.', 'Videos that make mechanical engineering easy to grasp: Mark Rober, robotics & Physical AI, and one per sub-field.'],
+  academic: ['수강·교과목·실험·졸업·학적 등 학부와 대학원 학사 공지입니다. 옛 홈페이지의 「학사」와 「학생게시판」 글을 모두 옮겨 왔습니다.', 'Academic notices for undergraduate and graduate programs, including posts migrated from the previous site.'],
+  scholarship: ['장학금, 인턴·채용, 설명회 안내입니다.', 'Scholarships, internships, recruiting and information sessions.'],
+  research: ['학과 교수진과 연구실의 논문·수상·연구 소식입니다.', 'Papers, awards and research news from our faculty and laboratories.'],
+  seminar: ['학과 세미나와 초청 강연 일정입니다. 대학원생은 매 학기 세미나 과목을 수강해야 합니다.', 'Department seminars and invited talks. Graduate students take the seminar course every semester.'],
+  gallery: ['학과 행사와 학교생활 사진입니다.', 'Photos from department events and student life.'],
+  archive: ['학과 양식과 자료를 모아 둔 곳입니다. 로그인한 구성원만 볼 수 있습니다.', 'Forms and documents for department members. Sign-in required.'],
+  grad_intro: ['화공생명공학과 대학원 재학생 소개입니다.', 'Introducing our graduate students.'],
+  internal: ['교수회의록·공문서 등 학과 내부 기록입니다. 관리자만 볼 수 있습니다.', 'Internal departmental records. Administrators only.'],
 };
 
 export default async function BoardList({ params, searchParams }: { params: { locale: Locale; board: string }; searchParams: { page?: string; q?: string; year?: string } }) {
   const { locale: l, board } = params; const ko = l === 'ko';
   if (!(boards as readonly string[]).includes(board)) notFound();
-  const special = ['promo', 'capstone', 'festival', 'videos'].includes(board);
+  // 내부 기록(교수회의록·공문서)은 메뉴에도 없고 관리자 화면에서만 본다 — 주소를 알아도 열리지 않게 404
+  if ((adminOnlyBoards as readonly string[]).includes(board)) notFound();
+  // 자료실은 로그인한 구성원만
+  if ((memberOnlyBoards as readonly string[]).includes(board)) {
+    const me = await currentMember();
+    if (!me || !isApproved(me.member)) return (<>
+      <PageHero locale={l} section="board" current={board} />
+      <div className="container-site py-16 max-w-2xl">
+        <h2 className="font-brand text-[1.8rem] break-keep">{ko ? '구성원만 볼 수 있습니다' : 'Members only'}</h2>
+        <p className="mt-3 text-[15px] text-sg-gray11 break-keep">{ko ? '자료실은 대학원생·교수·행정실만 볼 수 있습니다. 서강대학교 구글 계정으로 로그인해 주세요.' : 'Sign in with your Sogang Google account to view the downloads.'}</p>
+        <div className="mt-8"><MemberLogin next={`/${l}/board/${board}`} locale={l} /></div>
+      </div>
+    </>);
+  }
   const pageN = Number(searchParams.page); // 숫자가 아니면 NaN → 1페이지로 (NaN이 range()에 흘러가 빈 화면이 되지 않게)
   const page = Number.isFinite(pageN) && pageN >= 1 ? Math.floor(pageN) : 1; const q = searchParams.q || '';
-  const { posts: raw, total } = await getPosts(board, special ? 1 : page, special ? 200 : PER, q);
+  const { posts: raw, total } = await getPosts(board, page, PER, q);
   // 캡스톤·학술제의 조원·지도교수는 국문으로 입력된다 → 영문 페이지에서는 교수는 공식 영문 이름, 학생은 로마자로
   const people = !ko && raw.some((p) => p.advisor || p.members);
   const names = people ? await facultyNames() : [];
@@ -34,17 +52,13 @@ export default async function BoardList({ params, searchParams }: { params: { lo
     <PageHero locale={l} section={section} current={current} />
     <div className="container-site py-12">
       {intros[board] && <p className="mb-8 max-w-3xl text-[16px] leading-relaxed text-sg-gray11">{ko ? intros[board][0] : intros[board][1]}</p>}
-      {!special && (
+      {(
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <p className="text-[13px] text-sg-gray9">{ko ? `총 ${total}건` : `${total} posts`}</p>
           <form className="flex" action={`/${l}/board/${board}`}><input name="q" defaultValue={q} placeholder={T(l, 'search')} className="input !w-56" /><button className="btn-primary !py-2">{T(l, 'search')}</button></form>
         </div>
       )}
-      {board === 'promo' ? <PromoView posts={posts} locale={l} />
-       : board === 'capstone' ? <CapstoneView posts={posts} locale={l} />
-       : board === 'festival' ? <FestivalView posts={posts} locale={l} year={searchParams.year} />
-       : board === 'videos' ? <VideosView posts={posts} locale={l} />
-       : posts.length === 0 ? <p className="py-16 text-center text-sg-gray9 border border-dashed border-sg-line">{T(l, 'noPosts')}</p>
+      {posts.length === 0 ? <p className="py-16 text-center text-sg-gray9 border border-dashed border-sg-line">{T(l, 'noPosts')}</p>
        : board === 'gallery' ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">{posts.map((p) => <PostCard key={p.id} post={p} locale={l} />)}</div>
       ) : (
@@ -70,7 +84,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
           </tbody>
         </table>
       )}
-      {!special && pages > 1 && (
+      {pages > 1 && (
         <nav className="mt-10 flex justify-center gap-1 text-[14px]" aria-label="Pagination">
           {page > 1 && <Link href={href(page - 1)} className="px-3 py-2 border border-sg-line hover:border-sg-ink">‹</Link>}
           {Array.from({ length: pages }, (_, i) => i + 1).filter((p) => Math.abs(p - page) <= 3 || p === 1 || p === pages).map((p, i, arr) => (

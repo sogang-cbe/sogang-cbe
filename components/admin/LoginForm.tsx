@@ -15,7 +15,7 @@ export default function LoginForm() {
   return (
     <main className="min-h-screen grid place-items-center bg-sg-mist px-6">
       <form onSubmit={submit} className="w-full max-w-sm bg-white border border-sg-line p-8 space-y-4">
-        <p className="eyebrow">Sogang ME · Admin</p>
+        <p className="eyebrow">Sogang CBE · Admin</p>
         <h1 className="text-2xl font-bold">관리자 로그인</h1>
         <label className="block text-[13px]">이메일<input name="email" type="email" required autoComplete="username" className="input mt-1" /></label>
         <label className="block text-[13px]">비밀번호<input name="password" type="password" required autoComplete="current-password" className="input mt-1" /></label>

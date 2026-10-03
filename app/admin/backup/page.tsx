@@ -22,7 +22,7 @@ export default async function BackupPage() {
   return (
     <div className="max-w-4xl">
       <h1 className="text-2xl font-bold">백업·휴지통</h1>
-      <p className="mt-2 text-[13px] text-sg-steel break-keep">매일 새벽 4시에 DB 전체(게시글·교수·예약·URECA 등)와 업로드 파일을 Cloudflare R2 비공개 저장소에 자동 백업합니다. 최근 30일은 매일치, 그 이전은 매월 1일치를 12개월 보관합니다. 삭제한 글은 {TRASH_DAYS}일 동안 휴지통에 남고, 글을 고칠 때마다 직전 내용이 {HISTORY_DAYS}일 동안 보관됩니다(글 수정 화면 아래 ‘수정 이력’).</p>
+      <p className="mt-2 text-[13px] text-sg-steel break-keep">매일 새벽 4시에 DB 전체(게시글·교수·예약·장비 등)와 업로드 파일을 Cloudflare R2 비공개 저장소에 자동 백업합니다. 최근 30일은 매일치, 그 이전은 매월 1일치를 12개월 보관합니다. 삭제한 글은 {TRASH_DAYS}일 동안 휴지통에 남고, 글을 고칠 때마다 직전 내용이 {HISTORY_DAYS}일 동안 보관됩니다(글 수정 화면 아래 ‘수정 이력’).</p>
 
       {!enabled && (
         <div className="mt-6 border-l-4 border-sg-cardinal bg-white p-4 text-[13.5px] break-keep">
@@ -40,7 +40,7 @@ export default async function BackupPage() {
               {status && !status.ok && ` · 최근 시도 실패(${kst(status.at)})`}
               {stale && status?.lastSuccessAt && ' · 이틀 넘게 성공한 백업이 없습니다'}
             </p>
-            {status?.ok && <p className="mt-1 text-[12.5px] text-sg-steel">{status.unchanged ? '전날과 같아 새로 저장하지 않음 · ' : ''}압축 {mb(status.bytes)} · 게시글 {status.counts?.posts ?? '—'} · 예약 {status.counts?.reservations ?? '—'} · URECA {status.counts?.ureca_applications ?? '—'}{status.legacyDone ? ` · 옛 파일 사본 완료(${status.legacyTotal ?? 0}개)` : status.legacyTotal ? ` · 옛 파일 사본 ${status.legacyTotal}개 복사됨(매일 이어서)` : ''}{status.legacyFailed?.length ? ` · 복사 재시도 대기 ${status.legacyFailed.length}개` : ''}</p>}
+            {status?.ok && <p className="mt-1 text-[12.5px] text-sg-steel">{status.unchanged ? '전날과 같아 새로 저장하지 않음 · ' : ''}압축 {mb(status.bytes)} · 게시글 {status.counts?.posts ?? '—'} · 예약 {status.counts?.reservations ?? '—'}{status.legacyDone ? ` · 옛 파일 사본 완료(${status.legacyTotal ?? 0}개)` : status.legacyTotal ? ` · 옛 파일 사본 ${status.legacyTotal}개 복사됨(매일 이어서)` : ''}{status.legacyFailed?.length ? ` · 복사 재시도 대기 ${status.legacyFailed.length}개` : ''}</p>}
             {status?.error && <p className="mt-1 text-[12.5px] text-sg-cardinal break-all">{status.error}</p>}
           </div>
           {enabled && <form action={backupNow}><SubmitButton className="btn-ghost !py-2 !px-4 !text-[13px] bg-white" pendingText="백업 중…">지금 백업</SubmitButton></form>}

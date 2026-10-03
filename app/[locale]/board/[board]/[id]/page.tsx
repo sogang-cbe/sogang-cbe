@@ -7,13 +7,19 @@ import { notFound } from 'next/navigation';
 import YouTube from '@/components/YouTube';
 import ViewCounter from '@/components/ViewCounter';
 import { toHtml, wrapTables, downloadUrl } from '@/lib/html';
-import { boardSection, festivalCategories } from '@/lib/nav';
+import { boardSection, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
+import { currentMember, isApproved } from '@/lib/members';
 import { facultyNames, peopleEn } from '@/lib/names';
 export function generateStaticParams() { return []; }   // 선언해야 요청 시 만든 페이지가 캐시된다(ISR) — 없으면 매 요청 DB 조회
 export const revalidate = 604800; // 관리자 저장·자동 번역·일괄 수정(/api/admin/revalidate) 때 즉시 갱신되므로 시간 기준 갱신은 1주 — 4,700여 글을 크롤러가 훑을 때 DB 전송량(2026-09-25)과 Vercel 무료 한도(재생성 CPU, 2026-09-26)를 아낀다
 
 export default async function PostPage({ params }: { params: { locale: Locale; board: string; id: string } }) {
   const { locale: l, board } = params; const ko = l === 'ko';
+  if ((adminOnlyBoards as readonly string[]).includes(board)) notFound();
+  if ((memberOnlyBoards as readonly string[]).includes(board)) {
+    const me = await currentMember();
+    if (!me || !isApproved(me.member)) notFound();
+  }
   const p = await getPost(Number(params.id), l); if (!p || p.board !== board) notFound();
   const { prev, next } = await getAdjacent(board, p.id, p.created_at);
   const html = wrapTables(toHtml(t(p, 'content', l)));
@@ -21,7 +27,7 @@ export default async function PostPage({ params }: { params: { locale: Locale; b
   const termLabel = (term: string) => { const m = term.match(/^(\d{4})-(\d)$/); return m ? (ko ? `${m[1]}학년도 ${m[2]}학기` : `${m[1]} ${m[2] === '1' ? 'Spring' : 'Fall'}`) : term; };
   const meta: [string, string][] = [];
   if (p.term) meta.push([ko ? '학년도·학기' : 'Term', termLabel(p.term)]);
-  if (p.category) meta.push([ko ? '분야' : 'Category', festivalCategories.find((c) => c.id === p.category)?.[ko ? 'ko' : 'en'] || (ko ? p.category : (p as any).category_en || p.category)]);
+  if (p.category) meta.push([ko ? '분야' : 'Category', ko ? p.category : (p as any).category_en || p.category]);
   // 조원·지도교수는 국문으로 입력되므로 영문 페이지에서는 교수는 공식 영문 이름("정석환 교수" → "Prof. Seokhwan Jeong"), 학생은 로마자로
   const names = !ko && (p.members || p.advisor) ? await facultyNames() : [];
   if (p.members) meta.push([ko ? '조원' : 'Members', ko ? p.members : peopleEn(names, p.members)]);

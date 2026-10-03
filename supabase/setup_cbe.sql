@@ -365,3 +365,73 @@ drop policy if exists "eq resv admin write" on equipment_reservations;
 create policy "eq resv admin write" on equipment_reservations for all using (is_admin()) with check (is_admin());
 
 notify pgrst, 'reload schema';
+
+
+-- ============================================================
+-- 공용장비 v2 — 첫 로그인 등록, 본인 예약 수정(취소·체크인), 중복 예약 차단
+-- ============================================================
+create extension if not exists btree_gist;
+
+-- 담당자 승인이 필요한 장비 표시 (기본값: 바로 예약 확정)
+alter table equipment add column if not exists needs_approval boolean default false;
+-- 예약 가능한 시간대(학교 건물 운영시간에 맞춘다)
+alter table equipment add column if not exists open_from time default '08:00';
+alter table equipment add column if not exists open_to time default '22:00';
+-- 장비 QR 코드가 가리키는 토큰 (주소만 알면 남의 예약을 체크인할 수 없게)
+alter table equipment add column if not exists qr_token text default encode(gen_random_bytes(8), 'hex');
+
+-- 처음 로그인한 사람이 스스로 pending 으로 등록된다. 승인은 행정실이 한다.
+drop policy if exists "members self insert" on members;
+create policy "members self insert" on members for insert with check (
+  email = auth.jwt() ->> 'email' and role = 'pending' and approved_at is null
+);
+-- 이름·연구실은 본인이 고칠 수 있다 (역할은 바꿀 수 없다 — 아래 트리거로 막는다)
+drop policy if exists "members self update" on members;
+create policy "members self update" on members for update
+  using (email = auth.jwt() ->> 'email') with check (email = auth.jwt() ->> 'email');
+
+create or replace function public.members_guard() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if is_admin() then return new; end if;
+  new.role := old.role;              -- 본인이 역할을 올리는 것을 막는다
+  new.approved_at := old.approved_at;
+  new.email := old.email;
+  return new;
+end; $$;
+drop trigger if exists members_guard_tr on members;
+create trigger members_guard_tr before update on members
+  for each row execute function public.members_guard();
+
+-- 본인 예약만 취소·체크인할 수 있다.
+drop policy if exists "eq resv member update" on equipment_reservations;
+create policy "eq resv member update" on equipment_reservations for update
+  using (member_email = auth.jwt() ->> 'email')
+  with check (member_email = auth.jwt() ->> 'email');
+
+-- 승인이 필요 없는 장비는 신청 즉시 확정(approved)으로 넣을 수 있다.
+drop policy if exists "eq resv member insert" on equipment_reservations;
+create policy "eq resv member insert" on equipment_reservations for insert with check (
+  member_email = auth.jwt() ->> 'email'
+  and end_time > start_time
+  and date >= (now() at time zone 'Asia/Seoul')::date
+  and exists (select 1 from members m where m.email = auth.jwt() ->> 'email' and m.role in ('grad','faculty','staff'))
+  and (
+    status = 'pending'
+    or (status = 'approved' and exists (select 1 from equipment e where e.id = equipment_id and coalesce(e.needs_approval, false) = false))
+  )
+);
+
+-- 같은 장비·같은 시간에 두 예약이 들어가지 않게 DB에서 막는다.
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'eq_resv_no_overlap') then
+    alter table equipment_reservations add constraint eq_resv_no_overlap
+      exclude using gist (
+        equipment_id with =,
+        tsrange((date + start_time), (date + end_time)) with &&
+      ) where (status in ('pending', 'approved'));
+  end if;
+end $$;
+
+notify pgrst, 'reload schema';

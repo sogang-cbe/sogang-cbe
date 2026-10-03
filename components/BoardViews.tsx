@@ -112,7 +112,7 @@ export function FestivalView({ posts, locale, year }: { posts: Post[]; locale: L
   );
 }
 
-/** 기계공학도가 봐야 할 영상: grouped by category, YouTube thumbnails; first video plays inline */
+/** 영상 모음: grouped by category, YouTube thumbnails; first video plays inline */
 export function VideosView({ posts, locale }: { posts: Post[]; locale: Locale }) {
   const ko = locale === 'ko';
   const sorted = [...posts].sort((a, b) => (a.sort_order ?? 100) - (b.sort_order ?? 100) || a.id - b.id);

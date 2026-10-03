@@ -12,7 +12,7 @@ import { r2Enabled, r2Put, r2List, r2Delete, r2Copy, mediaBucket } from './r2';
  * Supabase 전송량: DB 전체를 받아도 압축 전송 약 1.2MB → 매일 해도 월 36MB(무료 5GB의 0.7%).
  * 복원은 버튼으로 두지 않는다(실수 위험) — docs/HANDOFF.md의 복원 절차 참고.
  */
-export const TABLES = ['posts', 'faculty', 'pages', 'reservations', 'banners', 'site_settings', 'ureca_applications', 'admins'] as const;
+export const TABLES = ['posts', 'faculty', 'pages', 'reservations', 'banners', 'site_settings', 'admins', 'members', 'equipment', 'equipment_reservations'] as const;
 const DAILY_KEEP = 30;
 const MONTHLY_KEEP = 12;
 

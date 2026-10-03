@@ -348,8 +348,3 @@ export async function addAdmin(fd: FormData) {
   redirect(`${base()}/settings`);
 }
 
-export async function setUreca(fd: FormData) {
-  const sb = await admin(); const id = Number(str(fd, 'id')); const status = str(fd, 'status');
-  if (status === 'delete') await sb.from('ureca_applications').delete().eq('id', id); else await sb.from('ureca_applications').update({ status }).eq('id', id);
-  redirect(`${base()}/ureca`);
-}
