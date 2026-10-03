@@ -4,7 +4,6 @@ import RichEditor from '@/components/admin/RichEditor';
 import TranslateButton from '@/components/admin/TranslateButton';
 import PhotoField from '@/components/admin/PhotoField';
 import { areas } from '@/content/areas';
-import { researchGroupDefs } from '@/lib/groups';
 import { buildings, parseOffice } from '@/lib/buildings';
 import { notFound } from 'next/navigation';
 
@@ -37,16 +36,9 @@ export default async function EditFaculty({ params }: { params: { id: string } }
           <I n="lab_ko" l="연구실명 (한국어)" v={f?.lab_ko} /><I n="lab_en" l="Laboratory (English)" v={f?.lab_en} />
           <I n="lab_url" l="연구실 홈페이지" v={f?.lab_url} ph="https://" /><label className="block text-[13px]">건물<select name="building" defaultValue={curBuilding} className="input mt-1"><option value="">— 선택 —</option>{buildings.map((b) => <option key={b.code} value={b.code}>{b.ko} ({b.code})</option>)}</select></label>
           <label className="block text-[13px]">호실<input name="room" defaultValue={curRoom} placeholder="618" className="input mt-1" /><span className="block text-[11px] text-sg-steel mt-1">숫자만 입력 (국문 "리치과학관(R) 618호" / 영문 "New Ricci Hall (R) Room 618"로 자동 표기)</span></label>
-          <label className="block text-[13px]">연구 분야 (4대 기초전공)<select name="field" defaultValue={f?.field === 'chair' ? '' : f?.field || ''} className="input mt-1"><option value="">—</option>{areas.map((a) => <option key={a.id} value={a.id}>{a.ko}</option>)}</select>{f?.field === 'chair' && <span className="block text-[11px] text-sg-cardinal mt-1">※ 석좌→전임으로 바꿀 때는 연구 분야를 함께 선택하세요 (비워 두면 기초전공 연구실 표에 나오지 않습니다)</span>}</label>
+          <label className="block text-[13px]">참여 연구센터<select name="field" defaultValue={f?.field === 'chair' ? '' : f?.field || ''} className="input mt-1"><option value="">—</option>{areas.map((a) => <option key={a.id} value={a.id}>{a.ko}</option>)}</select>{f?.field === 'chair' && <span className="block text-[11px] text-sg-cardinal mt-1">※ 석좌→전임으로 바꿀 때는 연구 분야를 함께 선택하세요 (비워 두면 연구실 표에 나오지 않습니다)</span>}</label>
           <I n="sort_order" l="정렬 순서 (작을수록 앞)" v={String(f?.sort_order ?? 100)} />
         </div>
-      </div>
-      <div className="border border-[rgba(175,39,47,0.3)] bg-[rgba(175,39,47,0.05)] p-4">
-        <p className="text-[13px] font-semibold">소속 연구그룹 <span className="font-normal text-sg-steel">— 체크한 그룹의 「대학원과정 › 융합 및 응용연구 그룹」 페이지에 자동으로 표시됩니다 (중복 선택 가능)</span></p>
-        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 text-[13px]">
-          {researchGroupDefs.map((g) => <label key={g.id} className="flex items-center gap-2"><input type="checkbox" name={`group_${g.id}`} defaultChecked={Array.isArray(f?.groups) && f.groups.includes(g.id)} /> {g.ko}</label>)}
-        </div>
-        <p className="mt-2 text-[12px] text-sg-steel">※ 위 "연구 분야"(4개 기초전공분야)는 「기초전공분야」 페이지의 연구실 표에 자동 반영됩니다. 전임·명예·석좌 구분은 맨 위 "구분"에서 바꿉니다.</p>
       </div>
       <div><p className="text-[13px] mb-1">연구분야 소개 (한국어)</p><RichEditor name="research_ko" defaultValue={f?.research_ko || ''} folder="faculty" minHeight={176} /></div>
       <div><p className="text-[13px] mb-1">Research (English)</p><RichEditor name="research_en" defaultValue={f?.research_en || ''} folder="faculty" minHeight={132} /></div>

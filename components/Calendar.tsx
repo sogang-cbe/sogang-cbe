@@ -1,4 +1,4 @@
-import { calendar2026 } from '@/content/pages-ug';
+import { calendar2026 } from '@/content/calendar';
 import type { Locale } from '@/lib/i18n';
 
 export default function AcademicCalendar({ locale }: { locale: Locale }) {

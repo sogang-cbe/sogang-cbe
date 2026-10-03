@@ -1,0 +1,27 @@
+/** 서강대학교 학사일정 — 대학 공통 일정이므로 학과와 무관하게 같은 날짜를 쓴다.
+ *  매 학년도 초 교무처 공지(학사일정)를 보고 갱신한다. */
+export const calendar2026 = [
+  { d: '2026-03-03', ko: '개강', en: 'Classes begin' }, { d: '2026-03-03 ~ 03-09', ko: '수강과목 확인 및 변경', en: 'Add/drop period' },
+  { d: '2026-03-12', ko: '개강미사 (오전 10시 30분)', en: 'Opening Mass (10:30)' }, { d: '2026-03-30', ko: '수강과목 취소 마감', en: 'Course withdrawal deadline' },
+  { d: '2026-04-02 ~ 04-03', ko: '부활절 휴가', en: 'Easter break' }, { d: '2026-04-18', ko: '개교기념일', en: 'Founding Anniversary' }, { d: '2026-04-21 ~ 04-27', ko: '중간시험', en: 'Midterm exams' },
+  { d: '2026-05-01 ~ 05-31', ko: '2026학년도 2학기 장학금 신청', en: 'Fall 2026 scholarship applications' }, { d: '2026-05-06 ~ 05-19', ko: '전공 추가신청 및 변경', en: 'Major declaration / change' },
+  { d: '2026-05-08', ko: '중간성적 제출 마감', en: 'Midterm grades due' }, { d: '2026-05-14 ~ 05-15', ko: '개교기념 축제', en: 'Anniversary festival' }, { d: '2026-05-22', ko: '휴학원서 제출 마감', en: 'Leave of absence deadline' },
+  { d: '2026-06-16 ~ 06-22', ko: '학기말시험', en: 'Final exams' }, { d: '2026-06-21', ko: '종강미사 (오전 11시)', en: 'Closing Mass (11:00)' }, { d: '2026-06-23', ko: '여름방학 시작, 계절수업 개강', en: 'Summer break; summer session begins' },
+  { d: '2026-06-30', ko: '학기말성적 제출 마감', en: 'Final grades due' }, { d: '2026-07-01 ~ 07-04', ko: '학기말성적 확인', en: 'Grade review' }, { d: '2026-07-13', ko: '계절수업 종강', en: 'Summer session ends' },
+  { d: '2026-07-21', ko: '계절수업성적 제출 마감', en: 'Summer session grades due' }, { d: '2026-07-23 ~ 08-07', ko: '2026학년도 2학기 휴·복학 신청', en: 'Leave / return applications for Fall 2026' },
+  { d: '2026-08-12 ~ 08-13', ko: '수강신청 과목 담아놓기', en: 'Course cart' }, { d: '2026-08-18', ko: '하계 졸업일', en: 'Summer graduation' },
+  { d: '2026-08-19', ko: '1,2학년 수강신청', en: 'Registration (years 1–2)' }, { d: '2026-08-20', ko: '3,4학년 수강신청', en: 'Registration (years 3–4)' }, { d: '2026-08-25', ko: '전학년 수강신청', en: 'Registration (all years)' },
+  { d: '2026-09-01', ko: '개강', en: 'Classes begin' }, { d: '2026-09-01 ~ 09-07', ko: '수강과목 확인 및 변경', en: 'Add/drop period' }, { d: '2026-09-10', ko: '개강미사 (오전 10시 30분)', en: 'Opening Mass' },
+  { d: '2026-09-14 ~ 09-18', ko: '서강문화제: CARDINAL', en: 'Sogang Culture Festival: CARDINAL' }, { d: '2026-09-28', ko: '수강과목 취소 마감', en: 'Course withdrawal deadline' },
+  { d: '2026-10-20 ~ 10-26', ko: '중간시험', en: 'Midterm exams' },
+  { d: '2026-11-01 ~ 11-30', ko: '2027학년도 1학기 장학금 신청', en: 'Spring 2027 scholarship applications' }, { d: '2026-11-03', ko: '중간성적 제출 마감', en: 'Midterm grades due' },
+  { d: '2026-11-04 ~ 11-17', ko: '전공 추가신청 및 변경', en: 'Major declaration / change' }, { d: '2026-11-20', ko: '휴학원서 제출 마감 · 스터디 데이(휴강일)', en: 'Leave of absence deadline · Study day (no classes)' },
+  { d: '2026-12-15 ~ 12-21', ko: '학기말시험', en: 'Final exams' }, { d: '2026-12-20', ko: '종강미사 (오전 11시)', en: 'Closing Mass' }, { d: '2026-12-22', ko: '겨울방학 시작, 계절수업 개강', en: 'Winter break; winter session begins' },
+  { d: '2026-12-29', ko: '학기말성적 제출 마감', en: 'Final grades due' }, { d: '2026-12-30 ~ 2027-01-02', ko: '학기말성적 확인', en: 'Grade review' },
+  { d: '2027-01-08', ko: '스터디 데이_편입(휴강일)', en: 'Study day (no classes)' }, { d: '2027-01-14', ko: '계절수업 종강', en: 'Winter session ends' },
+  { d: '2027-01-20 ~ 02-03', ko: '2027학년도 1학기 휴·복학 신청', en: 'Leave / return applications for Spring 2027' }, { d: '2027-01-21', ko: '계절수업성적 제출 마감', en: 'Winter session grades due' },
+  { d: '2027-02-11 ~ 02-12', ko: '수강신청 과목 담아놓기', en: 'Course cart' }, { d: '2027-02-14', ko: '졸업감사미사 (오전 11시)', en: 'Graduation Mass' },
+  { d: '2027-02-16', ko: '2,3학년 수강신청', en: 'Registration (years 2–3)' }, { d: '2027-02-17', ko: '4학년 수강신청', en: 'Registration (year 4)' },
+  { d: '2027-02-18', ko: '제64회 학위수여식 (오전 10시)', en: '64th Commencement (10:00)' }, { d: '2027-02-19', ko: '입학식, 입학축복예식 (오후 3시)', en: 'Entrance ceremony (15:00)' },
+  { d: '2027-02-20', ko: '신입생 수강신청', en: 'Freshman registration' }, { d: '2027-02-21 ~ 02-23', ko: '신입생 교외 오리엔테이션', en: 'Freshman orientation' }, { d: '2027-02-24', ko: '전학년 수강신청', en: 'Registration (all years)' },
+];

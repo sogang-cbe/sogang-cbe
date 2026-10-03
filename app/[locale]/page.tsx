@@ -3,7 +3,6 @@ import Link from '@/components/Link';
 import HeroVideo from '@/components/HeroVideo';
 import NewsRows from '@/components/NewsRows';
 import Reveal from '@/components/Reveal';
-import { emblemOf } from '@/components/FieldEmblems';
 import { getHomeData, getLabCount } from '@/lib/data';
 import { T, t, isLocale, type Locale } from '@/lib/i18n';
 import { areas } from '@/content/areas';
@@ -15,52 +14,29 @@ export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 �
 export default async function Home({ params }: { params: { locale: Locale } }) {
   if (!isLocale(params.locale)) notFound();   // /favicon.ico 등 언어가 아닌 한 단계 주소가 여기로 오면 500 대신 404(2026-09-25)
   const l = params.locale; const ko = l === 'ko';
-  const [{ groups, gallery, banners, settings, promo, videos, latest }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
-  const sections: string[] = settings.sections || ['hero', 'promo', 'intro', 'news', 'videos', 'programs', 'quicklinks', 'gallery'];
+  const [{ groups, gallery, banners, settings, latest }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
+  const sections: string[] = settings.sections || ['hero', 'intro', 'news', 'programs', 'quicklinks', 'gallery'];
   const on = (s: string) => sections.includes(s);
 
   const programs = [
-    { k: 'ug', d: 'ugDesc', href: '/undergraduate/admission', img: assets.entrance, tagKo: '학부', tagEn: 'Undergraduate' },
-    { k: 'grad', d: 'gradDesc', href: '/graduate/admission', img: assets.mainVisual, tagKo: '대학원', tagEn: 'Graduate', extra: ko ? `, ${labCount}개 연구실` : `, ${labCount} labs` },
-    { k: 'ureca', d: 'urecaDesc', href: '/undergraduate/ureca', img: assets.ureca, tagKo: '학부연구', tagEn: 'Research' },
-    { k: 'industry', d: 'industryDesc', href: '/industry/samsung', img: assets.industry, tagKo: '산학협력', tagEn: 'Industry' },
+    { k: 'ug', d: 'ugDesc', href: '/undergraduate/curriculum', tagKo: '학부', tagEn: 'Undergraduate', tint: 'var(--sg-cardinal)' },
+    { k: 'grad', d: 'gradDesc', href: '/graduate/admission', tagKo: '대학원', tagEn: 'Graduate', tint: 'var(--sg-blue)', extra: ko ? `, ${labCount}개 연구실` : `, ${labCount} labs` },
+    { k: 'researchNav', d: 'researchDesc', href: '/about/labs', tagKo: '연구', tagEn: 'Research', tint: 'var(--sg-orange)' },
+    { k: 'equipmentNav', d: 'equipmentDesc', href: '/equipment', tagKo: '공용장비', tagEn: 'Instruments', tint: 'var(--sg-teal)' },
   ] as const;
   const quick = [
-    { k: 'seminar', href: '/reservation?f=seminar', icon: 'M4 6h16v10H4zM8 20h8' }, { k: 'meeting', href: '/reservation?f=meeting', icon: 'M3 8h18v8H3zM7 12h10' },
-    { k: 'drafting', href: '/reservation?f=drafting', icon: 'M4 20L20 4M4 4l4 4M12 12l4 4' }, { k: 'server', href: '/reservation?f=server1', icon: 'M4 5h16v5H4zM4 14h16v5H4zM7 7.5h.01M7 16.5h.01' },
-    { k: 'scholarship', href: '/board/scholarship', icon: 'M12 3l9 5-9 5-9-5 9-5zM5 12v4c0 2 3 4 7 4s7-2 7-4v-4' }, { k: 'gallery', href: '/board/gallery', icon: 'M4 5h16v14H4zM8 15l3-3 3 3 2-2 2 2' },
+    { k: 'academic', href: '/board/academic', icon: 'M4 4h12l4 4v12H4zM16 4v4h4M8 13h8M8 17h5' },
+    { k: 'meeting', href: '/reservation', icon: 'M3 8h18v8H3zM7 12h10' },
+    { k: 'equipment', href: '/equipment', icon: 'M9 3v6l-5 9a2 2 0 002 3h12a2 2 0 002-3l-5-9V3zM9 3h6M7.5 15h9' },
+    { k: 'professors', href: '/faculty', icon: 'M12 11a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0' },
+    { k: 'scholarship', href: '/board/scholarship', icon: 'M12 3l9 5-9 5-9-5 9-5zM5 12v4c0 2 3 4 7 4s7-2 7-4v-4' },
+    { k: 'gallery', href: '/board/gallery', icon: 'M4 5h16v14H4zM8 15l3-3 3 3 2-2 2 2' },
   ] as const;
 
   return (
     <>
-      {on('hero') && <HeroVideo locale={l} videoUrl={settings.hero_video_url ?? undefined} fieldVideos={heroFieldVideos} poster={settings.hero_poster_url ?? assets.mainVisual} taglineKo={settings.tagline_ko} taglineEn={settings.tagline_en} news={latest} newsHref={on('news') ? '#news' : `/${l}/board/notice`} />}
+      {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko} taglineEn={settings.tagline_en} news={latest} newsHref={on('news') ? '#news' : `/${l}/board/academic`} />}
 
-      {on('promo') && promo.length > 0 && (
-        <section className="container-site -mt-14 relative z-10">
-          <div className="grid gap-4 md:grid-cols-2">
-            {promo.map((p: any, i: number) => { const file = (p.attachments || [])[0]; return (
-              <Reveal key={p.id} delay={i * 80} className="h-full">
-                <div className="card h-full flex overflow-hidden bg-white border-t-4 border-t-sg-cardinal shadow-[0_18px_40px_-16px_rgba(26,26,26,.28)]">
-                  {/* 표지는 비율이 제각각인 PDF 커버라 자르지 않고(contain) 통째로 보여주고, 빈 공간은 표지를 흐린 배경으로 채운다 */}
-                  <Link href={`/${l}/board/promo/${p.id}`} className="relative w-[34%] md:w-[36%] shrink-0 self-stretch overflow-hidden grid place-items-center p-2 md:p-3" style={{ backgroundColor: 'rgba(26,26,26,.9)' }}>
-                    <img src={p.thumbnail_url} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover blur-lg scale-125 opacity-50" />
-                    <img src={p.thumbnail_url} alt="" className="relative max-w-full max-h-[240px] md:max-h-[280px] object-contain shadow-[0_10px_28px_rgba(0,0,0,.45)]" />
-                  </Link>
-                  <div className="p-4 md:p-6 flex flex-col min-w-0">
-                    <p className="eyebrow">{ko ? '전공 홍보자료' : 'Intro materials'}</p>
-                    <h3 className="mt-1 text-[16px] md:text-[19px] font-bold leading-snug break-keep"><Link href={`/${l}/board/promo/${p.id}`} className="hover:text-sg-cardinal">{t(p, 'title', l)}</Link></h3>
-                    <p className="mt-2 text-[13px] md:text-[13.5px] text-sg-gray11 leading-relaxed line-clamp-3 break-keep">{t(p, 'excerpt', l)}</p>
-                    <div className="mt-auto pt-4 flex flex-wrap gap-2">
-                      <Link href={`/${l}/board/promo/${p.id}`} className="btn-ghost !py-1.5 !px-3 !text-[13px]">{ko ? '자료 보기' : 'View'}</Link>
-                      {file && <a href={file.url} download className="btn-primary !py-1.5 !px-3 !text-[13px]">PDF ↓</a>}
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            ); })}
-          </div>
-        </section>
-      )}
 
       {banners.length > 0 && (
         <section className="container-site -mt-10 relative z-10 grid gap-4 md:grid-cols-3">
@@ -77,26 +53,25 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         <section id="areas" className="container-site pt-24 pb-10">
           <Reveal className="max-w-3xl">
             <p className="eyebrow">{T(l, 'areasTitle')}</p>
-            <h2 className="h-section mt-3">{ko ? '기계공학의 네 기둥, 그 위에서 만나는 융합' : 'Four pillars of mechanical engineering, converging'}</h2>
-            <p className="mt-4 text-[17px] text-sg-gray11 leading-relaxed">{ko ? '설계·재료역학, 열·유체·에너지, 제어·진동·로보틱스, 생산공학. 기초 분야의 깊이 위에 바이오·에너지·모빌리티·마이크로나노 융합 연구가 자랍니다.' : 'Depth in four foundations grows into convergence research in bio, energy, mobility and micro/nano systems.'}</p>
+            <h2 className="h-section mt-3">{ko ? '분자에서 공정까지, 네 개의 연구센터' : 'From molecules to processes — four research centers'}</h2>
+            <p className="mt-4 text-[17px] text-sg-gray11 leading-relaxed">{ko ? '화공생명공학과는 C1 가스 전환, 에너지 인력양성, 분자제어 화공생물공정, 첨단소재 네 개의 대형 연구센터를 운영합니다. 18개 연구실이 촉매·분리막·고분자·전기화학·나노바이오를 아우릅니다.' : 'The department runs four major research centers — C1 gas refinery, energy workforce, molecular-scale bioprocess control, and advanced materials — across 18 laboratories.'}</p>
           </Reveal>
           <div className="mt-12 grid gap-5 md:grid-cols-2 items-stretch">
-            {areas.map((a, i) => { const E = emblemOf[a.id]; return (
+            {areas.map((a, i) => (
               <Reveal key={a.id} delay={i * 90} className="h-full">
-                <Link href={`/${l}/graduate/areas#${a.id}`} className="group relative flex h-full min-h-[300px] sm:min-h-[340px] flex-col overflow-hidden bg-sg-ink text-white p-6 sm:p-8 md:p-10">
+                <Link href={`/${l}/about/centers#${a.id}`} className="group relative flex h-full min-h-[300px] sm:min-h-[340px] flex-col overflow-hidden bg-sg-ink text-white p-6 sm:p-8 md:p-10">
                   <div className="absolute inset-0 opacity-90" style={{ background: `linear-gradient(135deg, ${a.color} 0%, #1a1a1a 85%)` }} />
                   <div className="absolute inset-0 opacity-[.12]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)', backgroundSize: '22px 22px' }} />
-                  <div className="absolute right-2 bottom-2 w-[190px] opacity-30 sm:opacity-90 sm:right-4 sm:w-[260px] md:w-[320px] transition-transform duration-700 group-hover:scale-105"><E className="w-full h-auto text-white" /></div>
-                  <div className="relative max-w-full sm:max-w-[60%]">
+                  <div className="relative flex h-full flex-col">
                     <p className="text-[13px] font-semibold tracking-[0.12em] text-white/70 uppercase">{ko ? a.en : ''}</p>
                     <h3 className="mt-2 font-brand text-[1.6rem] sm:text-[1.9rem] md:text-[2.3rem] leading-tight break-keep">{ko ? a.ko : a.en}</h3>
                     <p className="mt-4 text-[15px] leading-relaxed text-white/85">{ko ? a.descKo : a.descEn}</p>
                     <ul className="mt-5 flex flex-wrap gap-2">{(ko ? a.keywordsKo : a.keywordsEn).map((k) => <li key={k} className="text-[12.5px] px-2.5 py-1 bg-white/[.12] border border-white/20 rounded-full">{k}</li>)}</ul>
-                    <span className="mt-auto pt-6 inline-flex items-center gap-2 text-[14px] font-semibold">{ko ? '연구실 보기' : 'Explore labs'} <span className="transition-transform group-hover:translate-x-1">→</span></span>
+                    <span className="mt-auto pt-6 inline-flex items-center gap-2 text-[14px] font-semibold">{ko ? '센터 소개' : 'About the center'} <span className="transition-transform group-hover:translate-x-1">→</span></span>
                   </div>
                 </Link>
               </Reveal>
-            ); })}
+            ))}
           </div>
         </section>
       )}
@@ -108,38 +83,17 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         </section>
       )}
 
-      {on('videos') && videos.length > 0 && (
-        <section className="bg-sg-ink text-white py-20">
-          <div className="container-site">
-            <Reveal className="flex items-end justify-between gap-4 mb-8">
-              <div><p className="eyebrow !text-white/70">{ko ? '기계공학도가 봐야 할 영상' : 'Videos for ME students'}</p><h2 className="h-section mt-3">{ko ? '영상으로 만나는 기계공학' : 'Mechanical engineering on screen'}</h2></div>
-              <Link href={`/${l}/board/videos`} className="text-[14px] font-semibold text-white/70 hover:text-white whitespace-nowrap">{T(l, 'more')} +</Link>
-            </Reveal>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {videos.map((v: any, i: number) => (
-                <Reveal key={v.id} delay={i * 70}>
-                  <Link href={`/${l}/board/videos/${v.id}`} className="group block">
-                    <div className="relative aspect-video overflow-hidden bg-white/5"><img src={youtubeThumb(v.video_url) || v.thumbnail_url} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" /><span className="absolute inset-0 grid place-items-center"><span className="w-12 h-12 rounded-full bg-[rgba(175,39,47,0.9)] grid place-items-center text-white pl-1">▶</span></span></div>
-                    <p className="mt-3 text-[12px] font-semibold text-white/60">{ko ? v.category : v.category_en || v.category}</p>
-                    <h3 className="mt-1 font-bold text-[15px] leading-snug group-hover:text-sg-cardinal line-clamp-2">{t(v, 'title', l)}</h3>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {on('programs') && (
         <section className="bg-sg-mist py-24">
           <div className="container-site">
-            <Reveal className="mb-10"><p className="eyebrow">{T(l, 'programsTitle')}</p><h2 className="h-section mt-3">{ko ? '학부에서 대학원, 그리고 산업 현장까지' : 'From undergraduate to graduate to industry'}</h2></Reveal>
+            <Reveal className="mb-10"><p className="eyebrow">{T(l, 'programsTitle')}</p><h2 className="h-section mt-3">{ko ? '학부에서 대학원, 그리고 연구 현장까지' : 'From coursework to the laboratory'}</h2></Reveal>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {programs.map((p, i) => (
                 <Reveal key={p.k} delay={i * 80}>
                   <Link href={`/${l}${p.href}`} className="group relative block aspect-[3/4] overflow-hidden bg-sg-ink text-white">
-                    <img src={p.img} alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-sg-ink via-[rgba(26,26,26,0.4)] to-transparent" />
+                    <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ background: `linear-gradient(150deg, ${p.tint} 0%, #1a1a1a 78%)` }} />
+                    <div className="absolute inset-0 opacity-[.10]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)', backgroundSize: '20px 20px' }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-sg-ink via-[rgba(26,26,26,0.25)] to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 p-6">
                       <p className="text-[12.5px] font-semibold tracking-[0.12em] text-white/70 uppercase">{ko ? p.tagKo : p.tagEn}</p>
                       <h3 className="mt-1 font-brand text-[1.8rem] leading-tight">{T(l, p.k)}</h3>

@@ -1,9 +1,6 @@
 import PageHero from '@/components/PageHero';
 import { getFacultyOne, getFaculty } from '@/lib/data';
 import { t, T, type Locale } from '@/lib/i18n';
-import { areas } from '@/content/areas';
-import { emblemOf } from '@/components/FieldEmblems';
-import { researchGroupDefs } from '@/lib/groups';
 import { formatOffice } from '@/lib/buildings';
 import { notFound } from 'next/navigation';
 import Link from '@/components/Link';
@@ -18,19 +15,15 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
   const l = params.locale; const ko = l === 'ko';
   const f = await getFacultyOne(Number(params.id)); if (!f || f.published === false) notFound();
   // 명예교수는 분야를 쓰지 않는다 — 전임 시절 field가 남아 있어도 배지·분야 섹션·같은 분야 목록이 뜨지 않게 (리뷰 지적: 그대로 두면 명예교수 전체가 '같은 분야'로 잘못 나열되고 목록이 두 번 렌더됨)
-  const area = f.is_emeritus ? undefined : areas.find((a) => a.id === f.field);
   const research = toHtml(t(f, 'research', l)); const bio = toHtml(t(f, 'bio', l));
   const kind = f.is_emeritus ? 'emeritus' : f.field === 'chair' ? 'chair' : 'professors';
   const listHref = `/${l}/faculty${kind === 'emeritus' ? '/emeritus' : kind === 'chair' ? '/chair' : ''}`;
   // 같은 분야 교수진(전임) / 명예교수는 다른 명예교수 목록
-  const peers: any[] = f.is_emeritus
-    ? (await getFaculty(true)).filter((p: any) => p.id !== f.id)
-    : area ? (await getFaculty(false)).filter((p: any) => p.field === f.field && p.id !== f.id) : [];
+  const peers: any[] = f.field === 'staff' ? []
+    : (await getFaculty(f.is_emeritus)).filter((p: any) => p.id !== f.id && p.field !== 'staff').slice(0, 9);
   const office = formatOffice(f, ko);
-  const groups = (Array.isArray(f.groups) ? f.groups : []).map((g: string) => researchGroupDefs.find((x) => x.id === g)).filter(Boolean) as { id: string; ko: string; en: string }[];
-  const E = area ? emblemOf[area.id] : null;
   const host = (f.lab_url || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const accent = area?.color || 'var(--sg-cardinal)';
+  const accent = 'var(--sg-cardinal)';
 
   const contacts: { k: string; v: React.ReactNode }[] = [];
   if (office) contacts.push({ k: T(l, 'office'), v: office });
@@ -39,11 +32,7 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
   if (f.lab_url) contacts.push({ k: T(l, 'website'), v: <a href={f.lab_url} target="_blank" rel="noreferrer" className="break-all text-sg-cardinal underline underline-offset-4">{host} ↗<span className="sr-only">{ko ? ' (새 창)' : ' (opens in new window)'}</span></a> });
 
   // 배지 글자는 분야색이 아닌 잉크색 — 열·유체 주황(#d86018)은 흰 배경 위 13px 글자로 대비 3.75:1이라 AA 미달. 색은 점(●)으로만 표시
-  const Badge = () => area ? (
-    <Link href={`/${l}/graduate/areas#${area.id}`} className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-sg-gray11 hover:text-sg-ink hover:underline underline-offset-4">
-      <span className="w-2 h-2 rounded-full" style={{ background: area.color }} />{ko ? area.ko : area.en}
-    </Link>
-  ) : kind !== 'professors' ? (
+  const Badge = () => kind !== 'professors' ? (
     <span className="inline-flex items-center gap-2 text-[13px] font-semibold tracking-wide text-sg-cardinal"><span className="w-2 h-2 rounded-full bg-sg-cardinal" />{kind === 'chair' ? (ko ? '석좌교수' : 'Chair Professor') : T(l, 'emeritus')}</span>
   ) : null;
   const PeerRow = (p: any) => (
@@ -100,14 +89,6 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
             </dl>
           )}
 
-          {groups.length > 0 && (
-            <div className="mt-6">
-              <p className="text-[12.5px] font-semibold tracking-[0.08em] uppercase text-sg-gray9">{ko ? '융합연구 그룹' : 'Research groups'}</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {groups.map((g) => <Link key={g.id} href={`/${l}/graduate/groups`} className="text-[13px] px-2.5 py-1 bg-sg-mist border border-sg-line hover:border-sg-ink break-keep">{ko ? g.ko : g.en}</Link>)}
-              </div>
-            </div>
-          )}
 
           <div className="mt-8 flex flex-wrap gap-3">
             {f.lab_url && <a href={f.lab_url} target="_blank" rel="noreferrer" className="btn-primary !py-3">{ko ? '연구실 홈페이지' : 'Lab website'} <span aria-hidden>↗</span></a>}
@@ -124,49 +105,15 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
         </section>
       )}
 
-      {area && E && (
-        <section className="mt-14 md:mt-20 border-t border-sg-line pt-10 md:pt-12 grid gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* 소속 분야 소개 — 홈 4대 분야 카드와 같은 톤 */}
-          <Link href={`/${l}/graduate/areas#${area.id}`} className="group relative flex flex-col overflow-hidden bg-sg-ink text-white p-7 md:p-9 min-h-[260px]">
-            <div className="absolute inset-0 opacity-90" style={{ background: `linear-gradient(135deg, ${area.color} 0%, #1a1a1a 85%)` }} />
-            <div className="absolute inset-0 opacity-[.12]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)', backgroundSize: '22px 22px' }} />
-            <div className="absolute right-2 bottom-2 w-[170px] opacity-30 sm:opacity-80 sm:right-4 sm:w-[230px] transition-transform duration-700 group-hover:scale-105"><E className="w-full h-auto text-white" /></div>
-            <div className="relative max-w-full sm:max-w-[62%]">
-              <p className="text-[12.5px] font-semibold tracking-[0.12em] text-white/70 uppercase">{ko ? area.en : 'Research field'}</p>
-              <h3 className="mt-2 font-brand text-[1.6rem] md:text-[2rem] leading-tight break-keep">{ko ? area.ko : area.en}</h3>
-              <p className="mt-3 text-[14.5px] leading-relaxed text-white/85 break-keep">{ko ? area.descKo : area.descEn}</p>
-              <ul className="mt-4 flex flex-wrap gap-1.5">{(ko ? area.keywordsKo : area.keywordsEn).map((k) => <li key={k} className="text-[12px] px-2 py-0.5 border border-white/25 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,.12)' }}>{k}</li>)}</ul>
-              <span className="mt-auto pt-5 inline-flex items-center gap-2 text-[14px] font-semibold">{ko ? '분야 소개 보기' : 'About this field'} <span className="transition-transform group-hover:translate-x-1">→</span></span>
-            </div>
-          </Link>
-
-          {/* 같은 분야 교수진 */}
-          <div className="min-w-0">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="eyebrow">{ko ? area.ko : area.en}</p>
-                <h3 className="mt-2 font-brand text-[1.5rem] md:text-[1.8rem] leading-none break-keep">{ko ? '같은 분야 교수진' : 'Faculty in this field'}</h3>
-              </div>
-              <Link href={`/${l}/faculty?field=${area.id}`} className="shrink-0 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{T(l, 'more')} +</Link>
-            </div>
-            {peers.length === 0 ? (
-              <p className="mt-5 py-8 text-center text-[14px] text-sg-gray9 border border-dashed border-sg-line">{ko ? '같은 분야의 다른 교수진이 없습니다.' : 'No other faculty in this field.'}</p>
-            ) : (
-              <ul className="mt-5 border-t border-sg-line">{peers.map(PeerRow)}</ul>
-            )}
-          </div>
-        </section>
-      )}
-
-      {/* 명예교수: 다른 명예교수 목록 (연구분야 블록 대신) */}
-      {f.is_emeritus && peers.length > 0 && (
+      {/* 같은 구분의 다른 교수진 */}
+      {peers.length > 0 && (
         <section className="mt-14 md:mt-20 border-t border-sg-line pt-10 md:pt-12">
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow">{T(l, 'emeritus')}</p>
-              <h3 className="mt-2 font-brand text-[1.5rem] md:text-[1.8rem] leading-none break-keep">{ko ? '다른 명예교수' : 'Other emeritus professors'}</h3>
+              <p className="eyebrow">{f.is_emeritus ? T(l, 'emeritus') : ko ? '화공생명공학과' : 'Department of CBE'}</p>
+              <h3 className="mt-2 font-brand text-[1.5rem] md:text-[1.8rem] leading-none break-keep">{f.is_emeritus ? (ko ? '다른 명예교수' : 'Other emeritus professors') : (ko ? '다른 교수진' : 'Other professors')}</h3>
             </div>
-            <Link href={`/${l}/faculty/emeritus`} className="shrink-0 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{T(l, 'more')} +</Link>
+            <Link href={f.is_emeritus ? `/${l}/faculty/emeritus` : `/${l}/faculty`} className="shrink-0 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{T(l, 'more')} +</Link>
           </div>
           <ul className="mt-5 grid md:grid-cols-2 gap-x-12 border-t border-sg-line">{peers.map(PeerRow)}</ul>
         </section>

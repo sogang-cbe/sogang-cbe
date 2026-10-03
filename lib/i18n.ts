@@ -37,7 +37,7 @@ export const ui = {
     latestTitle: '최신 소식', latestSub: '모든 게시판의 최신 글', latestAll: '전체 소식', pinned: '중요',
     ug: '학부과정', grad: '대학원과정', equipmentNav: '공용장비',
     ugDesc: '전공 교과목 43과목, 2·3·4학년 실험 실습 병행', gradDesc: '석사·박사·통합과정, 교과목 82과목',
-    equipmentDesc: '학과 공용장비 예약과 사용 기록 (대학원생)', urecaDesc: '', industryDesc: '',
+    equipmentDesc: '장비 예약과 사용 기록 (대학원생)', researchDesc: '18개 연구실과 4개 대형 연구센터', researchNav: '연구', urecaDesc: '', industryDesc: '',
   },
   en: {
     home: 'Home', more: 'More', all: 'All', search: 'Search', date: 'Date', views: 'Views', author: 'Author',
@@ -57,7 +57,7 @@ export const ui = {
     latestTitle: 'Latest News', latestSub: 'Latest across all boards', latestAll: 'All news', pinned: 'PIN',
     ug: 'Undergraduate', grad: 'Graduate', equipmentNav: 'Shared Instruments',
     ugDesc: '43 major courses with laboratory work in years 2–4', gradDesc: 'MS, PhD and integrated programs; 82 courses',
-    equipmentDesc: 'Reserve shared instruments and log usage (graduate students)', urecaDesc: '', industryDesc: '',
+    equipmentDesc: 'Reserve instruments and log usage (graduate students)', researchDesc: '18 laboratories and 4 major research centers', researchNav: 'Research', urecaDesc: '', industryDesc: '',
   },
 } as const;
 export type UIKey = keyof typeof ui.ko;

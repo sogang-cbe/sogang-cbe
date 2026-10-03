@@ -3,12 +3,8 @@
 -- Supabase 대시보드 > SQL Editor에 전체를 붙여넣고 Run 한 번.
 -- 여러 번 실행해도 안전합니다 (if not exists / or replace).
 --
--- 기계과 저장소의 schema.sql + v3 + v6 + v7 + v8을 하나로 합치고,
--- 기계과 전용 데이터(v4 교수 분류)는 뺐습니다.
--- ============================================================
--- ============================================================
--- Sogang University Dept. of Mechanical Engineering — schema
--- Run this in Supabase SQL Editor (once). Safe to re-run.
+-- 기계공학과 저장소(sogang-me)의 schema.sql + v3 + v6 + v7 + v8을 하나로 합치고,
+-- 기계과 전용 데이터·기능(교수 분야 분류, URECA 지원)은 뺐습니다.
 -- ============================================================
 create extension if not exists pgcrypto;
 
@@ -26,7 +22,7 @@ language sql stable security definer as $$
   );
 $$;
 
--- Boards: notice | research | award | scholarship | major | gallery | archive | events | alumni_news
+-- Boards: academic | scholarship | research | seminar | gallery | archive | grad_intro | internal
 create table if not exists posts (
   id bigserial primary key,
   board text not null,
@@ -39,16 +35,17 @@ create table if not exists posts (
   thumbnail_url text,
   images jsonb default '[]'::jsonb,       -- gallery: [{url, caption}]
   attachments jsonb default '[]'::jsonb,  -- [{name, url, size}]
-  author text default '기계공학과',
+  author text default '화공생명공학과',
   is_pinned boolean default false,
   show_on_home boolean default true,
   published boolean default true,
   view_count int default 0,
-  legacy_id text,                          -- original gnuboard wr_id for migration
+  legacy_id text,                          -- 옛 사이트 글 식별자 'cbe:<게시판코드>:<idx>' (이관 중복 방지)
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
 create index if not exists posts_board_idx on posts(board, created_at desc);
+create unique index if not exists posts_legacy_uq on posts(legacy_id) where legacy_id is not null;
 
 create table if not exists faculty (
   id bigserial primary key,
@@ -63,7 +60,7 @@ create table if not exists faculty (
   lab_url text,
   office text,
   photo_url text,
-  field text,                 -- design | thermal | control | manufacturing
+  field text,                 -- chair(석학교수) | staff(행정실) | null(전임·명예)
   research_ko text,
   research_en text,
   bio_ko text,
@@ -84,7 +81,7 @@ create table if not exists pages (
   updated_at timestamptz default now()
 );
 
--- Facility reservations: seminar | meeting | drafting | server1..server4
+-- Facility reservations: meeting (학과회의실 R521A)
 create table if not exists reservations (
   id bigserial primary key,
   facility text not null,
@@ -180,40 +177,21 @@ create policy "media admin write" on storage.objects for all
 
 -- Default settings
 insert into site_settings (key, value) values
- ('home', '{"sections":["hero","intro","news","quicklinks","programs","gallery"],"news_count":6,"tagline_ko":"움직이는 모든 것의 원리를 설계합니다","tagline_en":"We design the principles behind everything that moves"}')
+ ('home', '{"sections":["hero","intro","news","programs","quicklinks","gallery"],"news_count":6,"tagline_ko":"분자에서 공정까지, 화학을 쓸모로 바꿉니다","tagline_en":"From molecules to processes"}')
 on conflict (key) do nothing;
 
 
 -- ===== v3: 게시글 추가 컬럼 =====
--- v3: new boards (promo/capstone/festival/videos), youtube, URECA applications, notification email
+-- v3: 게시글 부가 컬럼(영상 링크·분류·정렬)
 alter table posts add column if not exists video_url text;
 alter table posts add column if not exists term text;        -- e.g. '2025-2' (학년도-학기) or year '2025'
 alter table posts add column if not exists members text;     -- 조원
 alter table posts add column if not exists advisor text;     -- 지도교수
-alter table posts add column if not exists category text;    -- videos: 분야 / festival: ureca|capstone|project|award
+alter table posts add column if not exists category text;    -- 게시판별 소분류 (예: 세미나 분야)
 alter table posts add column if not exists sort_order int default 100;
 
-create table if not exists ureca_applications (
-  id bigserial primary key,
-  year int not null,
-  term text not null,            -- spring | summer | fall | winter
-  name text not null,
-  student_id text not null,
-  semester text,                 -- 현재 학기
-  phone text,
-  email text,
-  choices jsonb default '[]'::jsonb,   -- [{rank:1, lab:'...', prof:'...'}]
-  message text,
-  status text default 'pending',       -- pending | accepted | rejected
-  created_at timestamptz default now()
-);
-alter table ureca_applications enable row level security;
-drop policy if exists "ureca public insert" on ureca_applications;
-create policy "ureca public insert" on ureca_applications for insert with check (status = 'pending');
-drop policy if exists "ureca admin all" on ureca_applications;
-create policy "ureca admin all" on ureca_applications for all using (is_admin()) with check (is_admin());
 
-update site_settings set value = value || '{"notify_email":"sgmeoffice@gmail.com"}'::jsonb where key='home' and not (value ? 'notify_email');
+update site_settings set value = value || '{"notify_email":"chemeng.sogang@gmail.com"}'::jsonb where key='home' and not (value ? 'notify_email');
 alter table posts add column if not exists category_en text;
 
 
@@ -228,7 +206,6 @@ update faculty set
   room     = coalesce(room,     (regexp_match(office, '\(?[A-Z]{0,3}\)?\s*([0-9]+[A-Za-z]?)\s*호'))[1])
 where office is not null;
 
-select name_ko, office, building, room from faculty order by is_emeritus, sort_order;
 
 
 -- ===== v7: 영문 검수 표시 =====
@@ -255,25 +232,6 @@ drop policy if exists "admins admin write" on public.admins;
 create policy "admins admin write" on public.admins
   for all using (is_admin()) with check (is_admin());
 
--- 3) [버그] URECA 재제출 시 이전 지원서 대체가 RLS에 막혀 무동작이던 문제.
---    익명 요청에서도 원자적으로 동작하는 security definer 함수로 처리한다.
---    새 지원서를 먼저 insert한 뒤 호출한다: 같은 (연도·학기·학번)의 pending 지원서 중
---    가장 최근 것(방금 넣은 행)만 남기고 이전 것을 지운다 — insert 실패 시 기존 지원서는 그대로.
---    (anon은 select 정책이 없어 insert가 id를 돌려받을 수 없으므로 max(id) 유지 방식을 쓴다)
-create or replace function public.replace_ureca_application(p_year int, p_term text, p_student_id text)
-returns int
-language sql security definer set search_path = public as $$
-  with del as (
-    delete from ureca_applications
-    where year = p_year and term = p_term and student_id = p_student_id
-      and status = 'pending'          -- 검토가 끝난(선발/미선발/이관) 기록은 남긴다
-      and id < (select max(id) from ureca_applications
-                where year = p_year and term = p_term and student_id = p_student_id and status = 'pending')
-    returning id
-  ) select count(*)::int from del;
-$$;
-revoke all on function public.replace_ureca_application(int, text, text) from public;
-grant execute on function public.replace_ureca_application(int, text, text) to anon, authenticated;
 
 -- 4) [방어] 예약 공개 insert 조건 강화: API를 우회해 Supabase REST로 직접 넣어도
 --    pending·시간 정합·과거 날짜 금지가 DB에서 강제된다.

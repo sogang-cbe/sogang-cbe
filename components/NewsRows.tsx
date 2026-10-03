@@ -16,11 +16,11 @@ function Arrow({ dir, onClick, disabled }: { dir: 'l' | 'r'; onClick: () => void
 }
 
 /** 공지 전용 컴팩트 리스트 — 카드 없이 제목 한 줄 + 날짜로 많은 공지를 한눈에 보여준다. */
-function NoticeList({ locale, board, posts }: { locale: Locale; board: 'notice' | 'academic'; posts: Post[] }) {
+function NoticeList({ locale, board, posts }: { locale: Locale; board: 'academic' | 'scholarship'; posts: Post[] }) {
   const ko = locale === 'ko';
   const meta: Record<string, { t: [string, string]; s: [string, string] }> = {
-    notice: { t: ['일반공지', 'General Notice'], s: ['장학·행사·시설 등 학과 생활 안내', 'Scholarships, events and facilities'] },
     academic: { t: ['학사공지', 'Academic Notice'], s: ['수강·교과목·졸업·학적 안내', 'Courses, graduation and records'] },
+    scholarship: { t: ['장학·취업', 'Scholarships & Careers'], s: ['장학금·인턴·채용·행사 안내', 'Scholarships, internships and recruiting'] },
   };
   const m = meta[board];
   return (
@@ -113,16 +113,15 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
 export default function NewsRows({ locale, groups }: { locale: Locale; groups: Record<string, Post[]> }) {
   return (
     <div>
-      {/* 공지: 카드 대신 두 칼럼 제목 리스트 — 일반공지(왼쪽) / 학사공지(오른쪽) */}
+      {/* 공지: 카드 대신 두 칼럼 제목 리스트 — 학사공지(왼쪽) / 장학·취업(오른쪽) */}
       <div className="pb-10 border-b border-sg-line">
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 items-stretch">
-          <NoticeList locale={locale} board="notice" posts={groups.notice || []} />
           <NoticeList locale={locale} board="academic" posts={groups.academic || []} />
+          <NoticeList locale={locale} board="scholarship" posts={groups.scholarship || []} />
         </div>
       </div>
       <Row locale={locale} board="research" posts={groups.research || []} variant="image" />
-      <Row locale={locale} board="award" posts={groups.award || []} variant="image" />
-      <Row locale={locale} board="alumni_news" posts={groups.alumni_news || []} variant="image" />
+      <Row locale={locale} board="seminar" posts={groups.seminar || []} variant="image" />
     </div>
   );
 }

@@ -1,12 +1,10 @@
 import Link from '@/components/Link';
 import { T, t, type Locale, type UIKey } from '@/lib/i18n';
-import { DesignEmblem, ThermalEmblem, ControlEmblem, ManufacturingEmblem } from './FieldEmblems';
 import { areas } from '@/content/areas';
 import HeroRotator from './HeroRotator';
 import { fmtDate, type Post } from './PostCard';
 import { boardTint } from '@/lib/board-colors';
 
-const Em = [DesignEmblem, ThermalEmblem, ControlEmblem, ManufacturingEmblem];
 
 /** 히어로 '최신 소식' 위젯 한 줄 — getHomeData의 latest 쿼리 select와 같은 필드 */
 export type HeroNewsItem = Pick<Post, 'id' | 'board' | 'title_ko' | 'title_en' | 'created_at' | 'is_pinned'>;
@@ -136,17 +134,17 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
           <HeroNews locale={locale} items={news ?? []} allHref={newsHref ?? `/${locale}/board/notice`} />
         </div>
 
-        {/* Four fields strip */}
+        {/* 학과 연구센터 띠 */}
         <div className="mt-14 md:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/15 border border-white/15 backdrop-blur-sm rise rise-4">
-          {areas.map((a, i) => { const E = Em[i]; return (
-            <Link key={a.id} href={`/${locale}/graduate/areas#${a.id}`} className="group bg-[rgba(26,26,26,0.4)] hover:bg-[rgba(175,39,47,0.8)] transition-colors p-4 md:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <E className="w-[64px] h-[44px] md:w-[92px] md:h-[64px] shrink-0 text-white/90" />
+          {areas.map((a) => (
+            <Link key={a.id} href={`/${locale}/about/centers#${a.id}`} className="group bg-[rgba(26,26,26,0.4)] hover:bg-[rgba(175,39,47,0.8)] transition-colors p-4 md:p-5 flex gap-3 sm:gap-4">
+              <span aria-hidden className="w-[3px] shrink-0 self-stretch" style={{ backgroundColor: a.color }} />
               <div className="min-w-0">
-                <p className="font-bold text-[15px] md:text-[17px] leading-tight break-keep">{ko ? a.ko : a.en}</p>
+                <p className="font-bold text-[15px] md:text-[16.5px] leading-tight break-keep">{ko ? a.ko : a.en}</p>
                 {ko && <p className="mt-1 text-[12px] md:text-[12.5px] text-white/60 break-keep group-hover:text-white/85">{a.en}</p>}
               </div>
             </Link>
-          ); })}
+          ))}
         </div>
       </div>
       <a href="#areas" className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/60 hover:text-white flex flex-col items-center gap-1 text-[11px] tracking-[.3em]">SCROLL<span className="floaty">↓</span></a>

@@ -1,237 +1,155 @@
 import type { PageContent } from './types';
 
+/** 학부과정 고정 글. 출처: 옛 홈페이지 kor/sub/04_01.php(교과과정·참고사항), 04_03.php(학사규정),
+ *  06_01.php(학교생활·행사). 학번별 이수계획표는 content/data/ug-plans.json,
+ *  교과목 목록은 content/data/ug-courses.json, 학사일정은 content/calendar.ts. */
 export const undergraduate: Record<string, PageContent> = {
-  'undergraduate/majors': { ko: '', en: '' },
-  'undergraduate/admission': {
-    ko: `<p>학부 입학 정보에 대한 상세한 내용은 서강대학교 입학처 홈페이지에서 확인하실 수 있습니다.</p>
-<p><a href="https://admission.sogang.ac.kr" target="_blank" rel="noreferrer" class="btn-primary !no-underline !text-white">서강대학교 입학처 바로가기 →</a></p>
-<h2>화공생명공학과 소개 자료</h2>
-<p>자유전공학부 학생과 기계공학에 관심 있는 예비 공학도를 위한 소개 자료는 <a href="/ko/board/notice">공지사항</a>에서 내려받을 수 있습니다.</p>`,
-    en: `<p>Detailed undergraduate admission information is available on the Sogang University Office of Admissions website.</p>
-<p><a href="https://admission.sogang.ac.kr" target="_blank" rel="noreferrer" class="btn-primary !no-underline !text-white">Office of Admissions →</a></p>
-<h2>International applicants</h2>
-<p>International students apply through the Office of Admissions (international track). For questions about the mechanical engineering program, contact the department office at <a href="mailto:me@sogang.ac.kr">the department office</a> or +82-2-705-8631.</p>`,
-  },
   'undergraduate/curriculum': {
-    ko: `<p class="text-sg-steel">2026년 입학생 기준 교과과정입니다. 각 학번별 교과과정은 세인트(SAINT)의 졸업메뉴 또는 서강대학교 요람에서 확인 가능합니다.</p>
-<h2>1. 학점 이수요건</h2>
-<table>
-<thead><tr><th rowspan="2">구분</th><th colspan="3">공통</th><th rowspan="2">전공입문</th><th colspan="3">전공</th><th rowspan="2">총 이수학점</th></tr>
-<tr><th>필수</th><th>선택 ①②③④</th><th>소계</th><th>필수</th><th>선택</th><th>소계</th></tr></thead>
-<tbody>
-<tr><td>심화전공</td><td>11</td><td>3 / 3 / 3 / 3*</td><td>23</td><td>23</td><td>30</td><td>42**</td><td>72</td><td>130</td></tr>
-<tr><td>다전공 (제1전공: 기계공학)</td><td>11</td><td>3 / 3 / 3 / 3*</td><td>23</td><td>22</td><td>27</td><td>24</td><td>51</td><td>130</td></tr>
-<tr><td>다전공 (제1전공: 타전공)</td><td colspan="3">입학전공별 이수기준에 따름</td><td>22***</td><td>21</td><td>24</td><td>45</td><td>제1전공에 따름</td></tr>
+    ko: `<h2>참고사항</h2>
+<ol>
+<li>모든 공학부 신입생은 1학년 1학기에 개설되는 신입생세미나(HSS3014, 1학점) 과목을 필수적으로 수강해야 합니다. (2014학번부터 적용)</li>
+<li>글로벌의사소통Ⅰ(COR1003)의 경우 Placement Test를 통하여 이미 고급 수준의 영어 능력이 있다고 판단된 학생은 글로벌의사소통Ⅰ(고급)(COR1005)을 수강함으로써 중핵교육과정을 이수하며, 동시에 성적에 따라 수행능력 인증(Global English 관련 부문)을 취득할 수 있습니다.</li>
+<li>CBE2006(응용생물학)은 전공선택 과목이 아닌 전공예비 과목입니다.</li>
+<li>1학기와 2학기에 모두 개설되는 과목은 어느 학기에 수강해도 무방합니다.</li>
+<li>중핵필수 과목은 아니지만 SHU4059(창의와 혁신) 수강을 권장합니다.</li>
+</ol>
+<h2>졸업까지의 흐름</h2>
+<table><tbody>
+<tr><th>1학년</th><td>일반화학·일반물리·미적분학과 실험 등 공학 기초. 창의설계(CBE2002)로 전공을 처음 접합니다.</td></tr>
+<tr><th>2학년</th><td>화공수학Ⅰ·Ⅱ, 화공생명공학 양론, 물리화학, 응용유기화학, 응용생화학. 화공생명공학 기초실험Ⅰ·Ⅱ가 함께 열립니다.</td></tr>
+<tr><th>3학년</th><td>화공열역학, 반응공학, 화공유체역학, 열 및 물질전달, 고분자공학. 요소실험Ⅰ·Ⅱ로 단위조작을 직접 다룹니다.</td></tr>
+<tr><th>4학년</th><td>화공생명공학심화종합설계(캡스톤), 공정실험, 생물화학공학, 화학산업과 기술경영. 전공선택으로 진로에 맞춰 깊이를 더합니다.</td></tr>
 </tbody></table>
-<ul class="text-[13.5px] text-sg-steel">
-<li>* 자연계열(SCIENCE기반 자유전공학부 학생 제외)은 ④ '인간과 과학 &amp; AI 영역'의 미적분학Ⅰ을 필수선택으로 이수해야 함</li>
-<li>** 공과대학 및 소프트웨어융합대학 내 타 전공과목 이수 시 최대 6학점까지 기계공학 전공선택으로 인정됨 (제1전공이 기계공학 심화전공에 한함)</li>
-<li>*** 다전공자 중 제1전공이 타전공인 학생은 미적분학I, 미적분학II를 전공입문 교과로 반드시 이수해야 함</li>
-<li>※ 자유전공학부생이 제1전공을 기계공학 선택 시, 다전공(제1전공: 기계공학) 이수요건을 원칙으로 따르지만 원하는 경우 심화과정을 선택할 수 있음</li>
-</ul>
-<h2>2. 교과목 이수요건</h2>
-<h3>전공입문 (필수 이수, 전공 학점에는 미포함)</h3>
-<table><thead><tr><th>구분</th><th>과목명</th><th>학점</th><th>비고</th></tr></thead><tbody>
-<tr><td rowspan="3">심화전공</td><td>PHY1001 일반물리Ⅰ, PHY1002 일반물리Ⅱ, PHY1101 일반물리실험Ⅰ, PHY1102 일반물리실험Ⅱ, STS2006 미적분학Ⅱ</td><td>11</td><td rowspan="3">합계 23</td></tr>
-<tr><td>CHM1001 일반화학Ⅰ</td><td>3</td></tr>
-<tr><td>MEE1006 지능형 기계설계생산 입문, MEE2006 공학수학Ⅰ, MEE2007 공학수학Ⅱ</td><td>9</td></tr>
-<tr><td rowspan="2">다전공 (기계공학)</td><td>PHY1001, PHY1002, PHY1101, STS2006, &lt;BIO1001 일반생물학Ⅰ, CHM1001 일반화학Ⅰ&gt; 중 택1</td><td>13</td><td rowspan="2">합계 22</td></tr>
-<tr><td>MEE1006, MEE2006, MEE2007</td><td>9</td></tr>
-<tr><td rowspan="3">다전공 (제1전공: 타전공)</td><td>STS2005 미적분학Ⅰ, STS2006 미적분학Ⅱ</td><td>6</td><td>2006학번부터 추가 이수</td></tr>
-<tr><td>PHY1001, PHY1002, PHY1101, &lt;BIO1001, CHM1001&gt; 중 택1</td><td>10</td><td rowspan="2">합계 22 · MAT2410/2420 응용수학Ⅰ,Ⅱ 대체 인정 (공과대학 내 고급공학수학Ⅰ,Ⅱ, 화공수학Ⅰ,Ⅱ 상호 인정)</td></tr>
-<tr><td>MEE2006 공학수학Ⅰ, MEE2007 공학수학Ⅱ</td><td>6</td></tr>
+<p class="text-[13.5px] text-sg-gray9">※ 2026학번 이수계획표는 확정되는 대로 올립니다. 그 전까지는 2025학번 기준을 참고하시고, 확정 내용은 학과사무실에 확인해 주세요.</p>`,
+    en: `<h2>Notes</h2>
+<ol>
+<li>All engineering freshmen must take the Freshman Seminar (HSS3014, 1 credit) in the first semester of year 1 (from the 2014 entering class).</li>
+<li>Students judged to have advanced English through the placement test may take Global Communication I (Advanced) (COR1005) in place of COR1003.</li>
+<li>CBE2006 (Applied Biology) is a pre-major course, not a major elective.</li>
+<li>Courses offered in both semesters may be taken in either.</li>
+<li>SHU4059 (Creativity and Innovation) is recommended although it is not a core requirement.</li>
+</ol>
+<h2>Path to graduation</h2>
+<table><tbody>
+<tr><th>Year 1</th><td>General chemistry, physics, calculus and their labs. Creative Design (CBE2002) gives a first taste of the major.</td></tr>
+<tr><th>Year 2</th><td>CBE Mathematics I·II, Material and Energy Balances, Physical Chemistry, Applied Organic Chemistry, Applied Biochemistry, with Basic CBE Laboratory I·II.</td></tr>
+<tr><th>Year 3</th><td>Thermodynamics, Reaction Engineering, Fluid Mechanics, Heat and Mass Transfer, Polymer Engineering, with Unit-Operation Laboratory I·II.</td></tr>
+<tr><th>Year 4</th><td>Capstone design, Process Laboratory, Biochemical Engineering, Chemical Industry and Technology Management, plus electives.</td></tr>
 </tbody></table>
-<p class="text-[13.5px] text-sg-steel">※ SCIENCE기반 자유전공학부 전공필수 대체 인정: SCI1011 과학수학 → STS2006 미적분학Ⅱ / SCI1012 통합물리 → PHY1001 일반물리Ⅰ / SCI1013 통합화학 → CHM1001 일반화학Ⅰ / SCI1014 통합생물학 → BIO1001 일반생물학Ⅰ</p>
-<h3>전공필수 과목</h3>
-<table><thead><tr><th>구분</th><th>과목코드/과목명</th><th>학점</th><th>비고</th></tr></thead><tbody>
-<tr><td rowspan="2">기계공학 심화과정</td><td>MEE2011 고체역학, MEE2012 유체역학Ⅰ, MEE2013 동역학, MEE2022 열역학Ⅰ, MEE2025 기계제작실습, MEE3004 생산공정, MEE3015 설계방법론(캡스톤디자인), MEE3025 기계공학실험Ⅰ, MEE4021 창의적종합설계(캡스톤디자인)</td><td>27</td><td rowspan="2">MEE2014 기계재료기초, MEE3013 자동제어, MEE3032 열전달 중 1개 이상 이수 시 전공필수 졸업학점으로 최대 3학점까지 인정하며, 초과 학점은 전공선택으로 인정</td></tr>
-<tr><td>MEE2014 기계재료기초 / MEE3013 자동제어 / MEE3032 열전달 중 택1</td><td>3</td></tr>
-<tr><td>다전공 (제1전공: 기계공학)</td><td>위 9개 전공필수 과목</td><td>27</td><td></td></tr>
-<tr><td>다전공 (제1전공: 타전공)</td><td>MEE2011 고체역학, MEE2012 유체역학Ⅰ, MEE2013 동역학, MEE2022 열역학Ⅰ, MEE2025 기계제작실습, MEE3004 생산공정, MEE3025 기계공학실험Ⅰ</td><td>21</td><td></td></tr>
-</tbody></table>
-<h3>기타 이수 요건</h3>
-<ul>
-<li>MEE4046(특수연구)는 전공학점에 포함되지 않으나 졸업학점에는 포함됨</li>
-<li>모든 신입생은 1학년 1학기에 개설되는 COR1028 알바트로스세미나(기계공학 전용분반) 과목을 필수적으로 이수해야 함</li>
-<li>MEE3301 연구프로젝트I, MEE3302 연구프로젝트II 과목은 최대 3학점까지 전공학점으로 포함됨 (두 과목 모두 수강 시 초수강 과목은 전공 3학점, 후수강 과목은 기타 3학점으로 인정. 단, 2022년 2학기까지 6학점을 취득한 경우 최대 6학점까지 전공학점으로 인정)</li>
-<li>심화전공에서 다전공으로 변경 시, 전공입문 MEE1006 지능형 기계설계생산 입문 과목은 자유선택으로 인정됨</li>
-</ul>
-<h2>3. 전공교육과정 이수 로드맵 (심화과정)</h2>
-<table><thead><tr><th>분야</th><th>1학년</th><th>2학년</th><th>3학년</th><th>4학년</th></tr></thead><tbody>
-<tr><th>공통교과</th><td colspan="4">성철과 성정I, 자연계 글쓰기, 알바트로스 세미나, 미적분학1, 기초인공지능프로그래밍, &lt;글로벌 언어 영역&gt; 택1, &lt;①인간과 신앙&gt; &lt;②인간과 사상&gt; &lt;③인간과 사회&gt; 영역 각 택1</td></tr>
-<tr><th>전공입문</th><td>미적분학Ⅱ, 일반물리Ⅰ·Ⅱ, 일반물리실험Ⅰ·Ⅱ, 일반화학Ⅰ, 지능형 기계설계생산 입문</td><td>공학수학I, 공학수학II</td><td></td><td></td></tr>
-<tr><th>기계공학 일반</th><td></td><td></td><td>기계공학실험I, 기계학습 기초수학, 기계공학해석, 연구프로젝트Ⅰ</td><td>창의적종합설계, 자동차공학, 기계공학세미나, 연구프로젝트Ⅱ</td></tr>
-<tr><th>설계 및 재료역학</th><td></td><td>고체역학, 제품설계기초</td><td>재료거동학, 부품설계, 유한요소해석, 설계방법론(캡스톤디자인)</td><td>최적설계 및 실습, 바이오역학, 연속체역학, 실험계획법과 통계분석, 음향학의 기초, 유한요소해석과 응용, 재료모델링과 피로파괴</td></tr>
-<tr><th>열·유체 및 에너지</th><td></td><td>열역학I, 유체역학I</td><td>열역학II, 자동차동력공학, 유체역학II, 열전달, 냉동 및 공기조화, 신재생에너지공학개론</td><td>미소열유체역학, 열유체시스템설계, 전산유체역학, 연료전지개론, 연소 및 물질전달, 전산열전달, 통계열역학 및 미소열전달, 고급열전달</td></tr>
-<tr><th>제어·진동·로보틱스</th><td></td><td>동역학</td><td>진동학, 자동제어, 디지털제어시스템, 바이오모방공학개론, 메카트로닉스</td><td>고급동역학, 로봇설계 및 제어, 고급제어1, 시스템모델링 및 해석, 고급메카트로닉스</td></tr>
-<tr><th>생산공학</th><td></td><td>기계제작실습, 기계재료기초</td><td>생산공정, CAD, 마이크로나노기계공학, 복합재료입문</td><td>MEMS 설계제작, 공정설계의 CAE, 반도체공학, 메카노바이오공학, 나노공학개론</td></tr>
-<tr><th>현장실습</th><td></td><td></td><td colspan="2">기계공학현장실습</td></tr>
-</tbody></table>`,
-    en: `<p class="text-sg-steel">Curriculum for students entering in 2026. Curricula for earlier cohorts are available on SAINT (graduation menu) or in the University Bulletin.</p>
-<h2>1. Credit requirements</h2>
-<table>
-<thead><tr><th rowspan="2">Track</th><th colspan="3">General education</th><th rowspan="2">Major prerequisites</th><th colspan="3">Major</th><th rowspan="2">Total</th></tr>
-<tr><th>Required</th><th>Elective ①②③④</th><th>Subtotal</th><th>Required</th><th>Elective</th><th>Subtotal</th></tr></thead>
-<tbody>
-<tr><td>Intensive major</td><td>11</td><td>3 / 3 / 3 / 3*</td><td>23</td><td>23</td><td>30</td><td>42**</td><td>72</td><td>130</td></tr>
-<tr><td>Multiple major (primary: ME)</td><td>11</td><td>3 / 3 / 3 / 3*</td><td>23</td><td>22</td><td>27</td><td>24</td><td>51</td><td>130</td></tr>
-<tr><td>Multiple major (primary: other)</td><td colspan="3">Per entering major</td><td>22***</td><td>21</td><td>24</td><td>45</td><td>Per primary major</td></tr>
-</tbody></table>
-<ul class="text-[13.5px] text-sg-steel">
-<li>* Science-track students (except SCIENCE-based Liberal Major) must take Calculus I in area ④ "Humans, Science &amp; AI" as a required elective.</li>
-<li>** Up to 6 credits from other majors in the College of Engineering or College of Software Convergence count as ME electives (intensive major only).</li>
-<li>*** Multiple-major students whose primary major is not ME must take Calculus I and II as prerequisites.</li>
-</ul>
-<h2>2. Course requirements</h2>
-<h3>Major prerequisites (required; not counted toward major credits)</h3>
-<table><thead><tr><th>Track</th><th>Courses</th><th>Credits</th><th>Note</th></tr></thead><tbody>
-<tr><td rowspan="3">Intensive</td><td>PHY1001 General Physics I, PHY1002 General Physics II, PHY1101 Physics Lab I, PHY1102 Physics Lab II, STS2006 Calculus II</td><td>11</td><td rowspan="3">Total 23</td></tr>
-<tr><td>CHM1001 General Chemistry I</td><td>3</td></tr>
-<tr><td>MEE1006 Intro to Intelligent Mechanical Design &amp; Manufacturing, MEE2006 Engineering Math I, MEE2007 Engineering Math II</td><td>9</td></tr>
-<tr><td rowspan="2">Multiple (primary: ME)</td><td>PHY1001, PHY1002, PHY1101, STS2006, one of BIO1001 General Biology I / CHM1001</td><td>13</td><td rowspan="2">Total 22</td></tr>
-<tr><td>MEE1006, MEE2006, MEE2007</td><td>9</td></tr>
-<tr><td rowspan="3">Multiple (primary: other)</td><td>STS2005 Calculus I, STS2006 Calculus II</td><td>6</td><td></td></tr>
-<tr><td>PHY1001, PHY1002, PHY1101, one of BIO1001 / CHM1001</td><td>10</td><td rowspan="2">Total 22 · MAT2410/2420 Applied Math I, II accepted as substitutes</td></tr>
-<tr><td>MEE2006, MEE2007</td><td>6</td></tr>
-</tbody></table>
-<h3>Required major courses</h3>
-<table><thead><tr><th>Track</th><th>Courses</th><th>Credits</th><th>Note</th></tr></thead><tbody>
-<tr><td rowspan="2">Intensive</td><td>MEE2011 Solid Mechanics, MEE2012 Fluid Mechanics I, MEE2013 Dynamics, MEE2022 Thermodynamics I, MEE2025 Machine Shop Practice, MEE3004 Manufacturing Processes, MEE3015 Design Methodology (Capstone), MEE3025 ME Laboratory I, MEE4021 Creative Integrated Design (Capstone)</td><td>27</td><td rowspan="2">Up to 3 credits from MEE2014 / MEE3013 / MEE3032 count as required; any excess counts as elective</td></tr>
-<tr><td>One of MEE2014 Engineering Materials / MEE3013 Automatic Control / MEE3032 Heat Transfer</td><td>3</td></tr>
-<tr><td>Multiple (primary: ME)</td><td>The nine required courses above</td><td>27</td><td></td></tr>
-<tr><td>Multiple (primary: other)</td><td>MEE2011, MEE2012, MEE2013, MEE2022, MEE2025, MEE3004, MEE3025</td><td>21</td><td></td></tr>
-</tbody></table>
-<h3>Other requirements</h3>
-<ul>
-<li>MEE4046 (Special Research) counts toward graduation but not toward major credits.</li>
-<li>All first-year students must take COR1028 Albatross Seminar (ME section) in their first semester.</li>
-<li>MEE3301/3302 Research Project I/II count up to 3 credits toward the major.</li>
-<li>When switching from intensive to multiple major, MEE1006 counts as a free elective.</li>
-</ul>
-<h2>3. Roadmap (intensive track)</h2>
-<table><thead><tr><th>Area</th><th>Year 1</th><th>Year 2</th><th>Year 3</th><th>Year 4</th></tr></thead><tbody>
-<tr><th>General</th><td colspan="4">Core humanities, Science Writing, Albatross Seminar, Calculus I, Basic AI Programming, global language and humanities electives</td></tr>
-<tr><th>Prerequisites</th><td>Calculus II, General Physics I·II &amp; Labs, General Chemistry I, Intro to Intelligent Mechanical Design &amp; Manufacturing</td><td>Engineering Math I, II</td><td></td><td></td></tr>
-<tr><th>ME General</th><td></td><td></td><td>ME Lab I, Math for Machine Learning, ME Analysis, Research Project I</td><td>Creative Integrated Design, Automotive Engineering, ME Seminar, Research Project II</td></tr>
-<tr><th>Design &amp; Materials</th><td></td><td>Solid Mechanics, Product Design Basics</td><td>Materials Behavior, Component Design, Finite Element Analysis, Design Methodology</td><td>Optimal Design, Biomechanics, Continuum Mechanics, DOE &amp; Statistics, Acoustics, Applied FEA, Materials Modeling &amp; Fatigue</td></tr>
-<tr><th>Thermal-Fluids &amp; Energy</th><td></td><td>Thermodynamics I, Fluid Mechanics I</td><td>Thermodynamics II, Automotive Powertrain, Fluid Mechanics II, Heat Transfer, Refrigeration &amp; HVAC, Renewable Energy</td><td>Microscale Thermofluids, Thermal-Fluid System Design, CFD, Fuel Cells, Combustion &amp; Mass Transfer, Computational Heat Transfer, Statistical Thermodynamics, Advanced Heat Transfer</td></tr>
-<tr><th>Control, Vibration &amp; Robotics</th><td></td><td>Dynamics</td><td>Vibrations, Automatic Control, Digital Control, Biomimetics, Mechatronics</td><td>Advanced Dynamics, Robot Design &amp; Control, Advanced Control I, System Modeling, Advanced Mechatronics</td></tr>
-<tr><th>Manufacturing</th><td></td><td>Machine Shop Practice, Engineering Materials</td><td>Manufacturing Processes, CAD, Micro/Nano ME, Composites</td><td>MEMS Design, CAE for Process Design, Semiconductor Engineering, Mechanobiology, Nanotechnology</td></tr>
-<tr><th>Internship</th><td></td><td></td><td colspan="2">ME Field Practice</td></tr>
-</tbody></table>`,
+<p class="text-[13.5px] text-sg-gray9">The plan for the 2026 entering class will be posted once confirmed.</p>`,
   },
-  'undergraduate/competency': {
-    ko: `<table><thead><tr><th>전공능력</th><th>정의</th><th>하위능력</th></tr></thead><tbody>
-<tr><th>지식 응용</th><td>수학, 기초과학, 공학의 지식과 정보기술을 기계공학 문제 해결에 응용할 수 있는 능력</td><td><ul><li>기계공학에서 활용되는 수학, 기초과학, 공학의 기본 원리를 선정하고 적용하는 능력</li><li>공학 실무에 필요한 기술, 방법, 도구 및 정보기술을 사용할 수 있는 능력</li><li>공학적 해결방안이 세계적, 경제적, 환경적, 사회적 상황에 끼치는 영향을 이해할 수 있는 능력</li></ul></td></tr>
-<tr><th>문제 해결</th><td>기계공학 문제들을 인식하며, 이를 공식화하고 해결할 수 있는 능력</td><td><ul><li>공학 문제를 정의하고 수학적으로 공식화하고 해결할 수 있는 능력</li><li>직업적 책임과 윤리적 책임에 대한 인식</li><li>평생교육의 필요성에 대한 인식과 이에 능동적으로 참여할 수 있는 능력</li></ul></td></tr>
-<tr><th>실험 분석</th><td>실험을 계획하고 수행하며 데이터를 이해하고 분석할 수 있는 능력</td><td><ul><li>기계공학 문제의 해결을 위해 실험을 계획하고 수행할 수 있는 능력</li><li>자료를 분석하여 인과관계를 도출할 수 있는 능력</li></ul></td></tr>
-<tr><th>시스템 설계</th><td>기계공학의 현실적 제한조건을 반영하여 시스템, 요소, 공정을 설계할 수 있는 능력</td><td><ul><li>부품/시스템의 설계에서 목표설정, 상세설계, 평가의 과정을 수행할 수 있는 능력</li><li>공학 실무에 필요한 기술, 방법, 도구 및 정보기술을 사용할 수 있는 능력</li></ul></td></tr>
-<tr><th>협업 및 의사전달</th><td>기계공학 문제를 해결하는 팀의 구성원으로서 성과에 기여할 수 있는 능력</td><td><ul><li>복합 학제적 팀의 구성원의 역할을 해낼 수 있는 능력</li><li>의사를 논리적으로 문서화하고 효과적으로 발표할 수 있는 능력</li></ul></td></tr>
+  'undergraduate/courses': { ko: '', en: '' },
+  'undergraduate/rules': {
+    ko: `<h2>학사규정</h2>
+<p>학부 학사에 관한 사항은 서강대학교 학칙과 학사 운영 규정을 따릅니다. 아래에서 전문을 확인할 수 있습니다.</p>
+<ul>
+<li><a href="https://www.sogang.ac.kr/ko/rules" target="_blank" rel="noreferrer">서강대학교 학사규정 전문 ↗</a></li>
+<li><a href="https://sogang.ac.kr/ko/academics" target="_blank" rel="noreferrer">교무처 학사 안내 ↗</a></li>
+</ul>
+<h2>전공 이수 구분</h2>
+<table><tbody>
+<tr><th>화공생명공학 심화과정</th><td>공학교육인증(ABEEK) 프로그램입니다. 전공 필수·선택과 설계 과목을 인증 기준에 맞추어 이수합니다. 이수계획표는 <a href="/ko/undergraduate/curriculum">교과과정</a>에서 학번별로 확인합니다.</td></tr>
+<tr><th>전공 예비과목</th><td>응용생물학(CBE2006), 프로그래밍 언어 기초(CBE2013) 등은 전공선택 학점에 포함되지 않습니다.</td></tr>
+<tr><th>설계 과목</th><td>창의설계(CBE2002), 화공생명공학심화종합설계(CBE4001)가 설계 학점에 해당합니다.</td></tr>
+</tbody></table>
+<h2>자주 묻는 것</h2>
+<table><tbody>
+<tr><th>졸업 학점·요건</th><td>입학 학번에 따라 다릅니다. 본인 학번의 이수계획표와 학사규정을 함께 확인하고, 애매하면 학과사무실(02-705-8474)에 문의하세요.</td></tr>
+<tr><th>타 전공 과목 인정</th><td>학과 승인이 필요합니다. 수강 전에 학과사무실에 문의하세요.</td></tr>
+<tr><th>전과·복수전공</th><td>교무처 공지 일정에 따라 신청합니다. 학사일정의 '전공 추가신청 및 변경' 기간을 확인하세요.</td></tr>
 </tbody></table>`,
-    en: `<table><thead><tr><th>Competency</th><th>Definition</th><th>Sub-competencies</th></tr></thead><tbody>
-<tr><th>Applying knowledge</th><td>Apply mathematics, basic science, engineering knowledge and IT to mechanical engineering problems</td><td><ul><li>Select and apply fundamental principles of math, science and engineering</li><li>Use the techniques, methods, tools and IT needed in practice</li><li>Understand the global, economic, environmental and social impact of engineering solutions</li></ul></td></tr>
-<tr><th>Problem solving</th><td>Identify, formulate and solve mechanical engineering problems</td><td><ul><li>Define, mathematically formulate and solve engineering problems</li><li>Awareness of professional and ethical responsibility</li><li>Recognize the need for, and engage in, lifelong learning</li></ul></td></tr>
-<tr><th>Experimental analysis</th><td>Plan and conduct experiments; understand and analyze data</td><td><ul><li>Plan and conduct experiments to solve ME problems</li><li>Analyze data to derive causal relationships</li></ul></td></tr>
-<tr><th>System design</th><td>Design systems, components and processes under realistic constraints</td><td><ul><li>Set goals, carry out detailed design and evaluate components and systems</li><li>Use the tools and IT needed in practice</li></ul></td></tr>
-<tr><th>Teamwork &amp; communication</th><td>Contribute as a member of a team solving ME problems</td><td><ul><li>Function on multidisciplinary teams</li><li>Document ideas logically and present effectively</li></ul></td></tr>
-</tbody></table>`,
+    en: `<h2>Academic regulations</h2>
+<p>Undergraduate matters follow the University statutes and academic operating regulations.</p>
+<ul>
+<li><a href="https://www.sogang.ac.kr/en" target="_blank" rel="noreferrer">Sogang University academic regulations ↗</a></li>
+</ul>
+<h2>Track types</h2>
+<table><tbody>
+<tr><th>Intensive major (accredited)</th><td>An ABEEK-accredited engineering program. See <a href="/en/undergraduate/curriculum">Curriculum</a> for the plan by entering year.</td></tr>
+<tr><th>Pre-major courses</th><td>Applied Biology (CBE2006) and Introduction to Programming (CBE2013) do not count toward major electives.</td></tr>
+<tr><th>Design courses</th><td>Creative Design (CBE2002) and Capstone Design (CBE4001) carry design credits.</td></tr>
+</tbody></table>
+<p>Graduation requirements depend on the entering year. Contact the department office (+82-2-705-8474) if anything is unclear.</p>`,
   },
+  'undergraduate/lab': {
+    ko: `<p class="text-xl font-semibold text-sg-ink break-keep">서강대 화공생명공학과는 2·3·4학년 세 해에 걸쳐 실험 과목을 연속으로 둡니다. 강의에서 세운 식이 실제 장치에서 어떻게 움직이는지 직접 확인하는 과정입니다.</p>
+<h2>실험 과목</h2>
+<table><thead><tr><th>학년</th><th>과목</th><th>다루는 것</th></tr></thead><tbody>
+<tr><td>2학년</td><td>화공생명공학 기초실험Ⅰ (CBE2008)<br>화공생명공학 기초실험Ⅱ (CBE2009)</td><td>기본 측정과 데이터 처리, 물질·에너지 수지, 화학·생화학 기초 실험</td></tr>
+<tr><td>3학년</td><td>화공생명공학 요소실험Ⅰ (CBE3015)<br>화공생명공학 요소실험Ⅱ (CBE3016)</td><td>유체·열전달·물질전달·반응 등 단위조작 장치 실험</td></tr>
+<tr><td>4학년</td><td>화공생명공학 공정실험 (CBE4017)</td><td>여러 단위조작을 묶은 공정 운전과 해석, 설계와의 연결</td></tr>
+</tbody></table>
+<h2>실험실 안전</h2>
+<ul>
+<li>실험 전 안전교육을 이수해야 하며, 실험복과 보안경은 매 실험 착용이 원칙입니다.</li>
+<li>샌들·반바지 등 노출이 많은 복장으로는 실험실에 들어갈 수 없습니다.</li>
+<li>사고·누출이 발생하면 즉시 담당 조교와 학과사무실(02-705-8474)에 알립니다.</li>
+<li>시약과 폐액은 지정된 용기에만 버립니다.</li>
+</ul>
+<h2>일정</h2>
+<p>조 편성, 실험 날짜·장소, 보고서 마감은 매 학기 <a href="/ko/board/academic">학사공지</a>에 올라갑니다.</p>`,
+    en: `<p class="text-xl font-semibold text-sg-ink">Laboratory courses run for three consecutive years — years 2, 3 and 4 — so students see how the equations behave on real equipment.</p>
+<h2>Laboratory courses</h2>
+<table><thead><tr><th>Year</th><th>Course</th><th>Focus</th></tr></thead><tbody>
+<tr><td>2</td><td>Basic CBE Laboratory I (CBE2008)<br>Basic CBE Laboratory II (CBE2009)</td><td>Measurement and data handling, material and energy balances, basic chemistry and biochemistry</td></tr>
+<tr><td>3</td><td>Unit-Operation Laboratory I (CBE3015)<br>Unit-Operation Laboratory II (CBE3016)</td><td>Fluid flow, heat and mass transfer, reaction — unit operations on real apparatus</td></tr>
+<tr><td>4</td><td>Process Laboratory (CBE4017)</td><td>Operating and analyzing integrated processes, linked to capstone design</td></tr>
+</tbody></table>
+<h2>Laboratory safety</h2>
+<ul>
+<li>Safety training is required before entering the lab; lab coat and safety glasses are mandatory.</li>
+<li>Open shoes and shorts are not permitted.</li>
+<li>Report any incident or spill immediately to the teaching assistant and the department office.</li>
+<li>Dispose of reagents and waste only in the designated containers.</li>
+</ul>
+<p>Group assignments, dates, rooms and report deadlines are posted each semester under <a href="/en/board/academic">Academic Notice</a>.</p>`,
+  },
+  'undergraduate/calendar': { ko: '', en: '' },
   'undergraduate/activities': {
-    ko: `<h2>학생회</h2>
-<p>화공생명공학과 학생회는 화공생명공학과 학우들의 의견을 대변하고 학과의 발전을 위해 화공생명공학과 전 구성원들과 함께 가꾸어 가고 노력하는 자치적인 학생회입니다.</p>
-<h3>주요 행사</h3>
+    ko: `<p class="break-keep">물론 학과 수업이 우선입니다. 1학년 때는 공학 기초과목을 배우고, 2·3학년에서는 화공생명공학의 심화 과정을 학습합니다. 강의와 함께 전공과 연관된 실험·실습을 통해 구체적이고 효과적으로 전공과정을 익히며, 4학년에서는 다양한 전공선택 과정을 통해 취업과 대학원 진학 등 진로를 결정합니다. 그리고 그 사이에, 사람이 남는 시간이 있습니다.</p>
+<h2>학과 행사</h2>
 <table><tbody>
-<tr><th>3월 초</th><td>개강총회, 총MT</td></tr><tr><th>3월 중순</th><td>새내기 체육대회</td></tr><tr><th>3월 말</th><td>해오름제</td></tr>
-<tr><th>5월</th><td>봄농활, 서서전, 대동제(주점)</td></tr><tr><th>6월</th><td>화공생명공학과 하계 워크샵</td></tr><tr><th>9월 말</th><td>단과대 축제</td></tr>
-<tr><th>10월 말</th><td>서강문화제</td></tr><tr><th>11월</th><td>SOFEX(한-일 교류전), 홈커밍데이</td></tr><tr><th>12월</th><td>화공생명공학과 동계 워크샵</td></tr>
+<tr><th>3월</th><td><strong>개강총회</strong> 한 학기 행사를 정하고 간부를 선출합니다. <strong>총MT·신입생MT</strong> 교수님과 재학생, 신입생이 함께 갑니다.</td></tr>
+<tr><th>4월~</th><td><strong>Happy Hour</strong> 학년별로 교수진·동문 선배와 만나 학교생활과 직장생활의 경험을 나눕니다. (매월)</td></tr>
+<tr><th>6월</th><td><strong>종강총회</strong> 1학기를 마무리하고 2학기 간부를 선출합니다. <strong>졸업파티</strong> 4학년과 교수진이 함께하는 저녁 자리입니다.</td></tr>
+<tr><th>9월</th><td><strong>개강총회</strong> 2학기 행사를 공유합니다.</td></tr>
+<tr><th>10월</th><td><strong>일일호프</strong> 신입생들이 직접 운영하는 행사입니다.</td></tr>
+<tr><th>11월</th><td><strong>화공생명공학과 축제</strong> 1년 중 가장 큰 행사입니다. 화공 체육대회, 선배님들과의 대화, 화공인의 날 등으로 재학생과 대학원생이 함께합니다. <strong>홈커밍데이</strong> 졸업생·재학생·교수진이 모입니다.</td></tr>
+<tr><th>12월</th><td><strong>종강총회</strong> 2학기를 마무리합니다.</td></tr>
 </tbody></table>
-<h2>전공학회 MECHA</h2>
-<p>MECHA는 서강대 화공생명공학과 전공학회로서 자동제어 이론을 관심 분야에 접목함으로써 좀더 인간 생활에 도움이 되는 제어 시스템을 구축하는 것에 목적을 두고 있는 학회입니다. 특히 로봇과 같은 시스템을 제작하고 제어 알고리즘을 적용하여 최상의 성능을 가지도록 하는 데 목표를 두고 있습니다.</p>
-<p>기계공학 관점으로 제어에 대해 접근하려는 학생들이 모여서 이루어진 MECHA는 서강대학교 화공생명공학과의 탄생과 함께 시작하였습니다. 끊임없는 연구 활동은 물론이고 미래에 대한 도전 의식, 선후배간의 끈끈한 유대감, 우수한 학업성적이 자랑스러운 전통입니다. 현재 중점 연구 분야는 드론과 배틀 로봇으로, 각종 로봇 캠프 및 지능형 자동차 대회, 공모전 등에 참여하여 우수한 성적을 거두었습니다.</p>
-<p>MECHA는 화공생명공학과 전공 학회이지만 전자공학과 컴퓨터공학 관련 지식도 반드시 필요로 합니다. 학회 활동은 학부생을 중심으로 이루어지며 대학원생들은 명예 회원으로서 학부생들의 연구와 실험에 도움을 주고 있습니다. 현 회원은 정회원(학부생)과 명예회원(학부졸업생), 군복무 중인 회원을 포함해 50~60명 정도입니다.</p>`,
-    en: `<h2>Student Council</h2>
-<p>The ME Student Council is an autonomous body that represents students' voices and works with every member of the department for its development.</p>
-<h3>Annual events</h3>
+<h2>학교 행사</h2>
 <table><tbody>
-<tr><th>Early March</th><td>Opening assembly, department retreat (MT)</td></tr><tr><th>Mid March</th><td>Freshman sports day</td></tr><tr><th>Late March</th><td>Haeoreum Festival</td></tr>
-<tr><th>May</th><td>Spring rural volunteering, Sogang–Seoul games, Daedongje festival</td></tr><tr><th>June</th><td>ME Summer Workshop</td></tr><tr><th>Late September</th><td>College festival</td></tr>
-<tr><th>Late October</th><td>Sogang Culture Festival</td></tr><tr><th>November</th><td>SOFEX (Korea–Japan exchange), Homecoming Day</td></tr><tr><th>December</th><td>ME Winter Workshop</td></tr>
+<tr><th>3월 해오름제</th><td>총학·단과대·학과 대표자를 소개하고 신입생과 어우러지는 학교 주관 행사입니다.</td></tr>
+<tr><th>5월 대동제</th><td>과티 경연대회, 과주점, 본 판 공연이 이어지는 봄 축제입니다.</td></tr>
+<tr><th>11월 서강문화제</th><td>서강문화축제·국제문화축제·서강영화제로 이어지는 문화 교류의 시간입니다.</td></tr>
 </tbody></table>
-<h2>MECHA — student engineering society</h2>
-<p>MECHA is the department's academic society devoted to applying automatic control theory to areas of interest, building control systems that help people — in particular, building robotic systems and applying control algorithms for the best performance.</p>
-<p>Founded together with the department, MECHA is known for continuous research, a spirit of challenge, close bonds between seniors and juniors, and strong academic records. Current focus areas are drones and battle robots, with strong results at robot camps, intelligent-vehicle competitions and contests.</p>
-<p>Activities are led by undergraduates, with graduate students as honorary members supporting research and experiments. Membership is around 50–60 including regular members, honorary members and those on military service.</p>`,
-  },
-  'undergraduate/ureca': {
-    ko: `<p class="text-lg"><strong>Undergraduate Research Experience on Campus, URECA</strong></p>
-<p>화공생명공학과에서는 수업만으로 적성과 진로를 탐색하는 수동적인 교육방식에서 탈피하여, 학생들에게 연구 경험의 기회를 통하여 능동적으로 적성과 진로를 탐색하는 데 도움이 되도록 학부연구프로그램(URECA)을 제공하고 있습니다. URECA는 학생들이 부족한 정보와 타인의 조언만으로 적성에 맞지 않는 진로를 택하지 않도록 도와주며, 대학원 진학에 관심 있는 학생들에게는 연구 경험을 미리 제공하여 보다 성공적인 대학원 생활이 가능하도록 합니다. 특히 연구직에 관심이 있는 모든 학생들은 반드시 URECA를 활용할 것을 권장합니다.</p>
-<p>URECA는 <strong>Intern</strong>과 <strong>Fellow</strong>의 두 가지 트랙으로 운영됩니다.</p>
-<h2>URECA Intern</h2>
-<ul>
-<li>대학원 진학을 결심하지 못한 상태에서 연구 분야를 탐색하기 위한 프로그램입니다.</li>
-<li>화공생명공학과 2학년(2학기 종료 후) 이상이면 누구나 지원 가능합니다.</li>
-<li>1년에 4번, 겨울방학/봄학기/여름방학/가을학기 4개 텀으로 운영됩니다.</li>
-<li>횟수와 관계없이 지원 가능하고, 한 연구실에 2텀까지 연속으로 참여할 수 있습니다. 2텀 이후 계속 한 연구실에서 인턴을 희망할 경우, 반드시 다른 연구실에서 1텀 이상 인턴을 수행한 후 복귀해야 합니다. (2학기 연속 한 연구실에서 인턴 수행 시 해당 연구실에 불이익이 가해질 수 있습니다.)</li>
-<li>2텀 이후, 즉 6개월 이후 자동으로 인턴이 종료되므로 대학원 진학에 대한 의무가 발생하지 않습니다.</li>
-<li>6학기를 마친 학생이 대학원 진학을 결심할 경우 URECA Fellow로 전환하여 계속 한 연구실에 참여할 수 있습니다.</li>
-<li>2텀을 마친 후 교수님의 추천을 통하여 학과에서 발급하는 수료증을 받게 됩니다.</li>
-</ul>
-<p>URECA Intern은 텀으로 운영되는 순환(Rotation) 제도로서, 자유롭게 다양한 연구분야 및 연구환경을 경험해 볼 수 있는 기회를 제공합니다. 다만 학생들의 자유를 보장하기 위하여 학술제를 통한 상품 이외의 금전적 혜택은 제공되지 않습니다.</p>
-<h2>URECA Fellow</h2>
-<ul>
-<li>서강대학교 화공생명공학과 대학원으로 진학을 확정한 경우, 해당 교수님과 협의하여 지원 가능합니다.</li>
-<li>각 연구실과 교수님이 정한 의무와 권리, 금전적 지원범위에 따라 개별적으로 운영됩니다.</li>
-<li>6학기를 종료한 이후(6학기를 마친 방학 시점부터) 지원 가능합니다.</li>
-</ul>
-<p>URECA Fellow는 사실상 대학원 진학으로 연결되므로 신중하게 결정해야 합니다. 일단 Fellow가 되면 연구실에서 정한 각종 혜택을 받을 수 있지만 그에 따른 의무가 발생합니다. 대학원 진학을 결심한 경우 미리 연구실 생활을 시작하여 해당 연구분야와 환경에 적응할 수 있고, 보다 성공적인 대학원 생활이 가능합니다.</p>
-<p>기타 문의사항은 학과사무실(R618, 02-705-8474)로 문의하기 바랍니다.</p>`,
-    en: `<p class="text-lg"><strong>Undergraduate Research Experience on Campus (URECA)</strong></p>
-<p>URECA gives undergraduates real research experience so they can explore their aptitude and career actively, rather than through coursework alone. It helps students avoid choosing an ill-fitting path based on limited information, and gives those considering graduate school an early start toward a successful research career. All students interested in research careers are strongly encouraged to take part.</p>
-<p>URECA runs on two tracks: <strong>Intern</strong> and <strong>Fellow</strong>.</p>
-<h2>URECA Intern</h2>
-<ul>
-<li>For students who have not yet decided on graduate school and want to explore research fields.</li>
-<li>Open to any ME student who has completed the second year.</li>
-<li>Four terms per year: winter break, spring, summer break, fall.</li>
-<li>Apply as often as you like; up to two consecutive terms in one lab. To continue in the same lab, complete at least one term in a different lab first.</li>
-<li>The internship ends automatically after two terms (six months), with no obligation to enter graduate school.</li>
-<li>Students who have completed six semesters and decide on graduate school may convert to URECA Fellow in the same lab.</li>
-<li>A department certificate is issued after two terms on the professor's recommendation.</li>
-</ul>
-<p>The Intern track is a rotation system that lets you experience diverse research fields and environments freely. To protect that freedom, no financial benefits are provided beyond prizes at the research festival.</p>
-<h2>URECA Fellow</h2>
-<ul>
-<li>For students who have confirmed admission to the Sogang ME graduate program, by agreement with the professor.</li>
-<li>Operated individually according to the duties, rights and financial support set by each lab.</li>
-<li>Available after completing six semesters.</li>
-</ul>
-<p>Because Fellow leads directly to graduate study, decide carefully. Fellows receive the lab's benefits and take on corresponding duties, and get an early start on adapting to their research field and lab.</p>
-<p>Questions: Department office (R618, +82-2-705-8631).</p>`,
+<h2>진로와 연결된 활동</h2>
+<table><tbody>
+<tr><th>공장견학</th><td>3·4학년 중심으로 동문 선배가 많이 진출한 기업의 공장을 방문해 업계 현황과 진로를 듣습니다.</td></tr>
+<tr><th>취업 세미나</th><td>주로 4학년을 대상으로 동문 선배가 방문해 취업 관련 세미나와 강좌를 진행합니다.</td></tr>
+<tr><th>학부 연구 참여</th><td>관심 있는 연구실에 미리 들어가 연구를 경험할 수 있습니다. <a href="/ko/about/labs">연구실</a> 목록을 보고 지도교수에게 직접 문의하세요.</td></tr>
+</tbody></table>`,
+    en: `<p>Coursework comes first — engineering fundamentals in year 1, the core of chemical and biomolecular engineering in years 2 and 3, laboratory work alongside lectures, and electives in year 4 that shape the path to employment or graduate school. In between, there is the rest of student life.</p>
+<h2>Department events</h2>
+<table><tbody>
+<tr><th>March</th><td><strong>Opening assembly</strong> and department retreats with faculty, students and the incoming class.</td></tr>
+<tr><th>From April</th><td><strong>Happy Hour</strong> — monthly meetings by year group with faculty and alumni to share experience of study and work.</td></tr>
+<tr><th>June</th><td><strong>Closing assembly</strong> and a <strong>graduation dinner</strong> for the final-year class with the faculty.</td></tr>
+<tr><th>October</th><td><strong>One-day pub</strong>, organized by the first-year students.</td></tr>
+<tr><th>November</th><td><strong>Department festival</strong> — the largest event of the year, with a sports day, talks with alumni and CBE Day — and <strong>Homecoming Day</strong>.</td></tr>
+<tr><th>December</th><td><strong>Closing assembly</strong> for the fall semester.</td></tr>
+</tbody></table>
+<h2>University events</h2>
+<table><tbody>
+<tr><th>March — Haeoreum</th><td>The university welcome festival, introducing student representatives and the incoming class.</td></tr>
+<tr><th>May — Daedongje</th><td>The spring festival: class T-shirt contest, department pubs and the main stage.</td></tr>
+<tr><th>November — Sogang Culture Festival</th><td>Culture, international and film festivals.</td></tr>
+</tbody></table>
+<h2>Career-related activities</h2>
+<table><tbody>
+<tr><th>Plant visits</th><td>Years 3–4 visit plants of companies where many alumni work.</td></tr>
+<tr><th>Career seminars</th><td>Alumni return to run seminars, mainly for final-year students.</td></tr>
+<tr><th>Undergraduate research</th><td>Join a laboratory early. See the <a href="/en/about/labs">Laboratories</a> list and contact the advisor directly.</td></tr>
+</tbody></table>`,
   },
 };
-
-export const calendar2026 = [
-  { d: '2026-03-03', ko: '개강', en: 'Classes begin' }, { d: '2026-03-03 ~ 03-09', ko: '수강과목 확인 및 변경', en: 'Add/drop period' },
-  { d: '2026-03-12', ko: '개강미사 (오전 10시 30분)', en: 'Opening Mass (10:30)' }, { d: '2026-03-30', ko: '수강과목 취소 마감', en: 'Course withdrawal deadline' },
-  { d: '2026-04-02 ~ 04-03', ko: '부활절 휴가', en: 'Easter break' }, { d: '2026-04-18', ko: '개교기념일', en: 'Founding Anniversary' }, { d: '2026-04-21 ~ 04-27', ko: '중간시험', en: 'Midterm exams' },
-  { d: '2026-05-01 ~ 05-31', ko: '2026학년도 2학기 장학금 신청', en: 'Fall 2026 scholarship applications' }, { d: '2026-05-06 ~ 05-19', ko: '전공 추가신청 및 변경', en: 'Major declaration / change' },
-  { d: '2026-05-08', ko: '중간성적 제출 마감', en: 'Midterm grades due' }, { d: '2026-05-14 ~ 05-15', ko: '개교기념 축제', en: 'Anniversary festival' }, { d: '2026-05-22', ko: '휴학원서 제출 마감', en: 'Leave of absence deadline' },
-  { d: '2026-06-16 ~ 06-22', ko: '학기말시험', en: 'Final exams' }, { d: '2026-06-21', ko: '종강미사 (오전 11시)', en: 'Closing Mass (11:00)' }, { d: '2026-06-23', ko: '여름방학 시작, 계절수업 개강', en: 'Summer break; summer session begins' },
-  { d: '2026-06-30', ko: '학기말성적 제출 마감', en: 'Final grades due' }, { d: '2026-07-01 ~ 07-04', ko: '학기말성적 확인', en: 'Grade review' }, { d: '2026-07-13', ko: '계절수업 종강', en: 'Summer session ends' },
-  { d: '2026-07-21', ko: '계절수업성적 제출 마감', en: 'Summer session grades due' }, { d: '2026-07-23 ~ 08-07', ko: '2026학년도 2학기 휴·복학 신청', en: 'Leave / return applications for Fall 2026' },
-  { d: '2026-08-12 ~ 08-13', ko: '수강신청 과목 담아놓기', en: 'Course cart' }, { d: '2026-08-18', ko: '하계 졸업일', en: 'Summer graduation' },
-  { d: '2026-08-19', ko: '1,2학년 수강신청', en: 'Registration (years 1–2)' }, { d: '2026-08-20', ko: '3,4학년 수강신청', en: 'Registration (years 3–4)' }, { d: '2026-08-25', ko: '전학년 수강신청', en: 'Registration (all years)' },
-  { d: '2026-09-01', ko: '개강', en: 'Classes begin' }, { d: '2026-09-01 ~ 09-07', ko: '수강과목 확인 및 변경', en: 'Add/drop period' }, { d: '2026-09-10', ko: '개강미사 (오전 10시 30분)', en: 'Opening Mass' },
-  { d: '2026-09-14 ~ 09-18', ko: '서강문화제: CARDINAL', en: 'Sogang Culture Festival: CARDINAL' }, { d: '2026-09-28', ko: '수강과목 취소 마감', en: 'Course withdrawal deadline' },
-  { d: '2026-10-20 ~ 10-26', ko: '중간시험', en: 'Midterm exams' },
-  { d: '2026-11-01 ~ 11-30', ko: '2027학년도 1학기 장학금 신청', en: 'Spring 2027 scholarship applications' }, { d: '2026-11-03', ko: '중간성적 제출 마감', en: 'Midterm grades due' },
-  { d: '2026-11-04 ~ 11-17', ko: '전공 추가신청 및 변경', en: 'Major declaration / change' }, { d: '2026-11-20', ko: '휴학원서 제출 마감 · 스터디 데이(휴강일)', en: 'Leave of absence deadline · Study day (no classes)' },
-  { d: '2026-12-15 ~ 12-21', ko: '학기말시험', en: 'Final exams' }, { d: '2026-12-20', ko: '종강미사 (오전 11시)', en: 'Closing Mass' }, { d: '2026-12-22', ko: '겨울방학 시작, 계절수업 개강', en: 'Winter break; winter session begins' },
-  { d: '2026-12-29', ko: '학기말성적 제출 마감', en: 'Final grades due' }, { d: '2026-12-30 ~ 2027-01-02', ko: '학기말성적 확인', en: 'Grade review' },
-  { d: '2027-01-08', ko: '스터디 데이_편입(휴강일)', en: 'Study day (no classes)' }, { d: '2027-01-14', ko: '계절수업 종강', en: 'Winter session ends' },
-  { d: '2027-01-20 ~ 02-03', ko: '2027학년도 1학기 휴·복학 신청', en: 'Leave / return applications for Spring 2027' }, { d: '2027-01-21', ko: '계절수업성적 제출 마감', en: 'Winter session grades due' },
-  { d: '2027-02-11 ~ 02-12', ko: '수강신청 과목 담아놓기', en: 'Course cart' }, { d: '2027-02-14', ko: '졸업감사미사 (오전 11시)', en: 'Graduation Mass' },
-  { d: '2027-02-16', ko: '2,3학년 수강신청', en: 'Registration (years 2–3)' }, { d: '2027-02-17', ko: '4학년 수강신청', en: 'Registration (year 4)' },
-  { d: '2027-02-18', ko: '제64회 학위수여식 (오전 10시)', en: '64th Commencement (10:00)' }, { d: '2027-02-19', ko: '입학식, 입학축복예식 (오후 3시)', en: 'Entrance ceremony (15:00)' },
-  { d: '2027-02-20', ko: '신입생 수강신청', en: 'Freshman registration' }, { d: '2027-02-21 ~ 02-23', ko: '신입생 교외 오리엔테이션', en: 'Freshman orientation' }, { d: '2027-02-24', ko: '전학년 수강신청', en: 'Registration (all years)' },
-];
