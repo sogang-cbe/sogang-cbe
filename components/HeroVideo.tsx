@@ -126,12 +126,12 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
             </h1>
             <p className="mt-6 max-w-2xl text-[17px] md:text-[19px] leading-relaxed text-white/85 rise rise-4">{T(locale, 'heroSub')}</p>
             <div className="mt-9 flex flex-wrap gap-3 rise rise-4">
-              <Link href={`/${locale}/undergraduate/admission`} className="btn-primary">{T(locale, 'ugAdmission')}</Link>
+              <Link href={`/${locale}/undergraduate/curriculum`} className="btn-primary">{T(locale, 'ug')}</Link>
               <Link href={`/${locale}/graduate/admission`} className="btn-light">{T(locale, 'gradAdmission')}</Link>
-              <Link href={`/${locale}/faculty`} className="btn-light">{T(locale, 'professors')}</Link>
+              <Link href={`/${locale}/about/labs`} className="btn-light">{T(locale, 'lab')}</Link>
             </div>
           </div>
-          <HeroNews locale={locale} items={news ?? []} allHref={newsHref ?? `/${locale}/board/notice`} />
+          <HeroNews locale={locale} items={news ?? []} allHref={newsHref ?? `/${locale}/board/academic`} />
         </div>
 
         {/* 학과 연구센터 띠 */}

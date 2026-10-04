@@ -7,6 +7,7 @@ import { getHomeData, getLabCount } from '@/lib/data';
 import { T, t, isLocale, type Locale } from '@/lib/i18n';
 import { areas } from '@/content/areas';
 import { assets, heroFieldVideos } from '@/content/assets';
+import { coverFor } from '@/lib/placeholder';
 import { youtubeThumb } from '@/lib/html';
 
 export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 길게(10분 → 1시간, 2026-09-25 전송량 절감)
@@ -111,10 +112,10 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
       {on('quicklinks') && (
         <section className="container-site py-20">
           <Reveal className="mb-8 flex items-end justify-between gap-4"><div><p className="eyebrow">{T(l, 'quick')}</p><h2 className="h-section mt-3">{ko ? '자주 찾는 메뉴' : 'Quick links'}</h2></div></Reveal>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-stretch">
             {quick.map((q, i) => (
-              <Reveal key={q.k} delay={i * 60}>
-                <Link href={`/${l}${q.href}`} className="card group block p-6 text-center hover:border-sg-cardinal">
+              <Reveal key={q.k} delay={i * 60} className="h-full">
+                <Link href={`/${l}${q.href}`} className="card group h-full flex flex-col items-center justify-start p-6 text-center hover:border-sg-cardinal">
                   <span className="mx-auto w-16 h-16 grid place-items-center rounded-full bg-sg-mist text-sg-cardinal group-hover:bg-sg-cardinal group-hover:text-white transition-colors">
                     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={q.icon} /></svg>
                   </span>
@@ -136,7 +137,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {gallery.slice(0, 8).map((g: any, i: number) => (
                 <Link key={g.id} href={`/${l}/board/gallery/${g.id}`} className={`group relative overflow-hidden bg-white/5 ${i === 0 ? 'col-span-2 row-span-2' : ''} aspect-square`}>
-                  <img src={g.thumbnail_url || g.images?.[0]?.url} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img src={g.thumbnail_url || g.images?.[0]?.url || coverFor('gallery', t(g, 'title', l), g.id)} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <p className="absolute left-3 bottom-3 right-3 text-[13.5px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t(g, 'title', l)}</p>
                 </Link>

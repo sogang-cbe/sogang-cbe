@@ -34,12 +34,12 @@ export default function CurriculumPlans({ locale }: { locale: Locale }) {
           <p className="text-[15px] text-sg-gray9">{ko ? '이 학번의 계획표가 아직 없습니다.' : 'No plan available for this year yet.'}</p>
         ) : (
           <div className="overflow-x-auto border border-sg-line">
-            <table className="w-full border-collapse text-[13.5px]">
+            <table className="min-w-full w-auto border-collapse text-[13.5px]">
               <tbody>
                 {plan.grid.map((row, ri) => (
                   <tr key={ri} className={ri === 0 ? 'bg-sg-mist font-semibold' : ''}>
                     {row.map((cell, ci) => (
-                      <td key={ci} className="border border-sg-line px-3 py-2 align-top break-keep whitespace-pre-line min-w-[90px]">
+                      <td key={ci} className={`border border-sg-line px-3 py-2 align-top break-keep whitespace-pre-line ${cell.length <= 4 ? 'whitespace-nowrap text-center w-px' : 'min-w-[150px]'}`}>
                         {cell}
                       </td>
                     ))}

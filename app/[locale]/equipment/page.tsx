@@ -113,7 +113,7 @@ function Gate({ locale, title, children }: { locale: Locale; title?: string; chi
   const ko = locale === 'ko';
   return (<>
     <PageHero locale={locale} section="facility" current="equipment" />
-    <div className="container-site py-16 max-w-2xl">
+    <div className="container-narrow py-16">
       <h2 className="font-brand text-[1.8rem] md:text-[2.2rem] leading-tight break-keep">{title || (ko ? '구성원만 볼 수 있는 화면입니다' : 'Members only')}</h2>
       <p className="mt-3 text-[15px] text-sg-gray11 break-keep">
         {ko ? '학과 공용장비 목록과 예약은 대학원생·교수·행정실만 이용할 수 있습니다. 서강대학교 구글 계정으로 로그인해 주세요.' : 'The shared-instrument list and booking are available to graduate students, faculty and staff. Please sign in with your Sogang Google account.'}

@@ -66,6 +66,6 @@ export default async function Check({ params, searchParams }: { params: { locale
 function Shell({ locale, title, children }: { locale: Locale; title: string; children: React.ReactNode }) {
   return (<>
     <PageHero locale={locale} section="facility" current="equipment" title={title} />
-    <div className="container-site py-14 max-w-xl">{children}</div>
+    <div className="container-narrow py-14">{children}</div>
   </>);
 }

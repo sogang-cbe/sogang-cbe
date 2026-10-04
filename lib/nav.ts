@@ -31,7 +31,7 @@ export const nav: NavItem[] = [
     { id: 'curriculum', ko: '교과과정', en: 'Curriculum', href: '/graduate/curriculum' },
     { id: 'rules', ko: '학사규정', en: 'Academic Regulations', href: '/graduate/rules' },
     { id: 'students', ko: '재학생 소개', en: 'Graduate Students', href: '/board/grad_intro' },
-    { id: 'bk21', ko: 'BK21 교육연구팀', en: 'BK21 FOUR Program', href: 'http://bk21chechemeng.sogang.ac.kr' },   // 외부 사이트
+    { id: 'bk21', ko: 'BK21 교육연구팀', en: 'BK21 FOUR Program', href: 'http://bk21cheme.sogang.ac.kr' },   // 외부 사이트
   ]},
   { id: 'board', ko: '학과게시판', en: 'Board', href: '/board/academic', sub: [
     { id: 'academic', ko: '학사공지', en: 'Academic Notice', href: '/board/academic' },

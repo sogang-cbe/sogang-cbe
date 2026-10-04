@@ -4,3 +4,6 @@ node_modules
 .env.local
 .vercel
 *.tsbuildinfo
+
+# 디자인 검수용 스크린샷
+shots/

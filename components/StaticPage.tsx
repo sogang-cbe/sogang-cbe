@@ -17,7 +17,7 @@ export default async function StaticPage({ locale, section, slug, children }: { 
   return (
     <>
       <PageHero locale={locale} section={section} current={slug} title={locale === 'en' ? db?.title_en || undefined : db?.title_ko || undefined} />
-      <article className="container-site py-14 max-w-4xl">
+      <article className="container-narrow py-14">
         {pageImages[key] && !children && <img src={pageImages[key]} alt="" className="w-full aspect-[21/9] object-cover mb-10 border border-sg-line" />}
         {children}
         {html && <div className="prose-sg" dangerouslySetInnerHTML={{ __html: wrapTables(toHtml(html)) }} />}

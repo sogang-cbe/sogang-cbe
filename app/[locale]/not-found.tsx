@@ -11,7 +11,7 @@ export default function LocaleNotFound() {
       <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
         <Link href="/ko" className="btn-primary justify-center">홈으로</Link>
         <Link href="/en" className="btn-ghost justify-center">English home</Link>
-        <Link href="/ko/board/notice" className="btn-ghost justify-center">학과 공지</Link>
+        <Link href="/ko/board/academic" className="btn-ghost justify-center">학사공지</Link>
       </div>
     </div>
   );

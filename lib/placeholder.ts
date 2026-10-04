@@ -1,7 +1,8 @@
 /** Auto-generated cover image (SVG data URI) for posts without a photo — category-tinted, with the title's leading words. */
 const palettes: Record<string, [string, string]> = {
-  notice: ['#53565a', '#1a1a1a'], academic: ['#0b4f6c', '#062a3a'], research: ['#af272f', '#5c1116'], award: ['#d86018', '#8a3a0c'],
-  scholarship: ['#00558c', '#002e4d'], gallery: ['#719949', '#3b5527'], default: ['#75787b', '#3a3c3e'],
+  academic: ['#0b4f6c', '#062a3a'], scholarship: ['#00558c', '#002e4d'], research: ['#af272f', '#5c1116'],
+  seminar: ['#5b3a8e', '#2d1c47'], gallery: ['#719949', '#3b5527'], archive: ['#53565a', '#1a1a1a'],
+  grad_intro: ['#0e7490', '#083f49'], internal: ['#53565a', '#1a1a1a'], default: ['#75787b', '#3a3c3e'],
 };
 export function coverFor(board: string, title: string, seed = 0) {
   const [a, b] = palettes[board] || palettes.default;
