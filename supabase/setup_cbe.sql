@@ -435,3 +435,11 @@ begin
 end $$;
 
 notify pgrst, 'reload schema';
+
+
+-- ============================================================
+-- 교수 연구 키워드 — 연구실 목록 카드와 교수 상세에 칩으로 보여 준다.
+-- 쉼표로 구분해 3~5개 정도 (예: 고분자 재료, 이온 소재, 전기접착)
+-- ============================================================
+alter table faculty add column if not exists keywords text;
+notify pgrst, 'reload schema';

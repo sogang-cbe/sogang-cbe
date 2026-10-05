@@ -117,7 +117,7 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
         <div className={BP[locale].wrap}>
           <div className="min-w-0 flex-1">
             <p className="rise rise-1 text-[15px] md:text-[17px] font-semibold tracking-[0.12em] text-white/80">
-              {ko ? 'SOGANG UNIVERSITY · 화공생명공학과' : 'SOGANG UNIVERSITY · MECHANICAL ENGINEERING'}
+              {ko ? 'SOGANG UNIVERSITY · 화공생명공학과' : 'SOGANG UNIVERSITY · CHEMICAL AND BIOMOLECULAR ENGINEERING'}
             </p>
             <h1 className="mt-5 max-w-4xl font-brand text-[2.6rem] sm:text-[3.6rem] lg:text-[4.6rem] leading-[1.12]">
               {tagline ? <span className="block rise rise-2">{tagline}</span> : (

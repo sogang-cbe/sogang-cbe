@@ -187,6 +187,7 @@ export async function saveFaculty(fd: FormData) {
     else if (row.field === 'chair') row.field = null;
   } else row.is_emeritus = bool(fd, 'is_emeritus');
   row.published = bool(fd, 'published');
+  row.keywords = str(fd, 'keywords');
   /* 교수 정보도 같은 정책: 국문이 바뀐 항목만 다시 번역 */
   const mode = str(fd, 'translate_mode') || 'changed';
   // 이름·연구실 영문이 새로 생기거나 바뀌었는지 — 바뀌면 저장 후 기존 게시글 영문도 맞춘다(lib/names-sync)

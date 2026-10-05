@@ -25,6 +25,7 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
   const host = (f.lab_url || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
   const accent = 'var(--sg-cardinal)';
 
+  const keywords: string[] = (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean);
   const contacts: { k: string; v: React.ReactNode }[] = [];
   if (office) contacts.push({ k: T(l, 'office'), v: office });
   if (f.tel) contacts.push({ k: T(l, 'tel'), v: <a href={`tel:${f.tel.replace(/[^\d+]/g, '')}`} className="font-mono hover:text-sg-cardinal">{f.tel}</a> });
@@ -89,6 +90,15 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
             </dl>
           )}
 
+
+          {keywords.length > 0 && (
+            <div className="mt-6">
+              <p className="text-[12.5px] font-semibold tracking-[0.08em] uppercase text-sg-gray9">{T(l, 'field')}</p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {keywords.map((k) => <li key={k} className="text-[13px] px-2.5 py-1 border border-sg-line bg-sg-mist break-keep">{k}</li>)}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-8 flex flex-wrap gap-3">
             {f.lab_url && <a href={f.lab_url} target="_blank" rel="noreferrer" className="btn-primary !py-3">{ko ? '연구실 홈페이지' : 'Lab website'} <span aria-hidden>↗</span></a>}

@@ -89,48 +89,53 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     );
   }
 
-  /* 연구실 — 교수진(DB)에서 자동 생성. 교수 정보를 고치면 이 표가 따라 바뀐다. */
+  /* 연구실 — 교수진(DB)에서 자동 생성. 교수 정보를 고치면 이 목록이 따라 바뀐다. */
   if (slug === 'labs') {
     const faculty = await getFaculty(false);
-    const labs = faculty.filter((f: any) => f.lab_ko);
+    const labs = faculty.filter((f: any) => f.lab_ko && f.field !== 'staff');
+    const kw = (f: any) => (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean).slice(0, 4);
     return (
       <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug}>
-        <p className="text-[15px] text-sg-gray11 break-keep">
+        <p className="text-[16px] text-sg-gray11 break-keep max-w-3xl">
           {ko
-            ? `화공생명공학과에는 ${labs.length}개 연구실이 있습니다. 촉매·분리막·고분자·전기화학·나노바이오를 아우르며, 각 연구실 홈페이지에서 더 자세한 내용을 볼 수 있습니다.`
-            : `The department hosts ${labs.length} research laboratories spanning catalysis, membranes, polymers, electrochemistry and nano-bioengineering.`}
+            ? `화공생명공학과에는 ${labs.length}개 연구실이 있습니다. 촉매·분리막·고분자·전기화학·나노바이오·생물공정을 아우르며, 각 연구실 홈페이지에서 진행 중인 연구와 구성원을 볼 수 있습니다.`
+            : `${labs.length} research laboratories spanning catalysis, membranes, polymers, electrochemistry, nano-bioengineering and bioprocessing. Each lab's own site has current projects and members.`}
         </p>
-        <div className="mt-8 overflow-x-auto border-t border-sg-line">
-          <table className="w-full text-[14.5px]">
-            <thead>
-              <tr className="text-left text-[12px] uppercase tracking-wider text-sg-gray9 border-b border-sg-line">
-                <th className="py-2.5 pr-3">{ko ? '연구실' : 'Laboratory'}</th>
-                <th className="py-2.5 pr-3">{ko ? '지도교수' : 'Advisor'}</th>
-                <th className="py-2.5 pr-3">{ko ? '위치' : 'Office'}</th>
-                <th className="py-2.5">{ko ? '연락처' : 'Contact'}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {labs.map((f: any) => (
-                <tr key={f.id} className="border-b border-sg-line align-top">
-                  <td className="py-3 pr-3">
-                    {f.lab_url
-                      ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="font-semibold hover:text-sg-cardinal break-keep">{ko ? f.lab_ko : f.lab_en || f.lab_ko}</a>
-                      : <span className="font-semibold break-keep">{ko ? f.lab_ko : f.lab_en || f.lab_ko}</span>}
-                    {ko && f.lab_en && <span className="block text-[12.5px] text-sg-gray9">{f.lab_en}</span>}
-                  </td>
-                  <td className="py-3 pr-3 whitespace-nowrap">
-                    <Link href={`/${l}/faculty/${f.id}`} className="hover:text-sg-cardinal">{ko ? f.name_ko : f.name_en || f.name_ko}</Link>
-                  </td>
-                  <td className="py-3 pr-3 text-sg-gray11 tabular-nums whitespace-nowrap">{f.room || ''}</td>
-                  <td className="py-3 text-sg-gray11 tabular-nums whitespace-nowrap">{f.email || f.phone || ''}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {labs.map((f: any) => (
+            <div key={f.id} className="card group flex flex-col p-6">
+              <h2 className="font-brand text-[1.25rem] leading-snug break-keep !mt-0">
+                {f.lab_url
+                  ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{ko ? f.lab_ko : f.lab_en || f.lab_ko} <span aria-hidden className="text-[14px]">↗</span></a>
+                  : (ko ? f.lab_ko : f.lab_en || f.lab_ko)}
+              </h2>
+              {/* 국문 연구실명이 괄호로 영문을 이미 품고 있으면 한 번 더 적지 않는다 */}
+              {ko && f.lab_en && !String(f.lab_ko || '').includes(f.lab_en) && <p className="mt-1 text-[13px] text-sg-gray9">{f.lab_en}</p>}
+              {kw(f).length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-1.5">
+                  {kw(f).map((k: string) => <li key={k} className="text-[12.5px] px-2.5 py-1 border border-sg-line bg-sg-mist">{k}</li>)}
+                </ul>
+              )}
+              <div className="mt-auto pt-5 flex items-center gap-3 border-t border-sg-line mt-5">
+                <span className="w-11 h-[52px] shrink-0 bg-sg-mist overflow-hidden grid place-items-center">
+                  {f.photo_url
+                    ? <img src={f.photo_url} alt="" loading="lazy" className="w-full h-full object-cover" />
+                    : <span className="font-brand text-xl text-sg-gray5">{(f.name_ko || '').slice(0, 1)}</span>}
+                </span>
+                <span className="min-w-0">
+                  <Link href={`/${l}/faculty/${f.id}`} className="block font-bold text-[15px] hover:text-sg-cardinal">
+                    {ko ? f.name_ko : f.name_en || f.name_ko} <span className="text-[12.5px] font-medium text-sg-gray9">{ko ? f.title_ko : f.title_en}</span>
+                  </Link>
+                  <span className="block text-[12.5px] text-sg-gray11 truncate">
+                    {[f.room ? (ko ? `${f.room}호` : `Room ${f.room}`) : '', f.email].filter(Boolean).join(' · ')}
+                  </span>
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
         {labs.length === 0 && (
-          <p className="mt-8 text-[15px] text-sg-gray9">{ko ? '연구실 정보는 관리자 화면에서 교수진을 등록하면 자동으로 채워집니다.' : 'This table fills in automatically once faculty records are added.'}</p>
+          <p className="mt-8 text-[15px] text-sg-gray9">{ko ? '연구실 정보는 관리자 화면에서 교수진을 등록하면 자동으로 채워집니다.' : 'This list fills in automatically once faculty records are added.'}</p>
         )}
       </StaticPage>
     );

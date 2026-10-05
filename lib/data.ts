@@ -112,6 +112,13 @@ async function getReservationsRaw(facility: string, year: number, month: number)
 }
 
 /** 전임교수 중 연구실이 등록된 수 — '18개 연구실' 같은 문구를 DB와 연동하기 위해 사용합니다. */
+/** 전임교수 수 — 홈 '학과 한눈에' 숫자. 석학·명예·행정실은 빼고 센다. */
+export async function getFacultyCount() {
+  const sb = createPublicClient();
+  const { count } = await sb.from('faculty').select('id', { count: 'exact', head: true })
+    .eq('is_emeritus', false).eq('published', true).or('field.is.null,field.neq.chair');
+  return count || 0;
+}
 export async function getLabCount() {
   const sb = createPublicClient();
   const { count } = await sb.from('faculty').select('id', { count: 'exact', head: true }).eq('is_emeritus', false).eq('published', true).not('lab_ko', 'is', null).or('field.is.null,field.neq.chair');
