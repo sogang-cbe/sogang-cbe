@@ -45,6 +45,11 @@ export const nav: NavItem[] = [
     { id: 'equipment', ko: '공용장비', en: 'Shared Instruments', href: '/equipment' },
     { id: 'rooms', ko: '학과회의실', en: 'Meeting Room', href: '/reservation' },
   ]},
+  { id: 'alumni', ko: '동문회', en: 'Alumni', href: '/alumni/intro', sub: [
+    { id: 'intro', ko: '동문회 소개', en: 'About Alumni', href: '/alumni/intro' },
+    { id: 'officers', ko: '임원 명단', en: 'Officers', href: '/alumni/officers' },
+    { id: 'dues', ko: '회비 납부', en: 'Membership Dues', href: '/alumni/dues' },
+  ]},
 ];
 export const label = (item: { ko: string; en: string }, l: Locale) => (l === 'en' ? item.en : item.ko);
 /** 외부 링크(BK21 등)는 로케일 접두어 없이 새 탭으로 연다. */

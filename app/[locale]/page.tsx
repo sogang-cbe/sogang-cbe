@@ -15,7 +15,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   if (!isLocale(params.locale)) notFound();   // /favicon.ico 등 언어가 아닌 한 단계 주소가 여기로 오면 500 대신 404(2026-09-25)
   const l = params.locale; const ko = l === 'ko';
   const [{ groups, gallery, banners, settings, latest }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
-  const DEFAULT_SECTIONS = ['hero', 'news', 'research', 'programs', 'quicklinks', 'gallery'];
+  const DEFAULT_SECTIONS = ['hero', 'news', 'programs', 'quicklinks', 'gallery'];   // 'research'(연구센터 카드)는 기본에서 뺐다 — 관리자 '메인·설정'에서 켤 수 있다
   /* DB(site_settings.home)에 기계과 시절 설정이 그대로 남아 있을 수 있다.
      그때만 있던 구역 이름(promo·videos·intro)이 보이면 옛 설정으로 보고 기본값을 쓴다.
      관리자 화면 '메인·설정'에서 한 번 저장하면 이 보정은 더 이상 타지 않는다. */
@@ -26,10 +26,10 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   const on = (s: string) => sections.includes(s);
 
   const programs = [
-    { k: 'ug', d: 'ugDesc', href: '/undergraduate/curriculum', tagKo: '학부', tagEn: 'Undergraduate', tint: 'var(--sg-cardinal)' },
-    { k: 'grad', d: 'gradDesc', href: '/graduate/admission', tagKo: '대학원', tagEn: 'Graduate', tint: 'var(--sg-blue)', extra: ko ? `, ${labCount}개 연구실` : `, ${labCount} labs` },
-    { k: 'researchNav', d: 'researchDesc', href: '/about/labs', tagKo: '연구', tagEn: 'Research', tint: 'var(--sg-orange)' },
-    { k: 'equipmentNav', d: 'equipmentDesc', href: '/equipment', tagKo: '공용장비', tagEn: 'Instruments', tint: 'var(--sg-teal)' },
+    { k: 'ug', d: 'ugDesc', href: '/undergraduate/curriculum', tagKo: '학부', tagEn: 'Undergraduate' },
+    { k: 'grad', d: 'gradDesc', href: '/graduate/admission', tagKo: '대학원', tagEn: 'Graduate', extra: ko ? `, ${labCount}개 연구실` : `, ${labCount} labs` },
+    { k: 'researchNav', d: 'researchDesc', href: '/about/labs', tagKo: '연구', tagEn: 'Research' },
+    { k: 'equipmentNav', d: 'equipmentDesc', href: '/equipment', tagKo: '공용장비', tagEn: 'Instruments' },
   ] as const;
   const quick = [
     { k: 'academic', href: '/board/academic', icon: 'M4 4h12l4 4v12H4zM16 4v4h4M8 13h8M8 17h5' },
@@ -106,19 +106,19 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         <section className="bg-sg-mist py-24">
           <div className="container-site">
             <Reveal className="mb-10"><p className="eyebrow">{T(l, 'programsTitle')}</p><h2 className="h-section mt-3">{ko ? '학부에서 대학원, 그리고 연구 현장까지' : 'From coursework to the laboratory'}</h2></Reveal>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {/* 흰 카드 + 카디널 한 가지로 통일. 네 가지 원색 그라디언트는 학교 색 체계와 겉돌았다(2026-10-07 책임자). */}
+            <div className="grid gap-px bg-sg-line border border-sg-line sm:grid-cols-2 lg:grid-cols-4">
               {programs.map((p, i) => (
-                <Reveal key={p.k} delay={i * 80}>
-                  <Link href={`/${l}${p.href}`} className="group relative block aspect-[3/4] overflow-hidden bg-sg-ink text-white">
-                    <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105" style={{ background: `linear-gradient(150deg, ${p.tint} 0%, #1a1a1a 78%)` }} />
-                    <div className="absolute inset-0 opacity-[.10]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)', backgroundSize: '20px 20px' }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-sg-ink via-[rgba(26,26,26,0.25)] to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-6">
-                      <p className="text-[12.5px] font-semibold tracking-[0.12em] text-white/70 uppercase">{ko ? p.tagKo : p.tagEn}</p>
-                      <h3 className="mt-1 font-brand text-[1.8rem] leading-tight">{T(l, p.k)}</h3>
-                      <p className="mt-2 text-[14px] text-white/80 leading-relaxed">{T(l, p.d)}{(p as any).extra || ''}</p>
-                      <span className="mt-4 inline-flex w-10 h-10 items-center justify-center bg-sg-cardinal group-hover:bg-white group-hover:text-sg-cardinal transition-colors">→</span>
-                    </div>
+                <Reveal key={p.k} delay={i * 80} className="h-full">
+                  <Link href={`/${l}${p.href}`} className="group relative flex h-full flex-col bg-white p-7 md:p-8 transition-colors hover:bg-sg-mist">
+                    <span aria-hidden className="absolute left-0 top-0 h-[3px] w-0 bg-sg-cardinal transition-all duration-500 group-hover:w-full" />
+                    <p className="font-mono text-[12.5px] tabular-nums text-sg-gray5">{String(i + 1).padStart(2, '0')}</p>
+                    <p className="mt-6 text-[12.5px] font-semibold tracking-[0.12em] text-sg-cardinal uppercase">{ko ? p.tagKo : p.tagEn}</p>
+                    <h3 className="mt-1.5 font-brand text-[1.7rem] leading-tight break-keep">{T(l, p.k)}</h3>
+                    <p className="mt-3 text-[14.5px] leading-relaxed text-sg-gray11 break-keep">{T(l, p.d)}{(p as any).extra || ''}</p>
+                    <span className="mt-auto pt-7 inline-flex items-center gap-2 text-[14px] font-semibold text-sg-ink group-hover:text-sg-cardinal transition-colors">
+                      {ko ? '바로가기' : 'Open'} <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
+                    </span>
                   </Link>
                 </Reveal>
               ))}

@@ -15,8 +15,8 @@ const LEGACY_PAGES: Record<string, string> = {
   '04_03': '/undergraduate/rules', '04_04': '/graduate/rules', '04_05': '/undergraduate/lab',
   '05_01': '/board/research', '05_02': '/board/seminar', '05_04': '/board/academic', '05_05': '/board/scholarship',
   '06_01': '/undergraduate/activities', '06_02': '/undergraduate/activities', '06_03': '/board/gallery',
-  // 동문회 메뉴는 내렸다(2026-10-07) — 옛 동문회 주소는 홈으로 보낸다
-  '07_01': '', '07_02': '', '07_03': '', '07_04': '/board/gallery', '07_05': '', '07_06': '', '07_07': '',
+  '07_01': '/alumni/intro', '07_02': '/alumni/intro', '07_03': '/alumni/intro', '07_04': '/board/gallery',
+  '07_05': '/alumni/officers', '07_06': '/alumni/dues', '07_07': '/alumni/intro',
   '08_01': '/reservation', '08_02': '/board/grad_intro',
   'sitemap': '',
 };
