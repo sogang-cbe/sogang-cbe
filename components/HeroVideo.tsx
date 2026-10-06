@@ -118,10 +118,10 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
             <p className="rise rise-1 text-[15px] md:text-[17px] font-semibold tracking-[0.12em] text-white/80">
               {ko ? 'SOGANG UNIVERSITY · 화공생명공학과' : 'SOGANG UNIVERSITY · CHEMICAL AND BIOMOLECULAR ENGINEERING'}
             </p>
-            <h1 className="mt-5 max-w-4xl font-brand text-[2.6rem] sm:text-[3.6rem] lg:text-[4.6rem] leading-[1.12]">
-              {tagline ? <span className="block rise rise-2">{tagline}</span> : (
-                <><span className="block rise rise-2">{T(locale, 'hero1')}</span><span className="block rise rise-3">{T(locale, 'hero2')}</span></>
-              )}
+            {/* 한 줄 캐치프레이즈. 관리자 설정(tagline)이 있으면 그것을, 없으면 hero1(+hero2)을 쓴다.
+                국문은 한 줄에 들어가는 길이로 유지하고, 영문은 길면 자연스럽게 접히게 둔다. */}
+            <h1 className="mt-5 max-w-4xl font-brand text-[2.6rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[1.1] break-keep rise rise-2">
+              {tagline || [T(locale, 'hero1'), T(locale, 'hero2')].filter(Boolean).join(' ')}
             </h1>
             <p className="mt-6 max-w-2xl text-[17px] md:text-[19px] leading-relaxed text-white/85 rise rise-4">{T(locale, 'heroSub')}</p>
             <div className="mt-9 flex flex-wrap gap-3 rise rise-4">
