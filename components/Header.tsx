@@ -6,19 +6,6 @@ import Logo from './Logo';
 import { nav, label, isExternal } from '@/lib/nav';
 import type { Locale } from '@/lib/i18n';
 
-function Flag({ code }: { code: 'ko' | 'en' }) {
-  if (code === 'ko') return (
-    <svg viewBox="0 0 24 16" className="w-5 h-[14px] rounded-[2px] shadow-sm" aria-hidden>
-      <rect width="24" height="16" fill="#fff" /><circle cx="12" cy="8" r="4" fill="#cd2e3a" />
-      <path d="M8.2 6.4a4 4 0 0 0 7.6 3.2 2 2 0 0 1-3.8-1.6 2 2 0 0 0-3.8-1.6z" fill="#0047a0" />
-      <g stroke="#000" strokeWidth=".8"><path d="M3.5 3.2l2-1.2M3 4l2-1.2M4 4.8l2-1.2M18.5 11.8l2 1.2M18 12.6l2 1.2M17.5 13.4l2 1.2M3.5 12.8l2 1.2M4 12l2 1.2M3 13.6l2 1.2M18.5 4.2l2-1.2M18 3.4l2-1.2M19 5l2-1.2" /></g>
-    </svg>);
-  return (
-    <svg viewBox="0 0 24 16" className="w-5 h-[14px] rounded-[2px] shadow-sm" aria-hidden>
-      <rect width="24" height="16" fill="#012169" /><path d="M0 0l24 16M24 0L0 16" stroke="#fff" strokeWidth="2.6" /><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" strokeWidth="1" />
-      <path d="M12 0v16M0 8h24" stroke="#fff" strokeWidth="4" /><path d="M12 0v16M0 8h24" stroke="#C8102E" strokeWidth="2" />
-    </svg>);
-}
 
 export default function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname();
@@ -49,7 +36,7 @@ export default function Header({ locale }: { locale: Locale }) {
             1280~1439px은 메뉴 간격을 줄이고, 그보다 좁으면 햄버거 메뉴 */}
         <nav className="hidden xl:flex items-center h-full" aria-label="Main" onMouseEnter={() => setMega(true)}>
           {nav.map((item) => (
-            <Link key={item.id} href={`/${locale}${item.href}`} className="relative px-3 min-[1440px]:px-[18px] h-full flex items-center text-[16.5px] font-semibold text-sg-ink hover:text-sg-cardinal after:absolute after:left-3 after:right-3 min-[1440px]:after:left-[18px] min-[1440px]:after:right-[18px] after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:scale-x-0 after:origin-left after:transition-transform hover:after:scale-x-100">
+            <Link key={item.id} href={`/${locale}${item.href}`} className="relative px-2.5 min-[1536px]:px-4 h-full flex items-center text-[16px] min-[1536px]:text-[16.5px] font-semibold text-sg-ink hover:text-sg-cardinal after:absolute after:left-2.5 after:right-2.5 min-[1536px]:after:left-4 min-[1536px]:after:right-4 after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:scale-x-0 after:origin-left after:transition-transform hover:after:scale-x-100">
               {label(item, locale)}
             </Link>
           ))}
@@ -57,8 +44,8 @@ export default function Header({ locale }: { locale: Locale }) {
         <div className="flex items-center gap-2">
           {/* 일반 <a>여야 한다 — next/link로 두면 화면에 보이는 순간 /xx?setlang=1 을 프리페치하고, 미들웨어가 그것을 '언어 선택'으로 받아
               쿠키를 반대 언어로 바꿔 버린다(2026-09-24 발견: 한국어 페이지를 보기만 해도 다음 접속이 영어로 열리던 원인) */}
-          <a href={switchHref} onClick={switchLang} className="flex items-center gap-2 px-3 py-2 border border-sg-line text-[13px] font-semibold text-sg-ink hover:border-sg-ink" aria-label={other === 'en' ? 'Switch to English' : '한국어로 전환'}>
-            <Flag code={other} /> {other === 'en' ? 'ENG' : '한국어'}
+          <a href={switchHref} onClick={switchLang} className="px-2.5 py-2 text-[13px] font-semibold tracking-wide text-sg-gray11 hover:text-sg-cardinal transition-colors" aria-label={other === 'en' ? 'Switch to English' : '한국어로 전환'}>
+            {other === 'en' ? 'ENG' : '한국어'}
           </a>
           <button onClick={() => setOpen(!open)} className="xl:hidden p-2 text-sg-ink" aria-label="Menu" aria-expanded={open}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">{open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 7h18M3 12h18M3 17h18" />}</svg>

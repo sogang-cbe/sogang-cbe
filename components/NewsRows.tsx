@@ -1,5 +1,6 @@
 'use client';
 import Link from '@/components/Link';
+import Reveal from './Reveal';
 import { useRef, useState, useEffect } from 'react';
 import { fmtDate, type Post } from './PostCard';
 import { t, T, type Locale } from '@/lib/i18n';
@@ -118,12 +119,12 @@ export default function NewsRows({ locale, groups }: { locale: Locale; groups: R
       {/* 공지: 카드 대신 두 칼럼 제목 리스트 — 학사공지(왼쪽) / 장학·취업(오른쪽) */}
       <div className="pb-10 border-b border-sg-line">
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 items-stretch">
-          <NoticeList locale={locale} board="academic" posts={groups.academic || []} />
-          <NoticeList locale={locale} board="scholarship" posts={groups.scholarship || []} />
+          <Reveal className="h-full"><NoticeList locale={locale} board="academic" posts={groups.academic || []} /></Reveal>
+          <Reveal className="h-full" delay={100}><NoticeList locale={locale} board="scholarship" posts={groups.scholarship || []} /></Reveal>
         </div>
       </div>
-      <Row locale={locale} board="research" posts={groups.research || []} variant="image" />
-      <Row locale={locale} board="seminar" posts={groups.seminar || []} variant="image" />
+      <Reveal><Row locale={locale} board="research" posts={groups.research || []} variant="image" /></Reveal>
+      <Reveal><Row locale={locale} board="seminar" posts={groups.seminar || []} variant="image" /></Reveal>
     </div>
   );
 }

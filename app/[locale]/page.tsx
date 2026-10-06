@@ -154,7 +154,8 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {gallery.slice(0, 8).map((g: any, i: number) => (
-                <Link key={g.id} href={`/${l}/board/gallery/${g.id}`} className={`group relative overflow-hidden bg-white/5 ${i === 0 ? 'col-span-2 row-span-2' : ''} aspect-square`}>
+                <Reveal key={g.id} delay={Math.min(i, 5) * 70} className={i === 0 ? 'col-span-2 row-span-2' : ''}>
+                  <Link href={`/${l}/board/gallery/${g.id}`} className="group relative block overflow-hidden bg-white/5 h-full aspect-square">
                   {/* 사진이 있으면 사진, 없으면 제목을 보여 주는 타일 (정사각형 칸이라 16:10 자동표지를 쓰면 글자가 잘린다) */}
                   {(g.thumbnail_url || g.images?.[0]?.url) ? (<>
                     <img src={g.thumbnail_url || g.images[0].url} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -165,7 +166,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
                       <span className={`font-semibold leading-snug break-keep text-white/85 group-hover:text-white ${i === 0 ? 'text-[17px] line-clamp-4' : 'text-[13px] line-clamp-3'}`}>{t(g, 'title', l)}</span>
                     </span>
                   )}
-                </Link>
+                </Link></Reveal>
               ))}
             </div>
           </div>

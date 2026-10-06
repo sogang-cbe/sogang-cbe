@@ -12,7 +12,8 @@ export default function Logo({ locale, light = false, size = 'md' }: { locale: L
       <img src={light ? '/images/brand/signature-kor-eng-white.png' : '/images/brand/signature-kor-eng.png'} alt="서강대학교 Sogang University" className={`${h} w-auto`} />
       <span className={`hidden sm:block border-l pl-3 md:pl-4 leading-tight ${light ? 'border-white/40 text-white' : 'border-sg-gray4 text-sg-ink'}`}>
         <span className="block font-bold text-[17px] md:text-[19px] tracking-tight">{locale === 'en' ? 'Chemical and Biomolecular Engineering' : '화공생명공학과'}</span>
-        <span className={`block text-[10.5px] md:text-[11px] tracking-[0.04em] ${light ? 'text-white/70' : 'text-sg-gray9'}`}>{locale === 'en' ? '서강대학교 화공생명공학과' : 'Department of Chemical and Biomolecular Engineering'}</span>
+        {/* 전체 메뉴가 보이는 1280~1599px 구간에서는 긴 영문 부제를 감춘다 — 메뉴 8개 + 언어 전환이 한 줄에 들어가야 한다 */}
+        <span className={`block xl:hidden min-[1600px]:block text-[10.5px] md:text-[11px] tracking-[0.04em] ${light ? 'text-white/70' : 'text-sg-gray9'}`}>{locale === 'en' ? '서강대학교 화공생명공학과' : 'Department of Chemical and Biomolecular Engineering'}</span>
       </span>
     </Link>
   );
