@@ -14,7 +14,7 @@ export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 �
 export default async function Home({ params }: { params: { locale: Locale } }) {
   if (!isLocale(params.locale)) notFound();   // /favicon.ico 등 언어가 아닌 한 단계 주소가 여기로 오면 500 대신 404(2026-09-25)
   const l = params.locale; const ko = l === 'ko';
-  const [{ groups, gallery, banners, settings, latest }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
+  const [{ groups, gallery, banners, settings }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
   const DEFAULT_SECTIONS = ['hero', 'news', 'programs', 'quicklinks', 'gallery'];   // 'research'(연구센터 카드)는 기본에서 뺐다 — 관리자 '메인·설정'에서 켤 수 있다
   /* DB(site_settings.home)에 기계과 시절 설정이 그대로 남아 있을 수 있다.
      그때만 있던 구역 이름(promo·videos·intro)이 보이면 옛 설정으로 보고 기본값을 쓴다.
@@ -42,7 +42,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
 
   return (
     <>
-      {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko === LEGACY_TAGLINE ? undefined : settings.tagline_ko} taglineEn={settings.tagline_en} news={latest} newsHref={on('news') ? '#news' : `/${l}/board/academic`} />}
+      {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko === LEGACY_TAGLINE ? undefined : settings.tagline_ko} taglineEn={settings.tagline_en} />}
 
 
       {banners.length > 0 && (
