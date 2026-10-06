@@ -45,7 +45,7 @@ export default function Header({ locale }: { locale: Locale }) {
       <div className="h-1 bg-sg-cardinal" />
       <div className="container-site h-[76px] flex items-center justify-between gap-6">
         <Logo locale={locale} />
-        {/* 전체 메뉴는 1280px 이상에서만: 1024~1365px에서 메뉴가 넘쳐 오른쪽 BK21·언어 전환 버튼이 화면 밖으로 잘리던 문제(2026-09-25 전체 점검).
+        {/* 전체 메뉴는 1280px 이상에서만: 1024~1365px에서 메뉴가 넘쳐 오른쪽 언어 전환 버튼이 화면 밖으로 잘리던 문제(2026-09-25 전체 점검).
             1280~1439px은 메뉴 간격을 줄이고, 그보다 좁으면 햄버거 메뉴 */}
         <nav className="hidden xl:flex items-center h-full" aria-label="Main" onMouseEnter={() => setMega(true)}>
           {nav.map((item) => (
@@ -55,11 +55,6 @@ export default function Header({ locale }: { locale: Locale }) {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          {/* 옛 홈페이지 상단바에 있던 BK21 바로가기 — 공식 로고 원색, 버튼 틀은 언어 버튼과 동일 (모바일은 대학원과정 메뉴에서) */}
-          <a href="http://bk21cheme.sogang.ac.kr" target="_blank" rel="noreferrer" title="BK21 교육연구팀 (BK21 FOUR)"
-            className="hidden md:flex items-center px-3 py-2 border border-sg-line hover:border-sg-ink">
-            <img src="/images/brand/bk21-four.png" alt="BK21 FOUR" width={44} height={20} style={{ width: 44, height: 20, maxWidth: 'none' }} />
-          </a>
           {/* 일반 <a>여야 한다 — next/link로 두면 화면에 보이는 순간 /xx?setlang=1 을 프리페치하고, 미들웨어가 그것을 '언어 선택'으로 받아
               쿠키를 반대 언어로 바꿔 버린다(2026-09-24 발견: 한국어 페이지를 보기만 해도 다음 접속이 영어로 열리던 원인) */}
           <a href={switchHref} onClick={switchLang} className="flex items-center gap-2 px-3 py-2 border border-sg-line text-[13px] font-semibold text-sg-ink hover:border-sg-ink" aria-label={other === 'en' ? 'Switch to English' : '한국어로 전환'}>

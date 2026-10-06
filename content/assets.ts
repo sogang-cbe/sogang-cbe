@@ -25,5 +25,5 @@ export const heroFieldVideos: { field?: string; src: string; poster: string }[] 
 /** 섹션 상단 배경 이미지. 비어 있으면 각 페이지가 그라디언트로 대체한다. */
 export const sectionHero: Record<string, string> = {
   about: '', faculty: '', research: '', undergraduate: '', graduate: '',
-  board: '', facility: '', alumni: '', default: '',
+  board: '', facility: '', default: '',
 };
