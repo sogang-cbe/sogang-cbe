@@ -1,6 +1,5 @@
 import Link from '@/components/Link';
 import { T, t, type Locale, type UIKey } from '@/lib/i18n';
-import { areas } from '@/content/areas';
 import HeroRotator from './HeroRotator';
 import { fmtDate, type Post } from './PostCard';
 import { boardTint } from '@/lib/board-colors';
@@ -133,21 +132,8 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
           </div>
           <HeroNews locale={locale} items={news ?? []} allHref={newsHref ?? `/${locale}/board/academic`} />
         </div>
-
-        {/* 학과 연구센터 띠 */}
-        <div className="mt-14 md:mt-20 grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/15 border border-white/15 backdrop-blur-sm rise rise-4">
-          {areas.map((a) => (
-            <Link key={a.id} href={`/${locale}/about/centers#${a.id}`} className="group bg-[rgba(26,26,26,0.4)] hover:bg-[rgba(175,39,47,0.8)] transition-colors p-4 md:p-5 flex gap-3 sm:gap-4">
-              <span aria-hidden className="w-[3px] shrink-0 self-stretch" style={{ backgroundColor: a.color }} />
-              <div className="min-w-0">
-                <p className="font-bold text-[15px] md:text-[16.5px] leading-tight break-keep">{ko ? a.ko : a.en}</p>
-                {ko && <p className="mt-1 text-[12px] md:text-[12.5px] text-white/60 break-keep group-hover:text-white/85">{a.en}</p>}
-              </div>
-            </Link>
-          ))}
-        </div>
       </div>
-      <a href="#areas" className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/60 hover:text-white flex flex-col items-center gap-1 text-[11px] tracking-[.3em]">SCROLL<span className="floaty">↓</span></a>
+      <a href="#news" className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/60 hover:text-white flex flex-col items-center gap-1 text-[11px] tracking-[.3em]">SCROLL<span className="floaty">↓</span></a>
     </section>
   );
 }

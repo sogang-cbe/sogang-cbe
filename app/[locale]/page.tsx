@@ -3,11 +3,10 @@ import Link from '@/components/Link';
 import HeroVideo from '@/components/HeroVideo';
 import NewsRows from '@/components/NewsRows';
 import Reveal from '@/components/Reveal';
-import { getHomeData, getLabCount, getFacultyCount } from '@/lib/data';
+import { getHomeData, getLabCount } from '@/lib/data';
 import { T, t, isLocale, type Locale } from '@/lib/i18n';
 import { areas } from '@/content/areas';
 import { assets, heroFieldVideos } from '@/content/assets';
-import { ugCourses, gradCourses, history } from '@/content/courses';
 import { youtubeThumb } from '@/lib/html';
 
 export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 길게(10분 → 1시간, 2026-09-25 전송량 절감)
@@ -15,8 +14,15 @@ export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 �
 export default async function Home({ params }: { params: { locale: Locale } }) {
   if (!isLocale(params.locale)) notFound();   // /favicon.ico 등 언어가 아닌 한 단계 주소가 여기로 오면 500 대신 404(2026-09-25)
   const l = params.locale; const ko = l === 'ko';
-  const [{ groups, gallery, banners, settings, latest }, labCount, profCount] = await Promise.all([getHomeData(), getLabCount(), getFacultyCount()]);
-  const sections: string[] = settings.sections || ['hero', 'intro', 'news', 'research', 'programs', 'quicklinks', 'gallery'];
+  const [{ groups, gallery, banners, settings, latest }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
+  const DEFAULT_SECTIONS = ['hero', 'news', 'research', 'programs', 'quicklinks', 'gallery'];
+  /* DB(site_settings.home)에 기계과 시절 설정이 그대로 남아 있을 수 있다.
+     그때만 있던 구역 이름(promo·videos·intro)이 보이면 옛 설정으로 보고 기본값을 쓴다.
+     관리자 화면 '메인·설정'에서 한 번 저장하면 이 보정은 더 이상 타지 않는다. */
+  const stored: string[] = settings.sections || [];
+  const legacySettings = ['promo', 'videos', 'intro'].some((k) => stored.includes(k));
+  const sections: string[] = stored.length && !legacySettings ? stored : DEFAULT_SECTIONS;
+  const LEGACY_TAGLINE = '움직이는 모든 것의 원리를 설계합니다';
   const on = (s: string) => sections.includes(s);
 
   const programs = [
@@ -36,7 +42,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
 
   return (
     <>
-      {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko} taglineEn={settings.tagline_en} news={latest} newsHref={on('news') ? '#news' : `/${l}/board/academic`} />}
+      {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko === LEGACY_TAGLINE ? undefined : settings.tagline_ko} taglineEn={settings.tagline_en} news={latest} newsHref={on('news') ? '#news' : `/${l}/board/academic`} />}
 
 
       {banners.length > 0 && (
@@ -47,49 +53,6 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
               <div><p className="font-bold text-[16px]">{t(b, 'title', l)}</p><p className="text-[14px] text-sg-gray9">{t(b, 'subtitle', l)}</p></div>
             </a>
           ))}
-        </section>
-      )}
-
-      {/* 학과 한눈에 — 숫자 네 개로 학과의 크기를 먼저 보여 주고, 자세한 설명은 학과소개로 넘긴다. */}
-      {on('intro') && (
-        <section className="container-site pt-24 pb-10">
-          <div className="grid gap-12 lg:grid-cols-[1fr_440px] lg:gap-16 items-start">
-            <Reveal>
-              <p className="eyebrow">{ko ? '화공생명공학과' : 'About the department'}</p>
-              <h2 className="h-section mt-3 break-keep">{ko ? '화학을 공정으로 옮기는 법을 가르칩니다' : 'Teaching how chemistry becomes a process'}</h2>
-              <p className="mt-6 text-[17px] leading-relaxed text-sg-gray11 break-keep">
-                {ko
-                  ? '화공수학·열역학·전달현상·반응공학. 이 네 기둥은 화학공학자가 쓰는 공통 언어입니다. 서강대학교 화공생명공학과는 이 기본을 학부에서 끝까지 다루고, 2·3·4학년 세 해에 걸친 실험으로 강의에서 세운 식이 실제 장치에서 어떻게 움직이는지 확인하게 합니다.'
-                  : 'Chemical engineering mathematics, thermodynamics, transport phenomena and reaction engineering — the common language of the field. We teach these in full at undergraduate level, and pair them with three consecutive years of laboratory work so the equations meet real equipment.'}
-              </p>
-              <p className="mt-4 text-[17px] leading-relaxed text-sg-gray11 break-keep">
-                {ko
-                  ? '그 위에 생명·신소재·에너지·환경·반도체로 이어지는 전공선택이 열려 있고, 대학원에서는 18개 연구실과 네 개의 대형 연구센터가 촉매·분리막·고분자·전기화학·나노바이오·생물공정을 아우릅니다.'
-                  : 'On that foundation, electives open into life science, advanced materials, energy, environment and semiconductors, while our graduate laboratories and four research centers span catalysis, membranes, polymers, electrochemistry, nano-bioengineering and bioprocessing.'}
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href={`/${l}/about/intro`} className="btn-primary">{ko ? '학과소개' : 'About us'}</Link>
-                <Link href={`/${l}/about/history`} className="btn-ghost">{ko ? '연혁' : 'History'}</Link>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <dl className="grid grid-cols-2 border-t-2 border-sg-ink">
-                {[
-                  { n: history[0]?.year || '1976', u: ko ? '설립' : 'founded', d: ko ? '이공대학 내 학과로 출발' : 'as a department of the College of Science' },
-                  { n: String(profCount || 17), u: ko ? '명' : '', d: ko ? '전임교수' : 'full-time faculty' },
-                  { n: String(labCount || 18), u: ko ? '개' : '', d: ko ? '연구실' : 'research laboratories' },
-                  { n: String(ugCourses.length + gradCourses.length), u: ko ? '과목' : '', d: ko ? '학부·대학원 교과목' : 'courses, UG and graduate' },
-                ].map((x, i) => (
-                  <div key={x.d} className={`border-b border-sg-line py-7 ${i % 2 === 0 ? 'pr-6 border-r border-sg-line' : 'pl-6'}`}>
-                    <dt className="font-brand text-[2.6rem] leading-none text-sg-cardinal tabular-nums">
-                      {x.n}<span className="text-[1.1rem] font-sans font-semibold text-sg-ink ml-1">{x.u}</span>
-                    </dt>
-                    <dd className="mt-2 text-[14px] text-sg-gray11 break-keep">{x.d}</dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
-          </div>
         </section>
       )}
 
