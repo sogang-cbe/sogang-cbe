@@ -171,6 +171,5 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     );
   }
 
-  // 행정실은 표가 중심이라 교수진 목록과 같은 폭으로 둔다
-  return <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug} wide={slug === 'staff'} />;
+  return <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug} />;
 }
