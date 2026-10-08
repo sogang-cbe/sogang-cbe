@@ -56,6 +56,13 @@ export function splitBio(html: string): { vita: string; pubs: string[] } {
   if (pubs.length === 1 && /<br\s*\/?>/i.test(pubs[0])) pubs = pubs[0].split(/<br\s*\/?>/i);
   pubs = pubs
     .map((x) => x.trim().replace(/^\d{1,3}\s*[.)]\s*/, ''))   // 글에 적혀 있던 번호는 떼고 화면 번호(01, 02 …)를 쓴다
-    .filter((x) => x.replace(/<[^>]+>/g, '').trim().length > 0);
+    .filter((x) => x.replace(/<[^>]+>/g, '').trim().length > 0)
+    // 한 논문이 두 줄에 걸쳐 있던 경우(예: 뒷줄이 영상 링크뿐) 앞 항목에 도로 붙인다 — 별개 논문처럼 번호가 붙지 않게
+    .reduce<string[]>((acc, x) => {
+      const plain = x.replace(/<[^>]+>/g, '').trim();
+      if (acc.length && plain.length < 60 && !/\d{4}/.test(plain)) acc[acc.length - 1] += ` ${x}`;
+      else acc.push(x);
+      return acc;
+    }, []);
   return { vita: s.slice(0, m.index).trim(), pubs: pubs.length ? pubs : [rest] };
 }
