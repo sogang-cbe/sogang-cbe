@@ -3,6 +3,7 @@ import StaticPage from '@/components/StaticPage';
 import { history } from '@/content/courses';
 import { areas } from '@/content/areas';
 import { getFaculty } from '@/lib/data';
+import { shortLab } from '@/lib/html';
 import type { Locale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
 
@@ -89,51 +90,51 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     );
   }
 
-  /* 연구실 — 교수진(DB)에서 자동 생성. 교수 정보를 고치면 이 목록이 따라 바뀐다. */
+  /* 연구실 — 교수진(DB)에서 자동 생성. 교수 정보를 고치면 이 목록이 따라 바뀐다.
+     2026-10-09 개편: 사진과 안내문을 빼고 책임교수 · 연구실 · 연구분야 세 열의 목록으로 바꿨다.
+     18개를 위에서 아래로 훑으며 비교하는 화면이라 카드보다 열이 맞는 목록이 눈에 들어온다. */
   if (slug === 'labs') {
     const faculty = await getFaculty(false);
     const labs = faculty.filter((f: any) => f.lab_ko && f.field !== 'staff');
     const kw = (f: any) => (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean).slice(0, 4);
+    const cols = 'md:grid md:grid-cols-[190px_minmax(0,1.1fr)_minmax(0,1fr)] md:gap-8 lg:gap-10';
     return (
       <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug}>
-        <p className="text-[16px] text-sg-gray11 break-keep max-w-3xl">
-          {ko
-            ? `화공생명공학과에는 ${labs.length}개 연구실이 있습니다. 촉매·분리막·고분자·전기화학·나노바이오·생물공정을 아우르며, 각 연구실 홈페이지에서 진행 중인 연구와 구성원을 볼 수 있습니다.`
-            : `${labs.length} research laboratories spanning catalysis, membranes, polymers, electrochemistry, nano-bioengineering and bioprocessing. Each lab's own site has current projects and members.`}
-        </p>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
+        {/* 열 제목 — 모바일에서는 줄이 쌓이므로 감춘다 */}
+        <div className={`hidden ${cols} pb-2.5 px-2 text-[12px] font-semibold tracking-[0.08em] text-sg-gray9`}>
+          <span>{ko ? '책임교수' : 'Faculty'}</span><span>{ko ? '연구실' : 'Laboratory'}</span><span>{ko ? '연구분야' : 'Research areas'}</span>
+        </div>
+        <ul className="border-t-2 border-sg-ink">
           {labs.map((f: any) => (
-            <div key={f.id} className="card group flex flex-col p-6">
-              <h2 className="font-brand text-[1.25rem] leading-snug break-keep !mt-0">
-                {f.lab_url
-                  ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{ko ? f.lab_ko : f.lab_en || f.lab_ko} <span aria-hidden className="text-[14px]">↗</span></a>
-                  : (ko ? f.lab_ko : f.lab_en || f.lab_ko)}
-              </h2>
-              {/* 국문 연구실명이 괄호로 영문을 이미 품고 있으면 한 번 더 적지 않는다 */}
-              {ko && f.lab_en && !String(f.lab_ko || '').includes(f.lab_en) && <p className="mt-1 text-[13px] text-sg-gray9">{f.lab_en}</p>}
+            <li key={f.id} className={`${cols} items-center border-b border-sg-line px-2 py-5 hover:bg-sg-mist transition-colors`}>
+              <div className="min-w-0">
+                <Link href={`/${l}/faculty/${f.id}`} className="font-bold text-[15.5px] hover:text-sg-cardinal break-keep">
+                  {ko ? f.name_ko : f.name_en || f.name_ko}
+                  <span className="ml-1.5 text-[12.5px] font-medium text-sg-gray9">{ko ? f.title_ko : f.title_en}</span>
+                </Link>
+                <p className="mt-0.5 text-[12.5px] text-sg-gray9 truncate">
+                  {[f.room ? (ko ? `${f.room}호` : `Room ${f.room}`) : '', f.email].filter(Boolean).join(' · ')}
+                </p>
+              </div>
+
+              <div className="min-w-0 mt-3 md:mt-0">
+                {/* 국문명 뒤의 영문 괄호는 떼고 영문은 아래 줄로 — 한 줄에 두 번 적히지 않게 */}
+                <h2 className="text-[17.5px] font-bold leading-snug break-keep !mt-0">
+                  {f.lab_url
+                    ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)} <span aria-hidden className="text-[13px] text-sg-cardinal">↗</span></a>
+                    : shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)}
+                </h2>
+                {ko && f.lab_en && <p className="mt-1 text-[13px] leading-snug text-sg-gray9">{f.lab_en}</p>}
+              </div>
+
               {kw(f).length > 0 && (
-                <ul className="mt-4 flex flex-wrap gap-1.5">
-                  {kw(f).map((k: string) => <li key={k} className="text-[12.5px] px-2.5 py-1 border border-sg-line bg-sg-mist">{k}</li>)}
+                <ul className="mt-3 md:mt-0 flex flex-wrap gap-1.5">
+                  {kw(f).map((k: string) => <li key={k} className="text-[12px] leading-[1.5] px-2 py-[3px] bg-sg-mist text-sg-gray11 break-keep">{k}</li>)}
                 </ul>
               )}
-              <div className="mt-auto pt-5 flex items-center gap-3 border-t border-sg-line mt-5">
-                <span className="w-11 h-[52px] shrink-0 bg-sg-mist overflow-hidden grid place-items-center">
-                  {f.photo_url
-                    ? <img src={f.photo_url} alt="" loading="lazy" className="w-full h-full object-cover" />
-                    : <span className="font-brand text-xl text-sg-gray5">{(f.name_ko || '').slice(0, 1)}</span>}
-                </span>
-                <span className="min-w-0">
-                  <Link href={`/${l}/faculty/${f.id}`} className="block font-bold text-[15px] hover:text-sg-cardinal">
-                    {ko ? f.name_ko : f.name_en || f.name_ko} <span className="text-[12.5px] font-medium text-sg-gray9">{ko ? f.title_ko : f.title_en}</span>
-                  </Link>
-                  <span className="block text-[12.5px] text-sg-gray11 truncate">
-                    {[f.room ? (ko ? `${f.room}호` : `Room ${f.room}`) : '', f.email].filter(Boolean).join(' · ')}
-                  </span>
-                </span>
-              </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
         {labs.length === 0 && (
           <p className="mt-8 text-[15px] text-sg-gray9">{ko ? '연구실 정보는 관리자 화면에서 교수진을 등록하면 자동으로 채워집니다.' : 'This list fills in automatically once faculty records are added.'}</p>
         )}
