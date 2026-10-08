@@ -22,8 +22,10 @@ export default function Header({ locale }: { locale: Locale }) {
     const measure = () => {
       const bar = barRef.current, first = navRef.current?.firstElementChild as HTMLElement | null;
       if (!bar || !first) return;
-      const pad = parseFloat(getComputedStyle(first).paddingLeft) || 0;
-      setNavX(Math.max(0, first.getBoundingClientRect().left + pad - bar.getBoundingClientRect().left));
+      // 펼침 줄도 같은 container(좌우 여백 포함) 안에 있으므로, 그 여백만큼 빼야 글자끼리 맞는다
+      const barLeft = bar.getBoundingClientRect().left + (parseFloat(getComputedStyle(bar).paddingLeft) || 0);
+      const textLeft = first.getBoundingClientRect().left + (parseFloat(getComputedStyle(first).paddingLeft) || 0);
+      setNavX(Math.max(0, Math.round(textLeft - barLeft)));
     };
     measure();
     window.addEventListener('resize', measure);
