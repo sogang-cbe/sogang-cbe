@@ -16,7 +16,7 @@ export default async function StaticPage({ locale, section, slug, children }: { 
   if (!builtin && !db && !children) notFound();
   return (
     <>
-      <PageHero locale={locale} section={section} current={slug} title={locale === 'en' ? db?.title_en || undefined : db?.title_ko || undefined} />
+      <PageHero locale={locale} section={section} current={slug} title={locale === 'en' ? db?.title_en || undefined : db?.title_ko || undefined} narrow />
       <article className="container-narrow py-14">
         {pageImages[key] && !children && <img src={pageImages[key]} alt="" className="w-full aspect-[21/9] object-cover mb-10 border border-sg-line" />}
         {children}

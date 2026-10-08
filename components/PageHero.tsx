@@ -5,7 +5,11 @@ import { sectionHero } from '@/content/assets';
 import HeroDecor from './HeroDecor';
 import TabScroll from './TabScroll';
 
-export default function PageHero({ locale, section, current, title, image }: { locale: Locale; section: string; current?: string; title?: string; image?: string }) {
+/** 상단 제목·경로·탭.
+ *  narrow: 본문이 좁은 컨테이너(1088px)를 쓰는 페이지에서는 제목·경로·탭도 같은 폭으로 맞춘다.
+ *  (폭이 어긋나면 제목과 본문의 왼쪽 선이 안 맞아 눈에 거슬린다 — 2026-10-09 책임자 지적) */
+export default function PageHero({ locale, section, current, title, image, narrow }: { locale: Locale; section: string; current?: string; title?: string; image?: string; narrow?: boolean }) {
+  const box = narrow ? 'container-narrow' : 'container-site';
   const sec = nav.find((n) => n.id === section);
   const cur = sec?.sub?.find((s) => s.id === current);
   const heading = title || (cur ? label(cur, locale) : sec ? label(sec, locale) : '');
@@ -20,13 +24,13 @@ export default function PageHero({ locale, section, current, title, image }: { l
             : <div className="w-full h-full" style={{ background: 'linear-gradient(120deg,#1a1a1a 0%,#5d1418 55%,#8b1e24 100%)' }} />}
           <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(26,26,26,.85),rgba(139,30,36,.55)_60%,rgba(26,26,26,.3))]" /><HeroDecor />
         </div>
-        <div className="container-site relative py-20 md:py-24">
+        <div className={`${box} relative py-20 md:py-24`}>
           <p className="text-[14px] font-semibold tracking-[0.12em] text-white/75 uppercase">{sec ? label(sec, locale) : locale === 'ko' ? '화공생명공학과' : 'Sogang CBE'}</p>
           <h1 className="h-display mt-3">{heading}</h1>
         </div>
       </section>
       <div className="border-b border-sg-line bg-white">
-        <div className="container-site flex items-center gap-2 py-3 text-[14px] text-sg-gray9">
+        <div className={`${box} flex items-center gap-2 py-3 text-[14px] text-sg-gray9`}>
           <Link href={`/${locale}`} className="hover:text-sg-cardinal">{T(locale, 'home')}</Link>
           {sec && <><span>›</span><span>{label(sec, locale)}</span></>}
           {cur && <><span>›</span><span className="text-sg-ink font-semibold">{label(cur, locale)}</span></>}
@@ -34,7 +38,7 @@ export default function PageHero({ locale, section, current, title, image }: { l
       </div>
       {sec?.sub && (
         <div className="border-b border-sg-line bg-white sticky top-[80px] z-30">
-          <TabScroll className="container-site flex gap-1 overflow-x-auto no-scrollbar">
+          <TabScroll className={`${box} flex gap-1 overflow-x-auto no-scrollbar`}>
             {sec.sub.map((s) => isExternal(s.href) ? (
               <a key={s.id} href={s.href} target="_blank" rel="noreferrer" className="whitespace-nowrap px-4 py-3.5 text-[15px] border-b-[3px] -mb-px border-transparent text-sg-gray11 hover:text-sg-ink">{label(s, locale)} ↗</a>
             ) : (

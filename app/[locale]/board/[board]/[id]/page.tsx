@@ -36,7 +36,7 @@ export default async function PostPage({ params }: { params: { locale: Locale; b
   const files: { name: string; url: string; size?: number }[] = p.attachments || [];
   const contentHasImg = /<img/i.test(html || '');
   return (<>
-    <PageHero locale={l} section={section} current={current} image={p.thumbnail_url || images[0]?.url || undefined} />
+    <PageHero locale={l} section={section} current={current} image={p.thumbnail_url || images[0]?.url || undefined} narrow />
     <ViewCounter id={p.id} />
     <article className="container-narrow py-14">
       <header className="border-b-2 border-sg-ink pb-7">

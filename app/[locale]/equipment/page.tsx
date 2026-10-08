@@ -112,7 +112,7 @@ function statusChip(r: any, ko: boolean) {
 function Gate({ locale, title, children }: { locale: Locale; title?: string; children: React.ReactNode }) {
   const ko = locale === 'ko';
   return (<>
-    <PageHero locale={locale} section="facility" current="equipment" />
+    <PageHero locale={locale} section="facility" current="equipment" narrow />
     <div className="container-narrow py-16">
       <h2 className="font-brand text-[1.8rem] md:text-[2.2rem] leading-tight break-keep">{title || (ko ? '구성원만 볼 수 있는 화면입니다' : 'Members only')}</h2>
       <p className="mt-3 text-[15px] text-sg-gray11 break-keep">

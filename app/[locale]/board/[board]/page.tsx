@@ -30,7 +30,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
   if ((memberOnlyBoards as readonly string[]).includes(board)) {
     const me = await currentMember();
     if (!me || !isApproved(me.member)) return (<>
-      <PageHero locale={l} section="board" current={board} />
+      <PageHero locale={l} section="board" current={board} narrow />
       <div className="container-narrow py-16">
         <h2 className="font-brand text-[1.8rem] break-keep">{ko ? '구성원만 볼 수 있습니다' : 'Members only'}</h2>
         <p className="mt-3 text-[15px] text-sg-gray11 break-keep">{ko ? '자료실은 대학원생·교수·행정실만 볼 수 있습니다. 서강대학교 구글 계정으로 로그인해 주세요.' : 'Sign in with your Sogang Google account to view the downloads.'}</p>

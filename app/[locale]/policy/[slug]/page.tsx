@@ -9,7 +9,7 @@ const titles: Record<string, 'privacy' | 'emailPolicy' | 'terms'> = { privacy: '
 export default function Policy({ params }: { params: { locale: Locale; slug: string } }) {
   const c = staticPages[`policy/${params.slug}`]; if (!c) notFound();
   return (<>
-    <PageHero locale={params.locale} section="" title={T(params.locale, titles[params.slug])} />
+    <PageHero locale={params.locale} section="" title={T(params.locale, titles[params.slug])} narrow />
     <article className="container-narrow py-14 prose-sg" dangerouslySetInnerHTML={{ __html: wrapTables(params.locale === 'en' ? c.en : c.ko) }} />
   </>);
 }
