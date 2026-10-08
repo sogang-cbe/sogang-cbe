@@ -64,7 +64,7 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   const title = titles[board] || [board, board];
   const sub = subs[board] || ['', ''];
   return (
-    <div className="py-10 first:pt-0 border-b border-sg-line last:border-0">
+    <div className="pt-14 pb-10 first:pt-0 border-b border-sg-line last:border-0">   {/* 제목(leading-none)이 윗줄에 붙어 보여 위 여백 40→56px (2026-10-09) */}
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
           <h3 className="font-brand text-[1.7rem] md:text-[2.1rem] leading-none">{ko ? title[0] : title[1]}</h3>
