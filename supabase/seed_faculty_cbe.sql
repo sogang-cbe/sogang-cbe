@@ -70,3 +70,27 @@ insert into faculty (name_ko, name_en, title_ko, title_en, email, tel, lab_ko, l
 -- 사진 주소 교체 — 'https://pub-xxxxxxxx.r2.dev' 를 R2 공개 주소로 바꾼 뒤 실행하세요.
 -- update faculty set photo_url = replace(photo_url, 'MEDIA_BASE', 'https://pub-xxxxxxxx.r2.dev')
 --   where photo_url like 'MEDIA_BASE%';
+
+-- 전임교수 표시 순서 — 선임순(오세용 교수부터).
+-- 순서를 바꾸려면 아래 이름 나열만 고치면 된다. 명예교수·석학교수는 각자 전용 페이지라 건드리지 않는다.
+update faculty f set sort_order = v.ord
+  from (values
+    ('오세용', 1),
+    ('최진훈', 2),
+    ('이진원', 3),
+    ('오병근', 4),
+    ('강태욱', 5),
+    ('김현철', 6),
+    ('김충익', 7),
+    ('하경수', 8),
+    ('이종석', 9),
+    ('나정걸', 10),
+    ('강문성', 11),
+    ('김형준', 12),
+    ('류재건', 13),
+    ('박제영', 14),
+    ('조현석', 15),
+    ('신희종', 16),
+    ('이성현', 17)
+  ) as v(name, ord)
+  where f.name_ko = v.name and not f.is_emeritus;
