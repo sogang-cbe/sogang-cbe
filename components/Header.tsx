@@ -74,13 +74,13 @@ export default function Header({ locale }: { locale: Locale }) {
         </div>
       </div>
       {/* 하위 메뉴(데스크톱) — 가리킨 메뉴의 항목만, 늘 같은 자리에서 가로로. 빨간 글씨로 어느 메뉴인지 알려 준다. */}
-      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[160px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="container-site py-6">
-          <div style={{ marginLeft: navX }} className="flex items-baseline gap-10">
-          <p className="shrink-0 font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega) ? label(nav.find((n) => n.id === mega)!, locale) : ''}</p>
-          <ul className="flex flex-wrap gap-x-8 gap-y-2">{nav.find((n) => n.id === mega)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
-            ? <a href={sub.href} target="_blank" rel="noreferrer" className="block text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
-            : <Link href={`/${locale}${sub.href}`} className="block text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
+      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[360px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="container-site pt-6 pb-7">
+          <div style={{ marginLeft: navX }}>
+          <p className="font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega) ? label(nav.find((n) => n.id === mega)!, locale) : ''}</p>
+          <ul className="mt-3 space-y-0.5">{nav.find((n) => n.id === mega)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
+            ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
+            : <Link href={`/${locale}${sub.href}`} className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
           </div>
         </div>
       </div>
