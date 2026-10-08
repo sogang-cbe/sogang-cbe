@@ -23,7 +23,7 @@ export default function HeroDecor() {
   return (
     <div aria-hidden className="absolute inset-0 pointer-events-none text-white overflow-hidden">
       {/* 블루프린트 그리드 */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.1]">
+      <svg className="absolute inset-0 w-full h-full opacity-[0.13]">
         <defs>
           <pattern id="hero-grid" width="48" height="48" patternUnits="userSpaceOnUse">
             <path d="M48 0H0V48" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -38,7 +38,7 @@ export default function HeroDecor() {
 
       {/* 우측 공정도: 증류탑 + 응축기 + 분자 고리 */}
       <svg viewBox="0 0 900 420" preserveAspectRatio="xMaxYMid slice"
-           className="absolute right-0 top-1/2 -translate-y-1/2 h-[130%] w-auto max-w-none opacity-[0.16] stroke-current fill-none">
+           className="absolute right-0 top-1/2 -translate-y-1/2 h-[130%] w-auto max-w-none opacity-[0.22] stroke-current fill-none">
 
         {/* ── 증류탑 ── */}
         <g strokeWidth="2.5">
