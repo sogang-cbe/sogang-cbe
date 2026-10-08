@@ -31,21 +31,41 @@ die() { printf '\n\033[1;31m%s\033[0m\n' "$*" >&2; exit 1; }
 [ -f "$POSTS" ] || die "추출 데이터를 찾을 수 없습니다: $POSTS"
 command -v node >/dev/null || die "node 가 필요합니다. https://nodejs.org 에서 설치하세요."
 
-say "■ 값 입력 (입력한 글자는 보이지 않습니다)"
-read -r  -p "Supabase 주소 [https://pvbjbvsnuwccfyauajpe.supabase.co]: " SUPABASE_URL
-SUPABASE_URL="${SUPABASE_URL:-https://pvbjbvsnuwccfyauajpe.supabase.co}"
-read -rs -p "Supabase service_role 키: " SUPABASE_SERVICE_KEY; echo
-read -r  -p "R2 공개 주소 (예: https://pub-xxxx.r2.dev): " MEDIA_BASE
-read -r  -p "R2 Account ID: " R2_ACCOUNT_ID
-echo "  (아래 두 개는 Cloudflare R2 토큰 화면의 'Access Key ID'(32자)와 'Secret Access Key'(64자)입니다."
-echo "   맨 위의 'Token value' 가 아닙니다.)"
-read -rs -p "R2 Access Key ID: " R2_ACCESS_KEY_ID; echo
-read -rs -p "R2 Secret Access Key: " R2_SECRET_ACCESS_KEY; echo
-R2_BUCKET="${R2_BUCKET:-sogang-cbe-media}"
+# 길이를 확인하며 받는다. 비어 있으면 다시 묻는다. (붙여넣기 실패를 바로 알 수 있게)
+ask() {            # ask <변수명> <안내문> <기대길이,0이면 확인안함> <가릴까(y/n)>
+  local __var="$1" prompt="$2" want="$3" hide="$4" val n try=0
+  while :; do
+    if [ "$hide" = y ]; then read -rs -p "$prompt: " val; echo; else read -r -p "$prompt: " val; fi
+    val="$(printf '%s' "$val" | tr -d '[:space:]')"
+    n=${#val}
+    if [ "$n" -eq 0 ]; then
+      try=$((try+1))
+      echo "  아무것도 입력되지 않았습니다. 붙여넣기는 ⌘V 입니다. (글자가 안 보이는 건 정상)"
+      [ "$try" -ge 3 ] && die "입력이 없어 중단합니다."
+      continue
+    fi
+    if [ "$want" -ne 0 ] && [ "$n" -ne "$want" ]; then
+      echo "  ⚠ ${n}자입니다 (기대: ${want}자). 진행은 하지만 값을 확인하세요."
+    elif [ "$want" -ne 0 ]; then
+      echo "  ✓ ${n}자"
+    fi
+    printf -v "$__var" '%s' "$val"
+    return
+  done
+}
 
-# 길이가 전형적인 값과 다르면 미리 알려준다 (막지는 않는다)
-[ "${#R2_ACCESS_KEY_ID}" -eq 32 ] || echo "  ⚠ Access Key ID 가 ${#R2_ACCESS_KEY_ID}자입니다 (보통 32자)."
-[ "${#R2_SECRET_ACCESS_KEY}" -eq 64 ] || echo "  ⚠ Secret Access Key 가 ${#R2_SECRET_ACCESS_KEY}자입니다 (보통 64자). 'Token value' 를 넣지 않았는지 확인하세요."
+say "■ 값 입력"
+read -r -p "Supabase 주소 [https://pvbjbvsnuwccfyauajpe.supabase.co]: " SUPABASE_URL
+SUPABASE_URL="$(printf '%s' "${SUPABASE_URL:-https://pvbjbvsnuwccfyauajpe.supabase.co}" | tr -d '[:space:]')"
+ask SUPABASE_SERVICE_KEY "Supabase secret 키 (sb_secret_… 또는 eyJ…, 보이지 않습니다)" 0 y
+ask MEDIA_BASE "R2 공개 주소 (https://pub-xxxx.r2.dev)" 0 n
+echo
+echo "  아래 두 개는 Cloudflare R2 토큰 화면의 값입니다. 맨 위 'Token value' 가 아닙니다."
+read -r -p "R2 Account ID [a943f4d691cff116d13b87d165f226b9]: " R2_ACCOUNT_ID
+R2_ACCOUNT_ID="$(printf '%s' "${R2_ACCOUNT_ID:-a943f4d691cff116d13b87d165f226b9}" | tr -d '[:space:]')"
+ask R2_ACCESS_KEY_ID     "R2 Access Key ID (그대로 보입니다)" 32 n
+ask R2_SECRET_ACCESS_KEY "R2 Secret Access Key (보이지 않습니다)" 64 y
+R2_BUCKET="${R2_BUCKET:-sogang-cbe-media}"
 export SUPABASE_URL SUPABASE_SERVICE_KEY MEDIA_BASE R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET
 
 for v in SUPABASE_SERVICE_KEY MEDIA_BASE R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY; do
