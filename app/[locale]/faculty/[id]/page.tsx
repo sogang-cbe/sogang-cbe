@@ -53,6 +53,7 @@ export default async function FacultyDetail({ params }: { params: { locale: Loca
     <>
       <h2 className="mt-2 font-brand text-[1.9rem] sm:text-[2.2rem] md:text-[2.7rem] leading-tight break-keep">
         {t(f, 'name', l)} <span className="font-sans text-[0.95rem] md:text-[1.1rem] font-medium text-sg-gray9 whitespace-nowrap">{t(f, 'title', l)}</span>
+        {t(f, 'role_note', l) && <span className="ml-2 align-middle font-sans text-[12.5px] font-semibold text-white bg-sg-cardinal px-2 py-0.5 leading-none whitespace-nowrap">{t(f, 'role_note', l)}</span>}
       </h2>
       {ko && f.name_en && <p className="mt-1 text-[14px] md:text-[15px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
     </>

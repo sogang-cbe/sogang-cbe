@@ -18,7 +18,10 @@ export default function FacultyCardRow({ f, locale }: { f: any; locale: Locale }
       </div>
       <div className="min-w-0 flex-1">
         <h3 className="text-[20px] font-bold leading-tight group-hover:text-sg-cardinal transition-colors break-keep">
-          {t(f, 'name', locale)} <span className="text-[14px] font-medium text-sg-gray9">{t(f, 'title', locale)}</span>
+          {t(f, 'name', locale)} <span className="text-[14px] font-medium text-sg-gray9">{t(f, 'title', locale)}</span>{' '}{t(f, 'badge', locale) && <span className="text-[11.5px] font-semibold text-sg-cardinal border border-sg-cardinal px-1.5 py-[1px] leading-none">{t(f, 'badge', locale)}</span>}
+          {t(f, 'role_note', locale) && (
+            <span className="ml-2 align-middle text-[11.5px] font-semibold text-white bg-sg-cardinal px-1.5 py-0.5 leading-none">{t(f, 'role_note', locale)}</span>
+          )}
         </h3>
         {f.name_en && ko && <p className="text-[12.5px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
         {t(f, 'lab', locale) && <p className="mt-2 text-[14.5px] font-medium leading-snug break-keep">{t(f, 'lab', locale)}</p>}

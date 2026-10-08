@@ -8,7 +8,9 @@ import { toHtml, wrapTables } from '@/lib/html';
 const pageImages: Record<string, string> = {};
 
 /** Renders an editable static page: DB row (pages table) wins, otherwise built-in content. */
-export default async function StaticPage({ locale, section, slug, children }: { locale: Locale; section: string; slug: string; children?: React.ReactNode }) {
+/** wide: 글이 아니라 표가 중심인 페이지(행정실 등)는 교수진 목록과 같은 폭을 쓴다.
+ *  기본값(container-narrow)은 긴 글의 한 줄 길이를 읽기 좋게 잡아 두기 위한 것이라 그대로 둔다. */
+export default async function StaticPage({ locale, section, slug, children, wide }: { locale: Locale; section: string; slug: string; children?: React.ReactNode; wide?: boolean }) {
   const key = `${section}/${slug}`;
   const builtin = staticPages[key];
   const db = await getPage(key);
@@ -17,7 +19,7 @@ export default async function StaticPage({ locale, section, slug, children }: { 
   return (
     <>
       <PageHero locale={locale} section={section} current={slug} title={locale === 'en' ? db?.title_en || undefined : db?.title_ko || undefined} />
-      <article className="container-narrow py-14">
+      <article className={`${wide ? 'container-site' : 'container-narrow'} py-14`}>
         {pageImages[key] && !children && <img src={pageImages[key]} alt="" className="w-full aspect-[21/9] object-cover mb-10 border border-sg-line" />}
         {children}
         {html && <div className="prose-sg" dangerouslySetInnerHTML={{ __html: wrapTables(toHtml(html)) }} />}

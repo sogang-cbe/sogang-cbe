@@ -445,4 +445,10 @@ notify pgrst, 'reload schema';
 -- 쉼표로 구분해 3~5개 정도 (예: 고분자 재료, 이온 소재, 전기접착)
 -- ============================================================
 alter table faculty add column if not exists keywords text;
+-- 보직(학과장 등) — 직함과 별개로 이름 옆에 칩으로 붙는다. /adm/faculty 에서 편집.
+alter table faculty add column if not exists badge_ko text;
+alter table faculty add column if not exists badge_en text;
+-- 보직(학과장·부학과장 등). 직급(title_ko)과 따로 둔다 — 보직은 2년마다 바뀌고 직급은 그대로다.
+alter table faculty add column if not exists role_note_ko text;
+alter table faculty add column if not exists role_note_en text;
 notify pgrst, 'reload schema';

@@ -38,6 +38,8 @@ export default async function EditFaculty({ params }: { params: { id: string } }
           <label className="block text-[13px]">호실<input name="room" defaultValue={curRoom} placeholder="618" className="input mt-1" /><span className="block text-[11px] text-sg-steel mt-1">숫자만 입력 (국문 "리치과학관(R) 618호" / 영문 "New Ricci Hall (R) Room 618"로 자동 표기)</span></label>
           <label className="block text-[13px]">참여 연구센터<select name="field" defaultValue={f?.field === 'chair' ? '' : f?.field || ''} className="input mt-1"><option value="">—</option>{areas.map((a) => <option key={a.id} value={a.id}>{a.ko}</option>)}</select>{f?.field === 'chair' && <span className="block text-[11px] text-sg-cardinal mt-1">※ 석좌→전임으로 바꿀 때는 연구 분야를 함께 선택하세요 (비워 두면 연구실 표에 나오지 않습니다)</span>}</label>
           <I n="sort_order" l="정렬 순서 (작을수록 앞)" v={String(f?.sort_order ?? 100)} />
+          <label className="block text-[13px]">보직 <input name="badge_ko" defaultValue={f?.badge_ko || ''} placeholder="학과장" className="input mt-1" /><span className="block text-[11px] text-sg-steel mt-1">비워 두면 표시되지 않습니다. 이름 옆에 칩으로 붙습니다.</span></label>
+          <label className="block text-[13px]">Position <input name="badge_en" defaultValue={f?.badge_en || ''} placeholder="Department Chair" className="input mt-1" /></label>
           <label className="block text-[13px] sm:col-span-2">연구 키워드<input name="keywords" defaultValue={f?.keywords || ''} placeholder="고분자 재료, 이온 소재, 전기접착" className="input mt-1" /><span className="block text-[11px] text-sg-steel mt-1">쉼표로 구분해 3~5개. 「연구 › 연구실」 목록과 교수 상세에 칩으로 표시됩니다.</span></label>
         </div>
       </div>
