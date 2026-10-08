@@ -1,6 +1,6 @@
 # HANDOFF — 세션 간 인수인계 (화공생명공학과)
 
-마지막 갱신: 2026-10-03
+마지막 갱신: 2026-10-08
 
 ## 지금까지 (2026-10-01 ~ 10-03)
 
@@ -27,17 +27,43 @@
 - DB 한 파일(`supabase/setup_cbe.sql`): 표 13개, RLS, 중복 예약 차단(배타 제약), 본인 역할 상승 방지 트리거.
 - 이관 도구(`scripts/`): R2 업로드(의존성 없는 SigV4 서명), 게시글 이관(legacy_id 멱등), 둘 다 맥에서 `node`만으로 실행.
 
+## 끝난 것 — 옛 데이터 이관 (2026-10-08 완료)
+
+- **파일 2,926개 (3.28GB)** → Cloudflare R2 `sogang-cbe-media`. 실패 0건.
+  첨부파일·본문 이미지·교수 사진. 원본이 이미 지워진 394건은 건너뜀(글 본문은 정상).
+- **게시글 1,779건** → Supabase `posts`. 실패 0건.
+  학사공지 761 · 갤러리 348 · 연구성과 301 · 세미나 108 · 대학원안내 107 · 내부기록 92 · 장학취업 61 · 자료실 1.
+  옛 게시판 16개가 빠짐없이 매핑됨.
+- 개인정보가 섞인 **36건은 `published=false`** 로 들어갔다. 행정실 확인 후 공개로 바꾼다.
+
+이관 중 고친 것(재발 방지용 기록):
+- `posts.legacy_id` 고유 인덱스가 부분 인덱스라 `on_conflict` 추론이 안 됐다(42P10) → 일반 인덱스로. `supabase/fix_legacy_uq.sql`
+- 한 묶음 100건은 본문이 큰 글이 몰리면 statement timeout(57014) → 25건으로 줄이고 실패 시 반씩 쪼개 재시도
+- 이미 들어간 `legacy_id` 는 건너뛰므로 중단돼도 같은 명령을 다시 돌리면 된다
+- SigV4 경로 인코딩이 느슨해 괄호가 든 파일 이름에서 서명이 깨질 수 있었다 → 엄격 인코딩
+
 ## 다음 할 일 (순서대로)
 
-1. **Supabase Google 로그인 설정** — Authentication › Providers › Google 켜기, Redirect URL `https://sogang-cbe.vercel.app/auth/callback`, 허용 도메인 `sogang.ac.kr`. (없으면 공용장비 로그인이 동작하지 않는다.)
-2. **Vercel 환경변수** `NEXT_PUBLIC_MEDIA_BASE`(R2 공개 주소)·`NEXT_PUBLIC_SITE_URL` 입력 → 재배포.
-3. **파일·게시글 이관** — README "옛 홈페이지 이관" 절대로 맥미니에서 두 스크립트 실행.
-4. **교수진 시드** 실행 + 사진 주소 UPDATE.
-5. **2026학번 이수계획표**를 학과사무실에서 받아 `content/data/ug-plans.json`에 추가.
-6. **연구센터 참여교수 명단** 현황 확인 후 `content/areas.ts` 갱신.
-7. 옛 주소 → 새 주소 리다이렉트(`middleware.ts`)를 화공과 URL 체계(`/kor/sub/05_04.php?idx=…`)에 맞게 다시 씀. 지금은 기계과(그누보드) 규칙이 들어 있다.
-8. 학과 사진 촬영 후 히어로·섹션 이미지 교체(`content/assets.ts`는 비어 있어 현재는 그라디언트로 표시된다).
-9. 공식 도메인(`chemeng.sogang.ac.kr`) 연결 시점·절차 확인.
+1. **Vercel 환경변수** — `NEXT_PUBLIC_MEDIA_BASE=https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev`,
+   `NEXT_PUBLIC_SITE_URL=https://sogang-cbe.vercel.app` 입력 후 재배포.
+   (게시글 본문·첨부 주소는 이관 시점에 이미 박아 넣었으므로 이 값이 없어도 글은 보인다. 교수 사진과 앞으로 올릴 파일에 필요하다.)
+2. **이관 결과 눈으로 확인** — `/ko/board/academic`, `/ko/board/research`, `/ko/board/scholarship`,
+   `/ko/board/gallery`(이미지), 글 하나 열어 첨부 내려받기까지.
+3. **비공개 36건 검토** — `/adm/posts` 에서 개인정보 확인 후 공개 전환.
+4. **Supabase Google 로그인 설정** — Authentication › Providers › Google 켜기,
+   Redirect URL `https://sogang-cbe.vercel.app/auth/callback`, 허용 도메인 `sogang.ac.kr`.
+   (없으면 공용장비 로그인이 동작하지 않는다.)
+5. **교수진 시드** — `supabase/seed_faculty_cbe.sql` 실행 후 사진 주소 치환:
+   ```sql
+   update faculty set photo_url = replace(photo_url, 'MEDIA_BASE', 'https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev')
+     where photo_url like 'MEDIA_BASE%';
+   ```
+6. **2026학번 이수계획표**를 학과사무실에서 받아 `content/data/ug-plans.json`에 추가.
+7. **연구센터 참여교수 명단** 현황 확인 후 `content/areas.ts` 갱신.
+8. 옛 주소 → 새 주소 리다이렉트(`middleware.ts`) 실제 동작 확인.
+9. 학과 사진 촬영 후 히어로·섹션 이미지 교체(`content/assets.ts`는 비어 있어 현재는 그라디언트로 표시된다).
+10. 공식 도메인(`chemeng.sogang.ac.kr`) 연결 시점·절차 확인.
+11. 맥미니 임시 폴더 정리 — `기존데이터베이스/_이관작업`(6.4GB), `_이관스크립트/kit.b64`, `kit.tgz`.
 
 ## 미결·확인 필요
 - 동문회 임원 명단이 2000년대 중반 기준이다. 갱신 전까지 "확인 필요" 안내를 붙여 두었고, 기수대표단 명단은 내려 두었다.
