@@ -5,6 +5,8 @@
 --
 -- ※ 사진 주소는 R2 공개 주소로 이미 채워져 있습니다. 그대로 Run 하면 됩니다.
 --   (템플릿은 seed_faculty_cbe.sql — R2 주소가 바뀌면 거기서 다시 만듭니다.)
+-- ※ 2026-10 부임한 이웅 교수는 이 파일에 없다. supabase/add_faculty_ung_lee.sql 을 따로 실행한다.
+--   (이 시드는 28명만 지우고 다시 넣으므로 이웅 교수 행과 순서 18번은 건드리지 않는다.)
 -- ============================================================
 delete from faculty where name_ko in (select name_ko from (values 
   ('유기풍'),

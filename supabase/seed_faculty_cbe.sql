@@ -5,6 +5,8 @@
 --
 -- ※ 사진 주소: 아래 insert의 photo_url은 'MEDIA_BASE/faculty/...' 로 넣어 두었습니다.
 --   파일을 R2(sogang-cbe-media)에 올린 뒤, 맨 아래 UPDATE 한 줄의 주소를 바꿔 함께 실행하세요.
+-- ※ 2026-10 부임한 이웅 교수는 이 파일에 없다. supabase/add_faculty_ung_lee.sql 을 따로 실행한다.
+--   (이 시드는 28명만 지우고 다시 넣으므로 이웅 교수 행과 순서 18번은 건드리지 않는다.)
 -- ============================================================
 delete from faculty where name_ko in (select name_ko from (values 
   ('유기풍'),
