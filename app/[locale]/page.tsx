@@ -15,7 +15,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
   if (!isLocale(params.locale)) notFound();   // /favicon.ico 등 언어가 아닌 한 단계 주소가 여기로 오면 500 대신 404(2026-09-25)
   const l = params.locale; const ko = l === 'ko';
   const [{ groups, gallery, banners, settings }, labCount] = await Promise.all([getHomeData(), getLabCount()]);
-  const DEFAULT_SECTIONS = ['hero', 'news', 'programs', 'gallery'];   // 'research'(연구센터 카드)는 기본에서 뺐다 — 관리자 '메인·설정'에서 켤 수 있다
+  const DEFAULT_SECTIONS = ['hero', 'news', 'programs', 'quicklinks', 'gallery'];   // 'research'(연구센터 카드)는 기본에서 뺐다 — 관리자 '메인·설정'에서 켤 수 있다
   /* DB(site_settings.home)에 기계과 시절 설정이 그대로 남아 있을 수 있다.
      그때만 있던 구역 이름(promo·videos·intro)이 보이면 옛 설정으로 보고 기본값을 쓴다.
      관리자 화면 '메인·설정'에서 한 번 저장하면 이 보정은 더 이상 타지 않는다. */
@@ -31,6 +31,15 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
     { k: 'researchNav', d: 'researchDesc', href: '/about/labs', tagKo: '연구', tagEn: 'Research' },
     { k: 'equipmentNav', d: 'equipmentDesc', href: '/equipment', tagKo: '공용장비', tagEn: 'Instruments' },
   ] as const;
+  const quick = [
+    { k: 'academic', href: '/board/academic', icon: 'M4 4h12l4 4v12H4zM16 4v4h4M8 13h8M8 17h5' },
+    { k: 'meeting', href: '/reservation', icon: 'M3 8h18v8H3zM7 12h10' },
+    { k: 'equipment', href: '/equipment', icon: 'M9 3v6l-5 9a2 2 0 002 3h12a2 2 0 002-3l-5-9V3zM9 3h6M7.5 15h9' },
+    { k: 'professors', href: '/faculty', icon: 'M12 11a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0' },
+    { k: 'scholarship', href: '/board/scholarship', icon: 'M12 3l9 5-9 5-9-5 9-5zM5 12v4c0 2 3 4 7 4s7-2 7-4v-4' },
+    { k: 'gallery', href: '/board/gallery', icon: 'M4 5h16v14H4zM8 15l3-3 3 3 2-2 2 2' },
+  ] as const;
+
   return (
     <>
       {on('hero') && <HeroVideo locale={l} fieldVideos={heroFieldVideos} videoUrl={settings.hero_video_url ?? assets.campusVideo} poster={settings.hero_poster_url ?? undefined} taglineKo={settings.tagline_ko === LEGACY_TAGLINE ? undefined : settings.tagline_ko} taglineEn={settings.tagline_en} />}
@@ -122,25 +131,43 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         </section>
       )}
 
+      {on('quicklinks') && (
+        <section className="container-site py-20">
+          <Reveal className="mb-8 flex items-end justify-between gap-4"><div><p className="eyebrow">{T(l, 'quick')}</p><h2 className="h-section mt-3">{ko ? '자주 찾는 메뉴' : 'Quick links'}</h2></div></Reveal>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 items-stretch">
+            {quick.map((q, i) => (
+              <Reveal key={q.k} delay={i * 60} className="h-full">
+                <Link href={`/${l}${q.href}`} className="card group h-full flex flex-col items-center justify-start p-6 text-center hover:border-sg-cardinal">
+                  <span className="mx-auto w-16 h-16 grid place-items-center rounded-full bg-sg-mist text-sg-cardinal group-hover:bg-sg-cardinal group-hover:text-white transition-colors">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={q.icon} /></svg>
+                  </span>
+                  <p className="mt-4 font-bold text-[15.5px]">{T(l, q.k)}</p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
+
       {on('gallery') && gallery.length > 0 && (
-        <section className="bg-sg-mist py-24">   {/* 교육 프로그램과 같은 연회색 — 여기만 검정이라 갑자기 어두워졌다(2026-10-09) */}
+        <section className="bg-sg-ink text-white py-24">
           <div className="container-site">
             <div className="flex items-end justify-between mb-10">
-              <div><p className="eyebrow">{T(l, 'galleryTitle')}</p><h2 className="h-section mt-3">{ko ? '학과의 순간들' : 'Moments'}</h2></div>
-              <Link href={`/${l}/board/gallery`} className="text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal">{T(l, 'more')} +</Link>
+              <div><p className="eyebrow !text-white/70">{T(l, 'galleryTitle')}</p><h2 className="h-section mt-3">{ko ? '학과의 순간들' : 'Moments'}</h2></div>
+              <Link href={`/${l}/board/gallery`} className="text-[14px] font-semibold text-white/70 hover:text-white">{T(l, 'more')} +</Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {gallery.slice(0, 8).map((g: any, i: number) => (
                 <Reveal key={g.id} delay={Math.min(i, 5) * 70} className={i === 0 ? 'col-span-2 row-span-2' : ''}>
-                  <Link href={`/${l}/board/gallery/${g.id}`} className="group relative block overflow-hidden bg-white border border-sg-line h-full aspect-square">
+                  <Link href={`/${l}/board/gallery/${g.id}`} className="group relative block overflow-hidden bg-white/5 h-full aspect-square">
                   {/* 사진이 있으면 사진, 없으면 제목을 보여 주는 타일 (정사각형 칸이라 16:10 자동표지를 쓰면 글자가 잘린다) */}
                   {(g.thumbnail_url || g.images?.[0]?.url) ? (<>
                     <img src={g.thumbnail_url || g.images[0].url} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <p className="absolute left-3 bottom-3 right-3 text-[13.5px] font-semibold text-white opacity-0 group-hover:opacity-100 transition-opacity">{t(g, 'title', l)}</p>
+                    <p className="absolute left-3 bottom-3 right-3 text-[13.5px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">{t(g, 'title', l)}</p>
                   </>) : (
-                    <span className="absolute inset-0 flex items-end p-4 transition-colors">
-                      <span className={`font-semibold leading-snug break-keep text-sg-gray11 group-hover:text-sg-cardinal ${i === 0 ? 'text-[17px] line-clamp-4' : 'text-[13px] line-clamp-3'}`}>{t(g, 'title', l)}</span>
+                    <span className="absolute inset-0 flex items-end p-4 transition-colors" style={{ background: 'linear-gradient(160deg, rgba(255,255,255,.10), rgba(255,255,255,.03))' }}>
+                      <span className={`font-semibold leading-snug break-keep text-white/85 group-hover:text-white ${i === 0 ? 'text-[17px] line-clamp-4' : 'text-[13px] line-clamp-3'}`}>{t(g, 'title', l)}</span>
                     </span>
                   )}
                 </Link></Reveal>
