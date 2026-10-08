@@ -7,6 +7,6 @@ export default async function Emeritus({ params }: { params: { locale: Locale } 
   const list = await getFaculty(true);
   return (<>
     <PageHero locale={params.locale} section="faculty" current="emeritus" />
-    <div className="container-site py-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{list.map((f: any) => <FacultyCard key={f.id} f={f} locale={params.locale} />)}</div>
+    <div className="container-site py-12"><div className="grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{list.map((f: any) => <FacultyCard key={f.id} f={f} locale={params.locale} />)}</div></div>
   </>);
 }

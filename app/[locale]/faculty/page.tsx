@@ -23,7 +23,7 @@ export default async function Faculty({ params }: { params: { locale: Locale } }
       </p>
       {all.length === 0
         ? <p className="text-sg-gray9">{ko ? '교수진 정보가 아직 등록되지 않았습니다.' : 'No faculty records yet.'}</p>
-        : <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        : <div className="grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {all.map((f: any, i: number) => <Reveal key={f.id} delay={Math.min(i, 8) * 50} className="min-w-0"><FacultyCard f={f} locale={l} /></Reveal>)}
           </div>}
     </div>
