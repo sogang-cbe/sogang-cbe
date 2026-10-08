@@ -1,10 +1,7 @@
 import Link from '@/components/Link';
 import { t, type Locale } from '@/lib/i18n';
 import { formatOffice } from '@/lib/buildings';
-
-/** 국문 화면에서는 연구실 이름 끝의 영문 괄호를 떼어 카드가 길어지지 않게 한다.
- *  예) '광전자 나노소재 및 그린에너지 연구실(Photoelectronic … Lab)' → '광전자 나노소재 및 그린에너지 연구실' */
-const shortLab = (s: string, ko: boolean) => (ko ? s.replace(/\s*\([^()]*\)\s*$/, '') : s);
+import { shortLab } from '@/lib/html';
 
 /** 세로형 카드 — 사진을 카드 폭 전체로 쓰고 글을 아래에 둔다.
  *  2022년 촬영 원본이 4:5라 비율을 거기에 맞췄다. 사진이 없으면 성함 첫 글자를 옅게 넣어

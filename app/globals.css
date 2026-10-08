@@ -116,3 +116,22 @@ body { @apply bg-sg-paper text-sg-ink font-sans antialiased; word-break: keep-al
 .ProseMirror th { background: var(--sg-mist); font-weight: 600; }
 .ProseMirror .selectedCell { background: rgba(175,39,47,.08); }
 .ProseMirror p.is-editor-empty:first-child::before { content: '여기에 내용을 입력하세요'; color: var(--sg-gray5); float: left; height: 0; pointer-events: none; }
+
+/* ── 교수 상세 ── */
+/* 검은 밑줄이 있는 섹션 제목 */
+.sec-h { @apply text-[20px] md:text-[24px] font-bold leading-snug pb-3 mb-4 border-b-2 border-sg-ink break-keep; }
+/* 약력 칸: 본문(.prose-sg)보다 좁아 글자를 한 치 줄이고 목록 간격을 좁혔다 */
+.vita-col { @apply text-[14.5px] leading-[1.65] text-[#2b2b2b]; }
+.vita-col h3 { @apply text-[15px] font-bold mt-6 mb-2 flex items-center gap-2 text-sg-ink; }
+.vita-col h3::before { content: ''; @apply inline-block w-[9px] h-[9px] bg-sg-cardinal shrink-0; }
+.vita-col :where(h3):first-child { margin-top: 0; }
+.vita-col ul { @apply pl-[18px] list-disc space-y-[3px]; }
+.vita-col ol { @apply pl-[18px] list-decimal space-y-[3px]; }
+.vita-col p { @apply my-2; }
+/* 연구 소개 본문의 소제목(옛 글의 <p>제목<br>…) */
+.sub-lead { @apply block font-bold text-[14.5px] tracking-[0.02em] mb-1.5; }
+/* 주요 논문: 01, 02 … 번호를 카디널색으로 */
+.pubs { list-style: none; margin: 0; padding: 0; counter-reset: pub; }
+.pubs > li { counter-increment: pub; @apply relative py-[11px] pl-9 border-b border-sg-line text-[14.5px] leading-[1.65] text-[#2b2b2b]; word-break: normal; overflow-wrap: anywhere; }
+.pubs > li::before { content: counter(pub, decimal-leading-zero); @apply absolute left-0 top-[11px] text-[12.5px] font-bold text-sg-cardinal; font-variant-numeric: tabular-nums; }
+.pubs em, .pubs i { @apply italic text-sg-gray11; }
