@@ -16,9 +16,9 @@ function pageList(page: number, pages: number): number[] {
 export default async function Posts({ searchParams }: { searchParams: { board?: string; page?: string; q?: string } }) {
   const sb = createClient(); const b = adminBase();
   const board = searchParams.board || 'notice'; const pageN = Number(searchParams.page); const page = Number.isFinite(pageN) && pageN >= 1 ? Math.floor(pageN) : 1; const per = 30;
-  let q = sb.from('posts').select('id,title_ko,title_en,author,created_at,is_pinned,published,view_count', { count: 'exact' }).eq('board', board);
+  let q = sb.from('posts').select('id,title_ko,title_en,author,created_at,published,view_count', { count: 'exact' }).eq('board', board);
   if (searchParams.q) q = q.ilike('title_ko', `%${searchParams.q}%`);
-  const { data, count } = await q.order('is_pinned', { ascending: false }).order('created_at', { ascending: false }).range((page - 1) * per, page * per - 1);
+  const { data, count } = await q.order('created_at', { ascending: false }).range((page - 1) * per, page * per - 1);
   const pages = Math.ceil((count || 0) / per);
   return (
     <div>
@@ -34,7 +34,7 @@ export default async function Posts({ searchParams }: { searchParams: { board?: 
         <tbody>{(data || []).map((p: any) => (
           <tr key={p.id} className="border-t border-sg-line hover:bg-sg-mist">
             <td className="p-3 font-mono text-sg-steel">{p.id}</td>
-            <td className="p-3"><Link href={`${b}/posts/${p.id}`} className="font-medium hover:text-sg-red">{p.is_pinned && <span className="text-sg-red font-mono text-[10px] mr-1">PIN</span>}{p.title_ko}</Link></td>
+            <td className="p-3"><Link href={`${b}/posts/${p.id}`} className="font-medium hover:text-sg-red">{p.title_ko}</Link></td>
             <td className="p-3 font-mono text-[11px]">{p.title_en ? '✓' : <span className="text-sg-steel">—</span>}</td>
             <td className="p-3 text-sg-steel">{p.author}</td><td className="p-3 font-mono text-[12px]">{fmtDate(p.created_at)}</td><td className="p-3 font-mono">{p.view_count}</td>
             <td className="p-3">{p.published ? <span className="text-green-700">공개</span> : <span className="text-sg-steel">비공개</span>}</td>

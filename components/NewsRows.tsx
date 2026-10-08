@@ -41,7 +41,6 @@ function NoticeList({ locale, board, posts }: { locale: Locale; board: 'academic
           {posts.slice(0, 8).map((p) => (
             <li key={p.id} className="border-b border-sg-mist last:border-0">
               <Link href={`/${locale}/board/${board}/${p.id}`} className="group flex items-center gap-3 px-3 md:px-4 py-[11px]">
-                {p.is_pinned && <span className="shrink-0 text-[11px] font-bold text-white bg-sg-cardinal px-1.5 py-0.5">{ko ? '중요' : 'PIN'}</span>}
                 <span className="flex-1 min-w-0 truncate text-[15px] font-medium text-sg-ink group-hover:text-sg-cardinal transition-colors">{t(p, 'title', locale)}</span>
                 <span className="shrink-0 text-[12.5px] text-sg-gray9 tabular-nums">{fmtDate(p.created_at)}</span>
               </Link>
@@ -89,7 +88,6 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
                   <div className="h-2 bg-sg-cardinal group-hover:bg-sg-deep" />
                 )}
                 <div className="p-5 md:p-6 flex flex-col flex-1">
-                  {p.is_pinned && <span className="self-start mb-2 text-[11px] font-bold text-white bg-sg-cardinal px-2 py-0.5">{ko ? '중요' : 'PINNED'}</span>}
                   <h4 className={`font-bold leading-snug group-hover:text-sg-cardinal transition-colors ${variant === 'text' ? 'text-[17px] line-clamp-3' : 'text-[16px] line-clamp-2'}`}>{t(p, 'title', locale)}</h4>
                   {variant === 'text' && t(p, 'excerpt', locale) && <p className="mt-3 text-[14px] leading-relaxed text-sg-gray11 line-clamp-3">{t(p, 'excerpt', locale)}</p>}
                   {variant === 'image' && t(p, 'excerpt', locale) && <p className="mt-2 text-[13.5px] leading-relaxed text-sg-gray11 line-clamp-2">{t(p, 'excerpt', locale)}</p>}

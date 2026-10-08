@@ -17,9 +17,9 @@ export async function getHomeData() {
   const sb = createPublicClient();
   // 게시판별로 따로 조회한다 — 합쳐서 최신순으로 자르면 글이 많은 게시판(학사공지)이 다른 줄(세미나)을 밀어낸다
   const [postsByBoard, gallery, banners, settings] = await Promise.all([
-    Promise.all(homeBoards.map((b) => safe<Post[]>(() => sb.from('posts').select('id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,video_url,created_at,is_pinned')
+    Promise.all(homeBoards.map((b) => safe<Post[]>(() => sb.from('posts').select('id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,video_url,created_at')
       .eq('board', b).eq('published', true).eq('show_on_home', true)
-      .order('is_pinned', { ascending: false }).order('created_at', { ascending: false }).limit(24) as any, []))),
+      .order('created_at', { ascending: false }).limit(24) as any, []))),
     safe<Post[]>(() => sb.from('posts').select('id,board,title_ko,title_en,thumbnail_url,images,created_at').eq('board', 'gallery').eq('published', true).order('created_at', { ascending: false }).limit(8) as any, []),
     safe<any[]>(() => sb.from('banners').select('*').eq('visible', true).order('sort_order') as any, []),
     safe<any>(() => sb.from('site_settings').select('value').eq('key', 'home').maybeSingle() as any, null),
@@ -31,12 +31,12 @@ export async function getHomeData() {
 
 async function getPostsRaw(board: string, page = 1, per = 15, q = '') {
   const sb = createPublicClient();
-  let query = sb.from('posts').select('id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,created_at,is_pinned,view_count,author,attachments,video_url,term,members,advisor,category,category_en,sort_order', { count: 'exact' })
+  let query = sb.from('posts').select('id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,created_at,view_count,author,attachments,video_url,term,members,advisor,category,category_en,sort_order', { count: 'exact' })
     .eq('board', board).eq('published', true);
   const qs = safeQuery(q);
   if (qs) query = query.or(`title_ko.ilike.%${qs}%,title_en.ilike.%${qs}%,content_ko.ilike.%${qs}%,content_en.ilike.%${qs}%,members.ilike.%${qs}%`);
   const from = (page - 1) * per;
-  const { data, count, error } = await query.order('is_pinned', { ascending: false }).order('created_at', { ascending: false }).range(from, from + per - 1);
+  const { data, count, error } = await query.order('created_at', { ascending: false }).range(from, from + per - 1);
   if (error) {
     if (error.code === 'PGRST103') return { posts: [] as Post[], total: 0 }; // 범위를 벗어난 페이지 번호 → 빈 목록
     console.error(error.message); throw new Error(error.message);
@@ -48,7 +48,7 @@ async function getPostsRaw(board: string, page = 1, per = 15, q = '') {
 export const getPosts = unstable_cache(getPostsRaw, ['getPosts'], { revalidate: 600, tags: ['site'] });
 /** 게시글 상세 — 보는 언어의 본문만 읽는다(두 언어 본문을 다 읽던 것의 약 절반, 2026-09-25 Supabase 전송량 절감).
  *  영문 페이지는 영문 본문이 비었을 때만 국문 본문을 한 번 더 읽는다(번역 없음 안내·국문 대체 표시용). */
-const POST_COLS = 'id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,attachments,created_at,is_pinned,view_count,author,video_url,term,members,advisor,category,category_en,sort_order,published';
+const POST_COLS = 'id,board,title_ko,title_en,excerpt_ko,excerpt_en,thumbnail_url,images,attachments,created_at,view_count,author,video_url,term,members,advisor,category,category_en,sort_order,published';
 export async function getPost(id: number, locale: 'ko' | 'en' = 'ko') {
   const sb = createPublicClient();
   const { data } = await sb.from('posts').select(`${POST_COLS},content_${locale}`).eq('id', id).eq('published', true).single();

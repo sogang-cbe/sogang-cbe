@@ -36,7 +36,7 @@ create table if not exists posts (
   images jsonb default '[]'::jsonb,       -- gallery: [{url, caption}]
   attachments jsonb default '[]'::jsonb,  -- [{name, url, size}]
   author text default '화공생명공학과',
-  is_pinned boolean default false,
+  is_pinned boolean default false,        -- 더는 쓰지 않는다(2026-10-08 상단 고정 기능 제거). 목록은 날짜순 하나로만 정렬한다.
   show_on_home boolean default true,
   published boolean default true,
   view_count int default 0,

@@ -33,8 +33,8 @@ export const ui = {
     heroSub: '화학공학은 정유·석유화학에서 출발해 바이오·의약, 신소재, 반도체, 에너지, 환경으로 영역을 넓혀 왔습니다. 서강대학교 화공생명공학과는 탄탄한 기초 교육과 최전선의 연구로 그 변화를 이끌어 갈 인재를 길러냅니다.',
     since: '1976년 설립', labs: '개 연구실', profs: '명 전임교수', bk21: '4단계 BK21 교육연구팀',
     newsTitle: '학과 소식', programsTitle: '교육 프로그램', galleryTitle: '갤러리', areasTitle: '연구 분야',
-    // 홈 히어로 '최신 소식' 위젯 (pinned는 게시글 고정 칩 — 예약 '승인 대기' pending과 다른 키)
-    latestTitle: '최신 소식', latestSub: '모든 게시판의 최신 글', latestAll: '전체 소식', pinned: '중요',
+    // 홈 히어로 '최신 소식' 위젯
+    latestTitle: '최신 소식', latestSub: '모든 게시판의 최신 글', latestAll: '전체 소식',
     ug: '학부과정', grad: '대학원과정', equipmentNav: '공용장비',
     ugDesc: '전공 교과목 43과목, 2·3·4학년 실험 실습 병행', gradDesc: '석사·박사·통합과정, 교과목 82과목',
     equipmentDesc: '장비 예약과 사용 기록 (대학원생)', researchDesc: '18개 연구실과 4개 대형 연구센터', researchNav: '연구', urecaDesc: '', industryDesc: '',
@@ -54,7 +54,7 @@ export const ui = {
     heroSub: 'Chemical engineering began with refining and petrochemicals and now reaches into biopharmaceuticals, advanced materials, semiconductors, energy and the environment. Sogang CBE prepares the people who will lead that change, through solid fundamentals and research at the frontier.',
     since: 'Founded 1976', labs: 'research labs', profs: 'full-time faculty', bk21: 'BK21 FOUR program',
     newsTitle: 'News', programsTitle: 'Programs', galleryTitle: 'Gallery', areasTitle: 'Research areas',
-    latestTitle: 'Latest News', latestSub: 'Latest across all boards', latestAll: 'All news', pinned: 'PIN',
+    latestTitle: 'Latest News', latestSub: 'Latest across all boards', latestAll: 'All news',
     ug: 'Undergraduate', grad: 'Graduate', equipmentNav: 'Shared Instruments',
     ugDesc: '43 major courses with laboratory work in years 2–4', gradDesc: 'MS, PhD and integrated programs; 82 courses',
     equipmentDesc: 'Reserve instruments and log usage (graduate students)', researchDesc: '18 laboratories and 4 major research centers', researchNav: 'Research', urecaDesc: '', industryDesc: '',

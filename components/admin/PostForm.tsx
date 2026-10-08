@@ -72,7 +72,6 @@ export default function PostForm({ post, defaultBoard }: { post?: any; defaultBo
         </div>
       </section>
       <div className="flex flex-wrap gap-5 text-[13px]">
-        <label className="flex items-center gap-2"><input type="checkbox" name="is_pinned" defaultChecked={post?.is_pinned} /> 상단 고정(공지)</label>
         <label className="flex items-center gap-2"><input type="checkbox" name="show_on_home" defaultChecked={post ? post.show_on_home : true} /> 메인 페이지에 노출</label>
         <label className="flex items-center gap-2"><input type="checkbox" name="published" defaultChecked={post ? post.published : true} /> 공개</label>
       </div>
