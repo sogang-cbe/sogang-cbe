@@ -27,3 +27,17 @@ export const sectionHero: Record<string, string> = {
   about: '', faculty: '', research: '', undergraduate: '', graduate: '',
   board: '', facility: '', alumni: '', default: '',
 };
+
+/** 홈 '교육 프로그램' 카드 배경 사진 (초안).
+ *  학과 갤러리(옛 홈페이지에서 옮겨 온 우리 사진)에서 고른 것이라 저작권 문제가 없다.
+ *  제대로 된 사진이 생기면 여기 주소만 바꾸면 된다. 빈 문자열이면 카드가 글자만 있는 예전 모양으로 돌아간다.
+ *  - ug        2023 학술·진로지도 체육행사 (운동장 단체)
+ *  - grad      2022 대학원 신입생 오리엔테이션
+ *  - research  2013 학부·대학원 공장견학 (현대제철)
+ *  - equipment 2018 학부생 공장견학 (한화토탈) — 장비 사진이 없어 임시로 쓴다. 촬영 후 교체할 것. */
+export const programImages: Record<string, string> = {
+  ug: 'https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev/attach/16848964381.png',
+  grad: 'https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev/attach/16611537941.JPG',
+  researchNav: 'https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev/attach/14810953771.jpg',
+  equipmentNav: 'https://pub-a183fa7f31f4404bbd9290f0823b8786.r2.dev/attach/15469277201.jpg',
+};

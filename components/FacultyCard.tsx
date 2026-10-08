@@ -23,21 +23,21 @@ export default function FacultyCard({ f, locale }: { f: any; locale: Locale }) {
             </span>}
       </div>
 
-      <h3 className="mt-3.5 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-[19px] font-bold leading-tight break-keep transition-colors group-hover:text-sg-cardinal">
+      <h3 className="mt-3 flex flex-wrap items-baseline gap-x-1.5 gap-y-1 text-[17px] font-bold leading-tight break-keep transition-colors group-hover:text-sg-cardinal">
         {t(f, 'name', locale)}
-        <span className="text-[12.5px] font-medium text-sg-gray9">{t(f, 'title', locale)}</span>
+        <span className="text-[12px] font-medium text-sg-gray9">{t(f, 'title', locale)}</span>
         {t(f, 'badge', locale) && <span className="text-[11.5px] font-semibold text-sg-cardinal border border-sg-cardinal px-1.5 py-[1px] leading-none">{t(f, 'badge', locale)}</span>}
         {t(f, 'role_note', locale) && (
           <span className="text-[11.5px] font-semibold text-white bg-sg-cardinal px-1.5 py-0.5 leading-none">{t(f, 'role_note', locale)}</span>
         )}
       </h3>
-      {f.name_en && ko && <p className="mt-0.5 text-[12.5px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
+      {f.name_en && ko && <p className="mt-0.5 text-[12px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
 
       {hasDetail && (
         <div className="mt-2.5 pt-2.5 border-t border-sg-line">
-          {lab && <p className="text-[13.5px] leading-snug break-keep">{lab}</p>}
-          {office && <p className="mt-1.5 text-[12px] text-sg-gray9">{office}</p>}
-          {f.email && <p className="text-[12px] text-sg-gray9 truncate">{f.email}</p>}
+          {lab && <p className="text-[13px] leading-snug break-keep">{lab}</p>}
+          {office && <p className="mt-1.5 text-[11.5px] text-sg-gray9">{office}</p>}
+          {f.email && <p className="text-[11.5px] text-sg-gray9 truncate">{f.email}</p>}
         </div>
       )}
     </Link>

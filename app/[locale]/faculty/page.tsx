@@ -14,7 +14,7 @@ export default async function Faculty({ params }: { params: { locale: Locale } }
     getFaculty(false).then((rows: any[]) => rows.filter((f) => f.field !== 'staff')),
     getChair(),
   ]);
-  const grid = 'grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3';
+  const grid = 'grid gap-x-5 gap-y-9 grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
   return (<>
     <PageHero locale={l} section="faculty" current="professors" narrow />
     <div className="container-narrow py-12">

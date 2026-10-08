@@ -11,7 +11,7 @@ export default async function Chair({ params }: { params: { locale: Locale } }) 
     <div className="container-narrow py-12">
       {list.length === 0
         ? <p className="text-sg-gray9 break-keep">{ko ? '석좌교수 정보가 아직 등록되지 않았습니다.' : 'No chair professor records yet.'}</p>
-        : <div className="grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3">{list.map((f: any) => <FacultyCard key={f.id} f={f} locale={params.locale} />)}</div>}
+        : <div className="grid gap-x-5 gap-y-9 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">{list.map((f: any) => <FacultyCard key={f.id} f={f} locale={params.locale} />)}</div>}
     </div>
   </>);
 }

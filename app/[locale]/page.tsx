@@ -6,7 +6,7 @@ import Reveal from '@/components/Reveal';
 import { getHomeData, getLabCount } from '@/lib/data';
 import { T, t, isLocale, type Locale } from '@/lib/i18n';
 import { areas } from '@/content/areas';
-import { assets, heroFieldVideos } from '@/content/assets';
+import { assets, heroFieldVideos, programImages } from '@/content/assets';
 import { youtubeThumb } from '@/lib/html';
 
 export const revalidate = 3600; // 관리자 저장 시 즉시 갱신되므로 길게(10분 → 1시간, 2026-09-25 전송량 절감)
@@ -97,22 +97,26 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
         <section className="bg-sg-mist py-24">
           <div className="container-site">
             <Reveal className="mb-10"><p className="eyebrow">{T(l, 'programsTitle')}</p><h2 className="h-section mt-3">{ko ? '학부에서 대학원, 그리고 연구 현장까지' : 'From coursework to the laboratory'}</h2></Reveal>
-            {/* 흰 카드 + 카디널 한 가지로 통일. 네 가지 원색 그라디언트는 학교 색 체계와 겉돌았다(2026-10-07 책임자). */}
-            <div className="grid gap-px bg-sg-line border border-sg-line sm:grid-cols-2 lg:grid-cols-4">
-              {programs.map((p, i) => (
-                <Reveal key={p.k} delay={i * 80} className="h-full">
-                  <Link href={`/${l}${p.href}`} className="group relative flex h-full flex-col bg-white p-7 md:p-8 transition-colors hover:bg-sg-mist">
-                    <span aria-hidden className="absolute left-0 top-0 h-[3px] w-0 bg-sg-cardinal transition-all duration-500 group-hover:w-full" />
-                    <p className="font-mono text-[12.5px] tabular-nums text-sg-gray5">{String(i + 1).padStart(2, '0')}</p>
-                    <p className="mt-6 text-[12.5px] font-semibold tracking-[0.12em] text-sg-cardinal uppercase">{ko ? p.tagKo : p.tagEn}</p>
-                    <h3 className="mt-1.5 font-brand text-[1.7rem] leading-tight break-keep">{T(l, p.k)}</h3>
-                    <p className="mt-3 text-[14.5px] leading-relaxed text-sg-gray11 break-keep">{T(l, p.d)}{(p as any).extra || ''}</p>
-                    <span className="mt-auto pt-7 inline-flex items-center gap-2 text-[14px] font-semibold text-sg-ink group-hover:text-sg-cardinal transition-colors">
-                      {ko ? '바로가기' : 'Open'} <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
-                    </span>
-                  </Link>
-                </Reveal>
-              ))}
+            {/* 사진 카드 — 학과 갤러리 사진을 배경으로 깔고 글자를 아래에 얹는다(2026-10-09 초안).
+                사진 주소는 content/assets.ts 의 programImages 한 곳에 모아 두었다. 사진이 없으면 카디널 바탕으로 대체한다. */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {programs.map((p, i) => {
+                const img = programImages[p.k];
+                return (
+                  <Reveal key={p.k} delay={i * 80} className="h-full">
+                    <Link href={`/${l}${p.href}`} className="group relative flex h-full flex-col justify-end overflow-hidden aspect-[3/4] p-6"
+                      style={img ? undefined : { background: 'linear-gradient(160deg,#8b1e24,#5d1418)' }}>
+                      {img && <img src={img} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />}
+                      {/* 사진 위 글자가 읽히도록 아래쪽을 어둡게 */}
+                      <span aria-hidden className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,26,26,.88) 0%, rgba(26,26,26,.55) 42%, rgba(26,26,26,.12) 100%)' }} />
+                      <span className="relative text-[12.5px] font-semibold tracking-[0.12em] text-white/80 uppercase">{ko ? p.tagKo : p.tagEn}</span>
+                      <h3 className="relative mt-1 font-brand text-[1.6rem] leading-tight text-white break-keep">{T(l, p.k)}</h3>
+                      <p className="relative mt-2 text-[13.5px] leading-relaxed text-white/85 break-keep">{T(l, p.d)}{(p as any).extra || ''}</p>
+                      <span className="relative mt-5 inline-flex w-10 h-10 items-center justify-center bg-sg-cardinal text-white transition-transform group-hover:translate-x-1" aria-hidden>→</span>
+                    </Link>
+                  </Reveal>
+                );
+              })}
             </div>
           </div>
         </section>
