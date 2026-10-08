@@ -119,7 +119,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
       )}
 
       {on('gallery') && gallery.length > 0 && (
-        <section className="py-24">   {/* 바탕 흰색 — 앞 섹션이 모두 밝은데 여기만 검정이라 갑자기 어두워졌다(2026-10-09) */}
+        <section className="bg-sg-mist py-24">   {/* 교육 프로그램과 같은 연회색 — 여기만 검정이라 갑자기 어두워졌다(2026-10-09) */}
           <div className="container-site">
             <div className="flex items-end justify-between mb-10">
               <div><p className="eyebrow">{T(l, 'galleryTitle')}</p><h2 className="h-section mt-3">{ko ? '학과의 순간들' : 'Moments'}</h2></div>
@@ -128,7 +128,7 @@ export default async function Home({ params }: { params: { locale: Locale } }) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {gallery.slice(0, 8).map((g: any, i: number) => (
                 <Reveal key={g.id} delay={Math.min(i, 5) * 70} className={i === 0 ? 'col-span-2 row-span-2' : ''}>
-                  <Link href={`/${l}/board/gallery/${g.id}`} className="group relative block overflow-hidden bg-sg-mist border border-sg-line h-full aspect-square">
+                  <Link href={`/${l}/board/gallery/${g.id}`} className="group relative block overflow-hidden bg-white border border-sg-line h-full aspect-square">
                   {/* 사진이 있으면 사진, 없으면 제목을 보여 주는 타일 (정사각형 칸이라 16:10 자동표지를 쓰면 글자가 잘린다) */}
                   {(g.thumbnail_url || g.images?.[0]?.url) ? (<>
                     <img src={g.thumbnail_url || g.images[0].url} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />

@@ -63,8 +63,10 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   const subs: Record<string, [string, string]> = { research: ['논문·수상·연구 소식', 'Papers, awards and research news'], seminar: ['학과 세미나와 초청 강연', 'Department seminars and invited talks'] };
   const title = titles[board] || [board, board];
   const sub = subs[board] || ['', ''];
+  // 각 줄이 <Reveal> 로 한 겹 싸여 있어 first:/last: 가 늘 참이 된다(그래서 first:pt-0 이 모든 줄에 걸려 위 여백이 사라졌다).
+  // 제목이 leading-none 이라 글자 윗선이 칸 끝에 바로 붙으므로 위 여백을 넉넉히(56px) 고정한다.
   return (
-    <div className="pt-14 pb-10 first:pt-0 border-b border-sg-line last:border-0">   {/* 제목(leading-none)이 윗줄에 붙어 보여 위 여백 40→56px (2026-10-09) */}
+    <div className="pt-14 pb-10 border-b border-sg-line">
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
           <h3 className="font-brand text-[1.7rem] md:text-[2.1rem] leading-none">{ko ? title[0] : title[1]}</h3>
@@ -122,7 +124,7 @@ export default function NewsRows({ locale, groups }: { locale: Locale; groups: R
         </div>
       </div>
       <Reveal><Row locale={locale} board="research" posts={groups.research || []} variant="image" /></Reveal>
-      <Reveal><Row locale={locale} board="seminar" posts={groups.seminar || []} variant="image" /></Reveal>
+      <Reveal className="[&>div]:border-b-0"><Row locale={locale} board="seminar" posts={groups.seminar || []} variant="image" /></Reveal>
     </div>
   );
 }
