@@ -120,13 +120,14 @@ body { @apply bg-sg-paper text-sg-ink font-sans antialiased; word-break: keep-al
 /* ── 교수 상세 ── */
 /* 검은 밑줄이 있는 섹션 제목 */
 .sec-h { @apply text-[20px] md:text-[24px] font-bold leading-snug pb-3 mb-4 border-b-2 border-sg-ink break-keep; }
-/* 약력 칸: 본문(.prose-sg)보다 좁아 글자를 한 치 줄이고 목록 간격을 좁혔다 */
-.vita-col { @apply text-[14.5px] leading-[1.65] text-[#2b2b2b]; }
-.vita-col h3 { @apply text-[15px] font-bold mt-6 mb-2 flex items-center gap-2 text-sg-ink; }
+/* 약력 칸: 글자 크기는 연구 소개(.prose-sg)와 같게 맞추고 목록 간격만 좁게 둔다 */
+.vita-col { @apply text-[16.5px] leading-[1.7] text-[#2b2b2b]; }
+.vita-col h3 { @apply text-[1.05rem] font-bold mt-7 mb-2.5 flex items-center gap-2 text-sg-ink; }
 .vita-col h3::before { content: ''; @apply inline-block w-[9px] h-[9px] bg-sg-cardinal shrink-0; }
 .vita-col :where(h3):first-child { margin-top: 0; }
-.vita-col ul { @apply pl-[18px] list-disc space-y-[3px]; }
-.vita-col ol { @apply pl-[18px] list-decimal space-y-[3px]; }
+.vita-col ul { @apply pl-[20px] list-disc space-y-1; }
+.vita-col ol { @apply pl-[20px] list-decimal space-y-1; }
+.vita-col li { text-align: left; }   /* 목록 항목은 짧아 양쪽정렬하면 글자 사이가 벌어진다 */
 .vita-col p { @apply my-2; }
 /* 연구 소개 본문의 소제목(옛 글의 <p>제목<br>…) */
 .sub-lead { @apply block font-bold text-[14.5px] tracking-[0.02em] mb-1.5; }

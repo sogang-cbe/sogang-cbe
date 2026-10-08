@@ -73,3 +73,4 @@ update faculty set keywords = 'Sustainable Plastics, Biodegradable Polymers, Pol
 update faculty set keywords = 'Electrochemistry, Electrocatalysis, Energy Conversion & Storage, in situ Analysis' where name_ko = '신희종';
 update faculty set keywords = 'Genome Engineering, Cell Engineering, Mitochondrial Biology, Genome Editing Therapeutics' where name_ko = '이성현';
 update faculty set keywords = 'Biochemical Engineering, Nanobiotechnology, Biorobotics' where name_ko = '최정우';
+update faculty set keywords = 'Process Systems Engineering, CO₂ Capture & Utilization, Machine Learning for Process Design, Multiscale Reactor Design' where name_ko = '이웅';

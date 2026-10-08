@@ -10,7 +10,7 @@ import { toHtml, shortLab, researchBody, splitBio } from '@/lib/html';
  *  - 아래는 약력(왼쪽) · 연구 소개(오른쪽) 2단, 주요 논문은 전체 폭 번호 목록으로 따로 뺀다.
  *  - 연구 소개 맨 앞 요약 줄과 연구실 이름 뒤 영문 괄호는 연구분야 칩·영문 줄과 겹치므로 떼어 낸다(lib/html).
  *  DB를 읽지 않는 표시 전용 컴포넌트 — 시안 확인용 미리보기에서 같은 화면을 가짜 데이터로 띄울 수 있다. */
-export default function FacultyDetailView({ f, peers, locale: l }: { f: any; peers: any[]; locale: Locale }) {
+export default function FacultyDetailView({ f, locale: l }: { f: any; locale: Locale }) {
   const ko = l === 'ko';
   // 명예교수는 분야를 쓰지 않는다 — 전임 시절 field가 남아 있어도 배지·같은 분야 목록이 뜨지 않게
   const kind = f.is_emeritus ? 'emeritus' : f.field === 'chair' ? 'chair' : 'professors';
@@ -37,26 +37,12 @@ export default function FacultyDetailView({ f, peers, locale: l }: { f: any; pee
       <h2 className="font-brand text-[1.9rem] sm:text-[2.2rem] md:text-[2.6rem] leading-[1.15] break-keep flex flex-wrap items-baseline gap-x-3 gap-y-1">
         {t(f, 'name', l)}
         <span className="font-sans text-[0.95rem] md:text-[1.05rem] font-medium text-sg-gray9 whitespace-nowrap">{t(f, 'title', l)}</span>
-        {t(f, 'badge', l)
-          ? <span className={chip}>{t(f, 'badge', l)}</span>
-          : kind !== 'professors' && <span className={chip}>{kind === 'chair' ? (ko ? '석좌교수' : 'Chair Professor') : T(l, 'emeritus')}</span>}
+        {/* 배지는 DB의 badge 칸만 쓴다 — 명예교수·석학교수는 직함(title)에 이미 적혀 있어 자동 배지를 붙이면 두 번 나온다 */}
+        {t(f, 'badge', l) && <span className={chip}>{t(f, 'badge', l)}</span>}
         {t(f, 'role_note', l) && <span className="font-sans text-[12px] font-semibold text-white bg-sg-cardinal px-1.5 py-[3px] leading-none whitespace-nowrap">{t(f, 'role_note', l)}</span>}
       </h2>
       {ko && f.name_en && <p className="mt-1.5 text-[14px] md:text-[15px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
     </>
-  );
-  const PeerRow = (p: any) => (
-    <li key={p.id} className="border-b border-sg-line">
-      <Link href={`/${l}/faculty/${p.id}`} className="group flex items-center gap-4 py-3">
-        <span className="w-12 h-14 shrink-0 bg-sg-mist overflow-hidden">{p.photo_url ? <img src={p.photo_url} alt="" loading="lazy" className="w-full h-full object-cover" /> : <span className="w-full h-full grid place-items-center font-brand text-xl text-sg-gray5">{(p.name_ko || '').slice(0, 1)}</span>}</span>
-        <span className="min-w-0 flex-1">
-          <span className="block font-bold text-[15.5px] leading-tight group-hover:text-sg-cardinal transition-colors">{t(p, 'name', l)} <span className="text-[13px] font-medium text-sg-gray9">{t(p, 'title', l)}</span></span>
-          {/* 보조 줄: 전임은 연구실명, 명예교수 목록은 영문 이름으로 통일(연구실이 있는 분과 없는 분이 섞이지 않게) */}
-          {(f.is_emeritus ? (ko && p.name_en) : shortLab(t(p, 'lab', l) || '', ko)) && <span className="block mt-0.5 text-[13px] text-sg-gray11 truncate">{f.is_emeritus ? p.name_en : shortLab(t(p, 'lab', l) || '', ko)}</span>}
-        </span>
-        <span className="text-sg-gray5 group-hover:text-sg-cardinal transition-colors" aria-hidden>→</span>
-      </Link>
-    </li>
   );
 
   return (<>
@@ -118,13 +104,13 @@ export default function FacultyDetailView({ f, peers, locale: l }: { f: any; pee
           {vita && (
             <div>
               <h2 className="sec-h">{ko ? '약력' : 'Biography'}</h2>
-              <div className="vita-col" dangerouslySetInnerHTML={{ __html: vita }} />
+              <div className="vita-col text-justify" dangerouslySetInnerHTML={{ __html: vita }} />
             </div>
           )}
           {research && (
             <div className="min-w-0">
               <h2 className="sec-h">{ko ? '연구 소개' : 'Research'}</h2>
-              <div className="prose-sg" dangerouslySetInnerHTML={{ __html: research }} />
+              <div className="prose-sg text-justify" dangerouslySetInnerHTML={{ __html: research }} />
             </div>
           )}
         </section>
@@ -138,19 +124,6 @@ export default function FacultyDetailView({ f, peers, locale: l }: { f: any; pee
         </section>
       )}
 
-      {/* 같은 구분의 다른 교수진 */}
-      {peers.length > 0 && (
-        <section className="mt-14 md:mt-20 border-t border-sg-line pt-10 md:pt-12">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="eyebrow">{f.is_emeritus ? T(l, 'emeritus') : ko ? '화공생명공학과' : 'Department of CBE'}</p>
-              <h3 className="mt-2 font-brand text-[1.5rem] md:text-[1.8rem] leading-none break-keep">{f.is_emeritus ? (ko ? '다른 명예교수' : 'Other emeritus professors') : (ko ? '다른 교수진' : 'Other professors')}</h3>
-            </div>
-            <Link href={f.is_emeritus ? `/${l}/faculty/emeritus` : `/${l}/faculty`} className="shrink-0 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{T(l, 'more')} +</Link>
-          </div>
-          <ul className="mt-5 grid md:grid-cols-2 gap-x-12 border-t border-sg-line">{peers.map(PeerRow)}</ul>
-        </section>
-      )}
     </div>
   </>);
 }
