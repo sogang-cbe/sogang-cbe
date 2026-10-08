@@ -27,14 +27,18 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
         <div>
           <div className="min-w-0">
             <p className="rise rise-1 text-[15px] md:text-[17px] font-semibold tracking-[0.12em] text-white/80">
-              {ko ? 'SOGANG UNIVERSITY · 화공생명공학과' : 'SOGANG UNIVERSITY · CHEMICAL AND BIOMOLECULAR ENGINEERING'}
+              SOGANG UNIVERSITY
             </p>
             {/* 한 줄 캐치프레이즈. 관리자 설정(tagline)이 있으면 그것을, 없으면 hero1(+hero2)을 쓴다.
                 국문은 한 줄에 들어가는 길이로 유지하고, 영문은 길면 자연스럽게 접히게 둔다. */}
             <h1 className="mt-5 max-w-4xl font-brand text-[2.6rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[1.1] break-keep rise rise-2">
               {tagline || [T(locale, 'hero1'), T(locale, 'hero2')].filter(Boolean).join(' ')}
             </h1>
-            <p className="mt-6 max-w-3xl text-[17px] md:text-[19px] leading-relaxed text-white/85 break-keep rise rise-4">{T(locale, 'heroSub')}</p>
+            {/* 두 문장을 각각 한 줄로 — 첫 줄이 접히지 않게 폭을 넓게 잡고 글자를 한 치 줄였다(책임자 요청) */}
+            <div className="mt-6 max-w-[1120px] text-[16.5px] md:text-[18px] leading-relaxed text-white/85 break-keep rise rise-4">
+              <p>{T(locale, 'heroSub')}</p>
+              <p className="mt-1.5">{T(locale, 'heroSub2')}</p>
+            </div>
             <div className="mt-9 flex flex-wrap gap-3 rise rise-4">
               <Link href={`/${locale}/undergraduate/curriculum`} className="btn-primary">{T(locale, 'ug')}</Link>
               <Link href={`/${locale}/graduate/admission`} className="btn-light">{T(locale, 'gradAdmission')}</Link>
