@@ -62,12 +62,12 @@ export default function Header({ locale }: { locale: Locale }) {
         </div>
       </div>
       {/* 하위 메뉴(데스크톱) — 가리킨 메뉴 바로 아래에 그 메뉴의 항목만 펼친다. 띠는 화면 전체 폭. */}
-      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[360px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="container-site py-6">
+      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[320px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="container-site py-5">
           <div style={{ marginLeft: mega?.x ?? 0 }} className="transition-[margin] duration-200">
-            <ul className="flex flex-wrap gap-x-7 gap-y-2">{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
-              ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-1 text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
-              : <Link href={`/${locale}${sub.href}`} className="block py-1 text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
+            <ul className="space-y-0.5">{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
+              ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
+              : <Link href={`/${locale}${sub.href}`} className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
           </div>
         </div>
       </div>
