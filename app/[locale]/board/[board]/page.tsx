@@ -11,7 +11,7 @@ import MemberLogin from '@/components/MemberLogin';
 export const revalidate = 600; // 자료실(archive)만 로그인 쿠키를 읽어 요청마다 동적으로 그려지고, 나머지 게시판은 10분 캐시. 60초 → 10분(2026-09-25 Supabase 전송량 절감): 글 저장·삭제는 즉시 갱신되고, 목록의 조회수만 최대 10분 늦게 바뀐다
 const PER = 15;
 const intros: Record<string, [string, string]> = {
-  academic: ['수강·교과목·실험·졸업·학적 등 학부와 대학원 학사 공지입니다. 옛 홈페이지의 「학사」와 「학생게시판」 글을 모두 옮겨 왔습니다.', 'Academic notices for undergraduate and graduate programs, including posts migrated from the previous site.'],
+  academic: ['수강·교과목·실험·졸업·학적 등 학부와 대학원 학사 공지입니다.', 'Academic notices for undergraduate and graduate programs.'],
   scholarship: ['장학금, 인턴·채용, 설명회 안내입니다.', 'Scholarships, internships, recruiting and information sessions.'],
   research: ['학과 교수진과 연구실의 논문·수상·연구 소식입니다.', 'Papers, awards and research news from our faculty and laboratories.'],
   seminar: ['학과 세미나와 초청 강연 일정입니다. 대학원생은 매 학기 세미나 과목을 수강해야 합니다.', 'Department seminars and invited talks. Graduate students take the seminar course every semester.'],
