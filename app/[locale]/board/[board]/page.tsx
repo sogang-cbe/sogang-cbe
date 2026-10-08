@@ -67,11 +67,11 @@ export default async function BoardList({ params, searchParams }: { params: { lo
             <th className="py-3 w-16 text-left">No.</th><th className="py-3 text-left">{ko ? '제목' : 'Title'}</th><th className="py-3 w-28 text-left">{T(l, 'author')}</th><th className="py-3 w-28 text-left">{T(l, 'date')}</th><th className="py-3 w-16 text-right">{T(l, 'views')}</th></tr></thead>
           <tbody>
             {posts.map((p, i) => (
-              <tr key={p.id} className={`border-b border-sg-line ${p.is_pinned ? 'bg-[#f9f9f9]' : ''}`}>
-                <td className="py-3.5 pr-2 text-[13px] text-sg-gray9 hidden md:table-cell">{p.is_pinned ? <span className="text-sg-cardinal font-bold">{ko ? '공지' : 'PIN'}</span> : total - (page - 1) * PER - i}</td>
+              <tr key={p.id} className="border-b border-sg-line">
+                <td className="py-3.5 pr-2 text-[13px] text-sg-gray9 hidden md:table-cell">{total - (page - 1) * PER - i}</td>
                 <td className="py-3.5 pr-3">
                   <Link href={`/${l}/board/${board}/${p.id}`} className="font-medium hover:text-sg-cardinal line-clamp-2">
-                    {p.is_pinned && <span className="md:hidden text-[11px] text-sg-cardinal font-bold mr-2">{ko ? '공지' : 'PIN'}</span>}{t(p, 'title', l)}
+                    {t(p, 'title', l)}
                     {(p.attachments?.length ?? 0) > 0 && <span className="ml-2 text-[12px] text-sg-gray9">📎</span>}{p.video_url && <span className="ml-2 text-[12px] text-sg-cardinal">▶</span>}
                   </Link>
                   <span className="md:hidden block text-[12px] text-sg-gray9 mt-1">{fmtDate(p.created_at)}</span>
