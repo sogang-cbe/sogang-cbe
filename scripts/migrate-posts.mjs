@@ -114,22 +114,78 @@ if (dry) { console.log('\n--dry 이므로 보내지 않았습니다.'); process.
 
 if (!(await checkSupabase())) process.exit(1);
 
-const CHUNK = 100;
-let done = 0;
-for (let i = 0; i < rows.length; i += CHUNK) {
-  const batch = rows.slice(i, i + CHUNK);
+const H = {
+  apikey: SUPABASE_SERVICE_KEY,
+  Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
+  'Content-Type': 'application/json',
+};
+
+/** 이미 들어가 있는 legacy_id 를 모아 둔다 — 중단된 지점부터 이어서 넣기 위함. */
+async function existingIds() {
+  const have = new Set();
+  const PAGE = 1000;
+  for (let from = 0; ; from += PAGE) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=legacy_id&legacy_id=not.is.null`, {
+      headers: { ...H, Range: `${from}-${from + PAGE - 1}` },
+    });
+    if (!res.ok) { console.warn('  (이미 들어간 글 확인 실패 — 전부 다시 보냅니다)'); return new Set(); }
+    const page = await res.json();
+    for (const r of page) have.add(r.legacy_id);
+    if (page.length < PAGE) break;
+  }
+  return have;
+}
+
+/** 한 묶음을 보낸다. 시간초과·일시 오류면 반으로 쪼개 다시 시도한다. */
+async function send(batch, depth = 0) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?on_conflict=legacy_id`, {
     method: 'POST',
-    headers: {
-      apikey: SUPABASE_SERVICE_KEY,
-      Authorization: `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'resolution=merge-duplicates,return=minimal',
-    },
+    headers: { ...H, Prefer: 'resolution=merge-duplicates,return=minimal' },
     body: JSON.stringify(batch),
-  });
-  if (!res.ok) { console.error(`\n${i}번째 묶음 실패 — ${res.status}\n${await res.text()}`); process.exit(1); }
-  done += batch.length;
-  console.log(`  ${done}/${rows.length}`);
+  }).catch((e) => ({ ok: false, status: 0, text: async () => e.message }));
+  if (res.ok) return batch.length;
+
+  const body = await res.text();
+  const retriable = res.status === 0 || res.status >= 500 || /57014|timeout/i.test(body);
+  if (retriable && batch.length > 1) {
+    const mid = Math.ceil(batch.length / 2);
+    if (depth === 0) console.log(`    (${batch.length}건이 무거워 ${mid}건씩 나눠 보냅니다)`);
+    return (await send(batch.slice(0, mid), depth + 1)) + (await send(batch.slice(mid), depth + 1));
+  }
+  if (retriable && batch.length === 1) {   // 한 건도 안 들어가면 잠깐 쉬고 한 번 더
+    await new Promise((r) => setTimeout(r, 3000));
+    const again = await fetch(`${SUPABASE_URL}/rest/v1/posts?on_conflict=legacy_id`, {
+      method: 'POST', headers: { ...H, Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(batch),
+    });
+    if (again.ok) return 1;
+    console.error(`\n  이 글 하나가 끝내 안 들어갑니다: ${batch[0].legacy_id}`);
+    console.error(`  ${res.status} ${body.slice(0, 200)}`);
+    return 0;
+  }
+  throw new Error(`${res.status} ${body.slice(0, 300)}`);
+}
+
+const force = process.argv.includes('--force');
+let todo = rows;
+if (!force) {
+  const have = await existingIds();
+  if (have.size) {
+    todo = rows.filter((r) => !have.has(r.legacy_id));
+    console.log(`  이미 들어간 글 ${have.size}건은 건너뜁니다. 남은 ${todo.length}건을 넣습니다.`);
+  }
+}
+if (!todo.length) {
+  console.log('\n모두 들어가 있습니다. 더 할 일이 없습니다.');
+} else {
+  const CHUNK = 25;                      // 100건은 본문이 큰 글이 몰리면 시간초과가 난다
+  let done = 0, failed = 0;
+  for (let i = 0; i < todo.length; i += CHUNK) {
+    const batch = todo.slice(i, i + CHUNK);
+    const ok = await send(batch);
+    done += ok; failed += batch.length - ok;
+    console.log(`  ${done}/${todo.length}${failed ? ` (실패 ${failed})` : ''}`);
+  }
+  if (failed) { console.error(`\n${failed}건이 들어가지 않았습니다. 같은 명령을 한 번 더 돌리면 그 건들만 다시 시도합니다.`); process.exitCode = 1; }
 }
 console.log('\n완료. 관리자 화면(/adm/posts)에서 확인하세요. 비공개 글은 "개인정보 확인" 후 공개로 바꿔 주세요.');
