@@ -54,12 +54,12 @@ export default function Header({ locale }: { locale: Locale }) {
       </div>
       {/* Mega menu (desktop) — all sub-menus at once, like the university site */}
       <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-300 ${mega ? 'max-h-[420px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="container-site grid grid-cols-7 gap-4 py-7">
+        <div className="container-site grid grid-cols-8 gap-3 py-7">
           {nav.map((item) => (
             <div key={item.id}>
               <p className="font-bold text-[15px] text-sg-cardinal mb-3">{label(item, locale)}</p>
               <ul className="space-y-1.5">{item.sub?.map((s) => <li key={s.id}>{isExternal(s.href)
-                ? <a href={s.href} target="_blank" rel="noreferrer" className="block text-[14px] text-sg-gray11 hover:text-sg-ink hover:underline underline-offset-4">{label(s, locale)} ↗</a>
+                ? <a href={s.href} target="_blank" rel="noreferrer" className="block text-[14px] text-sg-gray11 hover:text-sg-ink hover:underline underline-offset-4">{label(s, locale)} ↗</a>
                 : <Link href={`/${locale}${s.href}`} className="block text-[14px] text-sg-gray11 hover:text-sg-ink hover:underline underline-offset-4">{label(s, locale)}</Link>}</li>)}</ul>
             </div>
           ))}
@@ -73,7 +73,7 @@ export default function Header({ locale }: { locale: Locale }) {
                 {label(item, locale)}<span className={`text-sg-gray9 transition-transform ${mobile === item.id ? 'rotate-45' : ''}`}>+</span>
               </button>
               {mobile === item.id && item.sub && <ul className="bg-sg-mist pb-2">{item.sub.map((s) => <li key={s.id}>{isExternal(s.href)
-                ? <a href={s.href} target="_blank" rel="noreferrer" className="block px-8 py-2.5 text-[15px]">{label(s, locale)} ↗</a>
+                ? <a href={s.href} target="_blank" rel="noreferrer" className="block px-8 py-2.5 text-[15px]">{label(s, locale)} ↗</a>
                 : <Link href={`/${locale}${s.href}`} className="block px-8 py-2.5 text-[15px]">{label(s, locale)}</Link>}</li>)}</ul>}
             </div>
           ))}
