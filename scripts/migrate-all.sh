@@ -37,9 +37,15 @@ SUPABASE_URL="${SUPABASE_URL:-https://pvbjbvsnuwccfyauajpe.supabase.co}"
 read -rs -p "Supabase service_role 키: " SUPABASE_SERVICE_KEY; echo
 read -r  -p "R2 공개 주소 (예: https://pub-xxxx.r2.dev): " MEDIA_BASE
 read -r  -p "R2 Account ID: " R2_ACCOUNT_ID
+echo "  (아래 두 개는 Cloudflare R2 토큰 화면의 'Access Key ID'(32자)와 'Secret Access Key'(64자)입니다."
+echo "   맨 위의 'Token value' 가 아닙니다.)"
 read -rs -p "R2 Access Key ID: " R2_ACCESS_KEY_ID; echo
 read -rs -p "R2 Secret Access Key: " R2_SECRET_ACCESS_KEY; echo
 R2_BUCKET="${R2_BUCKET:-sogang-cbe-media}"
+
+# 길이가 전형적인 값과 다르면 미리 알려준다 (막지는 않는다)
+[ "${#R2_ACCESS_KEY_ID}" -eq 32 ] || echo "  ⚠ Access Key ID 가 ${#R2_ACCESS_KEY_ID}자입니다 (보통 32자)."
+[ "${#R2_SECRET_ACCESS_KEY}" -eq 64 ] || echo "  ⚠ Secret Access Key 가 ${#R2_SECRET_ACCESS_KEY}자입니다 (보통 64자). 'Token value' 를 넣지 않았는지 확인하세요."
 export SUPABASE_URL SUPABASE_SERVICE_KEY MEDIA_BASE R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY R2_BUCKET
 
 for v in SUPABASE_SERVICE_KEY MEDIA_BASE R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY; do
