@@ -45,7 +45,10 @@ create table if not exists posts (
   updated_at timestamptz default now()
 );
 create index if not exists posts_board_idx on posts(board, created_at desc);
-create unique index if not exists posts_legacy_uq on posts(legacy_id) where legacy_id is not null;
+-- 부분 인덱스(where legacy_id is not null)로 두면 PostgREST 의 on_conflict=legacy_id 가
+-- 이 인덱스를 추론하지 못해 42P10 이 난다. 일반 고유 인덱스도 NULL 중복은 허용하므로 동작은 같다.
+drop index if exists posts_legacy_uq;
+create unique index if not exists posts_legacy_uq on posts(legacy_id);
 
 create table if not exists faculty (
   id bigserial primary key,
