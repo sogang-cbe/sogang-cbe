@@ -49,8 +49,8 @@ export default async function BoardList({ params, searchParams }: { params: { lo
   const [section, current] = boardSection[board] || ['board', board];
   const href = (p: number) => `/${l}/board/${board}?page=${p}${q ? `&q=${encodeURIComponent(q)}` : ''}`;
   return (<>
-    <PageHero locale={l} section={section} current={current} />
-    <div className="container-site py-12">
+    <PageHero locale={l} section={section} current={current} narrow />
+    <div className="container-narrow py-12">
       {intros[board] && <p className="mb-8 max-w-3xl text-[16px] leading-relaxed text-sg-gray11">{ko ? intros[board][0] : intros[board][1]}</p>}
       {(
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">

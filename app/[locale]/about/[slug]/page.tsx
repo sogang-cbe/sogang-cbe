@@ -165,5 +165,6 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     );
   }
 
-  return <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug} />;
+  // 행정실은 '구성원' 메뉴에 속한다 — 교수진·명예교수와 같은 넓은 폭을 써야 탭과 본문 줄이 맞는다
+  return <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug} wide={slug === 'staff'} />;
 }

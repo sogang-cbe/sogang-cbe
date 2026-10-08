@@ -321,7 +321,7 @@ export async function updateReservation(fd: FormData) {
 
 export async function saveSettings(fd: FormData) {
   const sb = await admin();
-  const sections = ['hero', 'promo', 'intro', 'news', 'videos', 'programs', 'quicklinks', 'gallery'].filter((s) => bool(fd, `sec_${s}`));
+  const sections = ['hero', 'promo', 'intro', 'news', 'videos', 'programs', 'gallery'].filter((s) => bool(fd, `sec_${s}`));
   const order = str(fd, 'order').split(',').map((s) => s.trim()).filter(Boolean);
   const ordered = [...order.filter((s) => sections.includes(s)), ...sections.filter((s) => !order.includes(s))];
   const value = { sections: ordered, news_count: Number(str(fd, 'news_count') || 8), tagline_ko: nul(str(fd, 'tagline_ko')), tagline_en: nul(str(fd, 'tagline_en')), hero_video_url: nul(str(fd, 'hero_video_url')), hero_poster_url: nul(str(fd, 'hero_poster_url')), notify_email: nul(str(fd, 'notify_email')) };

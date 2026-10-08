@@ -30,8 +30,8 @@ export default async function EquipmentDetail({ params, searchParams }: { params
   const next = new Date(start.getTime() + 7 * 864e5).toISOString().slice(0, 10);
 
   return (<>
-    <PageHero locale={l} section="facility" current="equipment" title={t(eq, 'name', l)} />
-    <div className="container-site py-12">
+    <PageHero locale={l} section="facility" current="equipment" title={t(eq, 'name', l)} narrow />
+    <div className="container-narrow py-12">
       <Link href={`/${l}/equipment`} className="text-[14px] text-sg-gray11 hover:text-sg-cardinal">← {ko ? '장비 목록' : 'All instruments'}</Link>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_340px] lg:gap-12">

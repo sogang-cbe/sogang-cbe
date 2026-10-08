@@ -25,8 +25,8 @@ export default async function Reservation({ params, searchParams }: { params: { 
   const todayStr = now.toISOString().slice(0, 10);
   const href = (yy: number, mm: number) => `/${l}/reservation?f=${facility}&y=${yy}&m=${mm}`;
   return (<>
-    <PageHero locale={l} section="board" current="reservation" />
-    <div className="container-site py-12">
+    <PageHero locale={l} section="board" current="reservation" narrow />
+    <div className="container-narrow py-12">
       <div className="flex flex-wrap gap-2 mb-6">
         {facilities.map((f) => <Link key={f.id} href={`/${l}/reservation?f=${f.id}&y=${y}&m=${m}`} className={`px-4 py-2 text-[13px] border ${f.id === facility ? 'bg-sg-ink text-white border-sg-ink' : 'border-sg-line hover:border-sg-ink'}`}>{ko ? f.ko : f.en}</Link>)}
       </div>

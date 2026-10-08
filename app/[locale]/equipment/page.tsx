@@ -44,8 +44,8 @@ export default async function Equipment({ params, searchParams }: { params: { lo
   const eqName = (id: number) => { const e = (list || []).find((x: any) => x.id === id); return e ? t(e, 'name', l) : `#${id}`; };
 
   return (<>
-    <PageHero locale={l} section="facility" current="equipment" />
-    <div className="container-site py-12">
+    <PageHero locale={l} section="facility" current="equipment" narrow />
+    <div className="container-narrow py-12">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
         <p className="text-[15px] text-sg-gray11 break-keep max-w-2xl">
           {ko
