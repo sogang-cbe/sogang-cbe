@@ -10,27 +10,18 @@ import type { Locale } from '@/lib/i18n';
 export default function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // 가리킨 메뉴 하나의 하위 항목만 펼친다. 여덟 칸을 한꺼번에 펼치면 어느 메뉴의 것인지 헷갈렸다.
-  // 펼침 위치는 메뉴를 따라 움직이지 않고 늘 본문 왼쪽 선에서 시작한다(2026-10-09 책임자 결정).
-  const [mega, setMega] = useState<string | null>(null);
-  // 펼침 줄은 늘 같은 자리 — 첫 메뉴('화공생명공학과') 글자와 왼쪽 선을 맞춘다.
-  // 메뉴 영역의 위치는 창 폭에 따라 달라지므로 실제로 재서 쓴다.
+  // 가리킨 메뉴 하나의 하위 항목만, 그 메뉴 글자 바로 아래로 세로로 펼친다(2026-10-09 책임자 결정).
+  // 메뉴 위치는 창 폭에 따라 달라지므로 가리킨 순간 실제로 재서 쓴다.
+  const [mega, setMega] = useState<{ id: string; x: number } | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
-  const navRef = useRef<HTMLElement>(null);
-  const [navX, setNavX] = useState(0);
-  useEffect(() => {
-    const measure = () => {
-      const bar = barRef.current, first = navRef.current?.firstElementChild as HTMLElement | null;
-      if (!bar || !first) return;
-      // 펼침 줄도 같은 container(좌우 여백 포함) 안에 있으므로, 그 여백만큼 빼야 글자끼리 맞는다
-      const barLeft = bar.getBoundingClientRect().left + (parseFloat(getComputedStyle(bar).paddingLeft) || 0);
-      const textLeft = first.getBoundingClientRect().left + (parseFloat(getComputedStyle(first).paddingLeft) || 0);
-      setNavX(Math.max(0, Math.round(textLeft - barLeft)));
-    };
-    measure();
-    window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
-  }, [locale]);
+  const openAt = (id: string, el: HTMLElement | null) => {
+    const bar = barRef.current;
+    if (!el || !bar) { setMega({ id, x: 0 }); return; }
+    // 펼침 칸도 같은 container(좌우 여백 포함) 안에 있으므로 그 여백만큼 빼야 글자끼리 맞는다
+    const barLeft = bar.getBoundingClientRect().left + (parseFloat(getComputedStyle(bar).paddingLeft) || 0);
+    const textLeft = el.getBoundingClientRect().left + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
+    setMega({ id, x: Math.max(0, Math.round(textLeft - barLeft)) });
+  };
   const [mobile, setMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const other: Locale = locale === 'ko' ? 'en' : 'ko';
@@ -54,9 +45,9 @@ export default function Header({ locale }: { locale: Locale }) {
         <Logo locale={locale} />
         {/* 전체 메뉴는 1280px 이상에서만: 1024~1365px에서 메뉴가 넘쳐 오른쪽 언어 전환 버튼이 화면 밖으로 잘리던 문제(2026-09-25 전체 점검).
             1280~1439px은 메뉴 간격을 줄이고, 그보다 좁으면 햄버거 메뉴 */}
-        <nav ref={navRef} className="hidden xl:flex items-center h-full" aria-label="Main">
+        <nav className="hidden xl:flex items-center h-full" aria-label="Main">
           {nav.map((item) => (
-            <Link key={item.id} href={`/${locale}${item.href}`} onMouseEnter={() => setMega(item.id)} onFocus={() => setMega(item.id)}
+            <Link key={item.id} href={`/${locale}${item.href}`} onMouseEnter={(e) => openAt(item.id, e.currentTarget)} onFocus={(e) => openAt(item.id, e.currentTarget)}
               className="relative px-2.5 min-[1536px]:px-4 h-full flex items-center text-[16px] min-[1536px]:text-[16.5px] font-semibold text-sg-ink hover:text-sg-cardinal after:absolute after:left-2.5 after:right-2.5 min-[1536px]:after:left-4 min-[1536px]:after:right-4 after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:scale-x-0 after:origin-left after:transition-transform hover:after:scale-x-100">
               {label(item, locale)}
             </Link>
@@ -76,9 +67,9 @@ export default function Header({ locale }: { locale: Locale }) {
       {/* 하위 메뉴(데스크톱) — 가리킨 메뉴의 항목만, 늘 같은 자리에서 가로로. 빨간 글씨로 어느 메뉴인지 알려 준다. */}
       <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[360px] opacity-100' : 'max-h-0 opacity-0'}`}>
         <div className="container-site pt-6 pb-7">
-          <div style={{ marginLeft: navX }}>
-          <p className="font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega) ? label(nav.find((n) => n.id === mega)!, locale) : ''}</p>
-          <ul className="mt-3 space-y-0.5">{nav.find((n) => n.id === mega)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
+          <div style={{ marginLeft: mega?.x ?? 0 }}>
+          <p className="font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega?.id) ? label(nav.find((n) => n.id === mega?.id)!, locale) : ''}</p>
+          <ul className="mt-3 space-y-0.5">{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
             ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
             : <Link href={`/${locale}${sub.href}`} className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
           </div>
