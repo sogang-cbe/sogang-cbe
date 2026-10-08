@@ -10,6 +10,6 @@ export default function Policy({ params }: { params: { locale: Locale; slug: str
   const c = staticPages[`policy/${params.slug}`]; if (!c) notFound();
   return (<>
     <PageHero locale={params.locale} section="" title={T(params.locale, titles[params.slug])} />
-    <article className="container-site py-14 prose-sg" dangerouslySetInnerHTML={{ __html: wrapTables(params.locale === 'en' ? c.en : c.ko) }} />
+    <article className="container-narrow py-14 prose-sg" dangerouslySetInnerHTML={{ __html: wrapTables(params.locale === 'en' ? c.en : c.ko) }} />
   </>);
 }

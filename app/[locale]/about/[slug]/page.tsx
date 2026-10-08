@@ -91,50 +91,43 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
   }
 
   /* 연구실 — 교수진(DB)에서 자동 생성. 교수 정보를 고치면 이 목록이 따라 바뀐다.
-     2026-10-09 개편: 사진과 안내문을 빼고 책임교수 · 연구실 · 연구분야 세 열의 목록으로 바꿨다.
-     18개를 위에서 아래로 훑으며 비교하는 화면이라 카드보다 열이 맞는 목록이 눈에 들어온다. */
+     2026-10-09 개편(A안): 맨 위 안내문과 교수 사진을 빼고, 연구실명은 국문만 크게 쓰고 영문은 아랫줄로 내렸다.
+     (목록형 B안도 만들어 봤으나 실제로 보니 카드가 낫다는 결론) */
   if (slug === 'labs') {
     const faculty = await getFaculty(false);
     const labs = faculty.filter((f: any) => f.lab_ko && f.field !== 'staff');
     const kw = (f: any) => (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean).slice(0, 4);
-    const cols = 'md:grid md:grid-cols-[190px_minmax(0,1.1fr)_minmax(0,1fr)] md:gap-8 lg:gap-10';
     return (
       <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug}>
-        {/* 열 제목 — 모바일에서는 줄이 쌓이므로 감춘다 */}
-        <div className={`hidden ${cols} pb-2.5 px-2 text-[12px] font-semibold tracking-[0.08em] text-sg-gray9`}>
-          <span>{ko ? '책임교수' : 'Faculty'}</span><span>{ko ? '연구실' : 'Laboratory'}</span><span>{ko ? '연구분야' : 'Research areas'}</span>
-        </div>
-        <ul className="border-t-2 border-sg-ink">
+        <div className="grid gap-4 md:grid-cols-2">
           {labs.map((f: any) => (
-            <li key={f.id} className={`${cols} items-center border-b border-sg-line px-2 py-5 hover:bg-sg-mist transition-colors`}>
-              <div className="min-w-0">
-                <Link href={`/${l}/faculty/${f.id}`} className="font-bold text-[15.5px] hover:text-sg-cardinal break-keep">
+            <div key={f.id} className="card flex flex-col p-6 md:p-7">
+              {/* 국문명 뒤의 영문 괄호는 떼고 영문은 아래 줄로 — 한 줄에 두 번 적히지 않게 */}
+              <h2 className="text-[19px] md:text-[20px] font-bold leading-snug break-keep !mt-0">
+                {f.lab_url
+                  ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)} <span aria-hidden className="text-[13px] text-sg-cardinal">↗</span></a>
+                  : shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)}
+              </h2>
+              {ko && f.lab_en && <p className="mt-1.5 text-[13px] leading-snug text-sg-gray9">{f.lab_en}</p>}
+
+              {kw(f).length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-1.5">
+                  {kw(f).map((k: string) => <li key={k} className="text-[12px] leading-[1.5] px-2 py-[3px] border border-sg-line text-sg-gray11 break-keep">{k}</li>)}
+                </ul>
+              )}
+
+              <div className="mt-auto pt-4 border-t border-sg-line flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <Link href={`/${l}/faculty/${f.id}`} className="font-bold text-[15.5px] hover:text-sg-cardinal">
                   {ko ? f.name_ko : f.name_en || f.name_ko}
                   <span className="ml-1.5 text-[12.5px] font-medium text-sg-gray9">{ko ? f.title_ko : f.title_en}</span>
                 </Link>
-                <p className="mt-0.5 text-[12.5px] text-sg-gray9 truncate">
+                <span className="ml-auto text-[12.5px] text-sg-gray9">
                   {[f.room ? (ko ? `${f.room}호` : `Room ${f.room}`) : '', f.email].filter(Boolean).join(' · ')}
-                </p>
+                </span>
               </div>
-
-              <div className="min-w-0 mt-3 md:mt-0">
-                {/* 국문명 뒤의 영문 괄호는 떼고 영문은 아래 줄로 — 한 줄에 두 번 적히지 않게 */}
-                <h2 className="text-[17.5px] font-bold leading-snug break-keep !mt-0">
-                  {f.lab_url
-                    ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)} <span aria-hidden className="text-[13px] text-sg-cardinal">↗</span></a>
-                    : shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)}
-                </h2>
-                {ko && f.lab_en && <p className="mt-1 text-[13px] leading-snug text-sg-gray9">{f.lab_en}</p>}
-              </div>
-
-              {kw(f).length > 0 && (
-                <ul className="mt-3 md:mt-0 flex flex-wrap gap-1.5">
-                  {kw(f).map((k: string) => <li key={k} className="text-[12px] leading-[1.5] px-2 py-[3px] bg-sg-mist text-sg-gray11 break-keep">{k}</li>)}
-                </ul>
-              )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
         {labs.length === 0 && (
           <p className="mt-8 text-[15px] text-sg-gray9">{ko ? '연구실 정보는 관리자 화면에서 교수진을 등록하면 자동으로 채워집니다.' : 'This list fills in automatically once faculty records are added.'}</p>
         )}

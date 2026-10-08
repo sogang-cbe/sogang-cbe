@@ -32,10 +32,12 @@ body { @apply bg-sg-paper text-sg-ink font-sans antialiased; word-break: keep-al
 :focus-visible { outline: 2px solid var(--sg-cardinal); outline-offset: 3px; }
 
 .container-site { @apply mx-auto w-full max-w-site px-5 md:px-8; }
-/* 글을 읽는 화면용 좁은 컨테이너.
+/* 글을 읽는 화면용 컨테이너.
    .container-site 는 @tailwind utilities 뒤에 선언돼 있어 같은 요소에 max-w-4xl 같은 유틸리티를 붙여도
-   이기지 못한다(본문 글줄이 1,200px까지 늘어나 읽기 어려웠다). 본문 페이지는 이 클래스를 쓴다. */
-.container-narrow { @apply mx-auto w-full px-5 md:px-8; max-width: 60rem; }
+   이기지 못한다(본문 글줄이 1,200px까지 늘어나 읽기 어려웠다). 본문 페이지는 이 클래스를 쓴다.
+   2026-10-09: 고정 페이지를 전부 교수진 폭(1320px)으로 맞췄더니 글이 중심인 화면이 허전해져 되돌렸다.
+   대신 예전 960px 보다는 조금 넓은 1088px 로 둔다(책임자 요청). */
+.container-narrow { @apply mx-auto w-full px-5 md:px-8; max-width: 68rem; }
 .font-brand { font-family: 'Pretendard Variable', Pretendard, serif; }
 .eyebrow { @apply text-[13px] font-semibold tracking-[0.08em] text-sg-cardinal uppercase; }
 .h-display { @apply font-brand text-[2.4rem] md:text-[3.4rem] leading-[1.15] tracking-[-0.01em]; }

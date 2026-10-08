@@ -38,7 +38,7 @@ export default async function PostPage({ params }: { params: { locale: Locale; b
   return (<>
     <PageHero locale={l} section={section} current={current} image={p.thumbnail_url || images[0]?.url || undefined} />
     <ViewCounter id={p.id} />
-    <article className="container-site py-14">
+    <article className="container-narrow py-14">
       <header className="border-b-2 border-sg-ink pb-7">
         <span className="eyebrow">{T(l, board as any) || board}</span>
         {/* 제목 크기 2.5rem→2rem (2026-09-17 박현주 선생님 요청: 본문 대비 제목이 너무 크다) */}
