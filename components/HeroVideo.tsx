@@ -31,7 +31,7 @@ export default function HeroVideo({ locale, videoUrl, poster, taglineKo, tagline
             </p>
             {/* 한 줄 캐치프레이즈. 관리자 설정(tagline)이 있으면 그것을, 없으면 hero1(+hero2)을 쓴다.
                 국문은 한 줄에 들어가는 길이로 유지하고, 영문은 길면 자연스럽게 접히게 둔다. */}
-            <h1 className="mt-5 max-w-4xl font-brand text-[2.6rem] sm:text-[3.8rem] lg:text-[4.8rem] leading-[1.1] break-keep rise rise-2">
+            <h1 className="mt-5 max-w-6xl font-brand text-[2.3rem] sm:text-[3.4rem] lg:text-[4.2rem] xl:text-[4.8rem] leading-[1.1] break-keep rise rise-2">
               {tagline || [T(locale, 'hero1'), T(locale, 'hero2')].filter(Boolean).join(' ')}
             </h1>
             {/* 두 문장을 각각 한 줄로 — 첫 줄이 접히지 않게 폭을 넓게 잡고 글자를 한 치 줄였다(책임자 요청) */}

@@ -29,7 +29,7 @@ export const ui = {
     readMore: '자세히 보기', professors: '전임교수', emeritus: '명예교수', lab: '연구실', office: '위치', tel: '전화',
     email: '이메일', website: '홈페이지', field: '연구분야', reserve: '예약 신청', pending: '승인 대기', approved: '확정',
     officeHours: '학과사무실', address: '주소', fax: '팩스', privacy: '개인정보처리방침', terms: '이용약관', emailPolicy: '이메일무단수집거부',
-    hero1: '화공생명공학과', hero2: '',
+    hero1: '서강대학교 화공생명공학과', hero2: '',
     // 홈 히어로 설명 — 두 문장을 각각 한 줄로 둔다(heroSub / heroSub2)
     heroSub: '화학공학은 정유·석유화학에서 출발해 바이오·의약, 신소재, 반도체, 에너지, 환경으로 영역을 넓혀 왔습니다.',
     heroSub2: '서강대학교 화공생명공학과는 탄탄한 기초 교육과 최전선의 연구로 그 변화를 이끌어 갈 인재를 길러냅니다.',
@@ -52,7 +52,7 @@ export const ui = {
     readMore: 'Read more', professors: 'Professors', emeritus: 'Emeritus', lab: 'Laboratory', office: 'Office', tel: 'Phone',
     email: 'Email', website: 'Website', field: 'Research field', reserve: 'Request a reservation', pending: 'Pending', approved: 'Confirmed',
     officeHours: 'Department Office', address: 'Address', fax: 'Fax', privacy: 'Privacy Policy', terms: 'Terms of Use', emailPolicy: 'No Unauthorized Email Collection',
-    hero1: 'Chemical and Biomolecular Engineering', hero2: '',
+    hero1: 'Sogang Chemical and Biomolecular Engineering', hero2: '',
     heroSub: 'Chemical engineering began with refining and petrochemicals and now reaches into biopharmaceuticals, advanced materials, semiconductors, energy and the environment.',
     heroSub2: 'Sogang CBE prepares the people who will lead that change, through solid fundamentals and research at the frontier.',
     since: 'Founded 1976', labs: 'research labs', profs: 'full-time faculty', bk21: 'BK21 FOUR program',
