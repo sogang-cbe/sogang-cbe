@@ -72,6 +72,9 @@ for v in SUPABASE_SERVICE_KEY MEDIA_BASE R2_ACCOUNT_ID R2_ACCESS_KEY_ID R2_SECRE
   [ -n "${!v}" ] || die "$v 가 비어 있습니다."
 done
 
+say "■ 자격증명 확인 (오래 걸리는 작업 전에 먼저 봅니다)"
+node "$HERE/migrate-posts.mjs" "$POSTS" --check || die "Supabase 키가 통하지 않습니다. 위 안내를 보고 다시 시도하세요."
+
 say "■ 1/3 백업에서 필요한 폴더만 풀어 놓습니다 (몇 분 걸립니다)"
 mkdir -p "$WORK"
 if [ -d "$WORK/home2/chemeng/public/data/bbsData" ]; then
@@ -87,8 +90,13 @@ WEBROOT="$WORK/home2/chemeng/public"
 [ -d "$WEBROOT" ] || die "압축 해제가 끝나지 않았습니다: $WEBROOT"
 echo "  완료 — $(du -sh "$WORK" | cut -f1)"
 
-say "■ 2/3 파일을 R2에 올립니다 (쓰이는 것만, 약 4GB — 회선에 따라 10~40분)"
-node "$HERE/upload-media.mjs" "$WEBROOT" "$POSTS"
+if [ -f "$WORK/.uploaded" ] && [ "${FORCE_UPLOAD:-}" != 1 ]; then
+  say "■ 2/3 파일 업로드 — 이미 끝나 있어 건너뜁니다 (다시 올리려면 FORCE_UPLOAD=1)"
+else
+  say "■ 2/3 파일을 R2에 올립니다 (쓰이는 것만, 약 4GB — 회선에 따라 10~40분)"
+  node "$HERE/upload-media.mjs" "$WEBROOT" "$POSTS"
+  touch "$WORK/.uploaded"
+fi
 
 say "■ 3/3 게시글을 Supabase에 넣습니다"
 node "$HERE/migrate-posts.mjs" "$POSTS" --dry

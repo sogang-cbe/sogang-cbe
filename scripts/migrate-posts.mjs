@@ -17,13 +17,55 @@ import { rewriteContent, isImage, BOARD_MAP, encodeKey } from './legacy-media.mj
 
 const file = process.argv[2];
 const dry = process.argv.includes('--dry');
-if (!file) { console.error('사용법: node scripts/migrate-posts.mjs <posts_mapped.json> [--dry]'); process.exit(1); }
+const checkOnly = process.argv.includes('--check');
+if (!file) { console.error('사용법: node scripts/migrate-posts.mjs <posts_mapped.json> [--dry|--check]'); process.exit(1); }
 
 const { SUPABASE_URL, SUPABASE_SERVICE_KEY, MEDIA_BASE } = process.env;
 if (!dry && (!SUPABASE_URL || !SUPABASE_SERVICE_KEY || !MEDIA_BASE)) {
   console.error('환경변수 SUPABASE_URL, SUPABASE_SERVICE_KEY, MEDIA_BASE 를 설정하세요.');
   process.exit(1);
 }
+
+/** 키의 "종류"를 사람이 읽을 수 있게 풀어 준다. 틀린 키를 넣었을 때 바로 알 수 있도록. */
+function describeKey(k) {
+  if (!k) return { ok: false, why: '비어 있습니다' };
+  if (k.startsWith('sb_publishable_'))
+    return { ok: false, why: 'publishable(공개용) 키입니다. 글을 넣으려면 secret 키가 필요합니다' };
+  if (k.startsWith('sb_secret_')) return { ok: true, why: 'secret 키 (올바른 종류)' };
+  if (k.startsWith('eyJ')) {
+    try {
+      const payload = JSON.parse(Buffer.from(k.split('.')[1], 'base64').toString('utf8'));
+      if (payload.role === 'service_role') return { ok: true, why: 'legacy service_role 키 (올바른 종류)' };
+      return { ok: false, why: `legacy ${payload.role} 키입니다. service_role 이어야 합니다` };
+    } catch { return { ok: false, why: 'JWT 형식이 깨졌습니다 (복사하다 잘렸을 수 있습니다)' }; }
+  }
+  return { ok: false, why: '알 수 없는 형식입니다 (sb_secret_… 또는 eyJ… 로 시작해야 합니다)' };
+}
+
+/** 실제로 한 번 찔러 보고 쓸 수 있는 키인지 확인한다. */
+async function checkSupabase() {
+  const kind = describeKey(SUPABASE_SERVICE_KEY);
+  console.log(`  키 종류: ${kind.why}`);
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/posts?select=id&limit=1`, {
+    headers: { apikey: SUPABASE_SERVICE_KEY, Authorization: `Bearer ${SUPABASE_SERVICE_KEY}` },
+  }).catch((e) => ({ ok: false, status: 0, text: async () => e.message }));
+  if (res.ok) { console.log('  Supabase 정상'); return true; }
+  const body = await res.text();
+  console.error(`\n  Supabase 가 키를 거부했습니다 — ${res.status}\n  ${body.slice(0, 200)}`);
+  if (!kind.ok) {
+    console.error(`  → ${kind.why}`);
+  } else if (/Invalid API key/i.test(body)) {
+    console.error('  → 키 종류는 맞는데 값이 통하지 않습니다. 다음을 확인하세요.');
+    console.error('     · Supabase → Project Settings → API Keys 에서 값을 다시 복사 (Reveal 후 복사 버튼 사용)');
+    console.error('     · 화면에 Secret keys 와 Legacy API keys 가 둘 다 있으면, 지금과 다른 쪽을 써 보세요');
+    console.error(`     · 프로젝트 주소가 맞는지: ${SUPABASE_URL}`);
+  } else if (res.status === 404) {
+    console.error('  → posts 테이블이 없습니다. SQL Editor 에서 supabase/setup_cbe.sql 을 먼저 실행하세요.');
+  }
+  return false;
+}
+
+if (checkOnly) { process.exit((await checkSupabase()) ? 0 : 1); }
 const media = (MEDIA_BASE || 'MEDIA_BASE').replace(/\/$/, '');
 
 const strip = (h) => String(h || '').replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
@@ -69,6 +111,8 @@ console.log('게시판별:', count('board'));
 console.log(`비공개(개인정보 확인 대기): ${rows.filter((r) => !r.published).length}건`);
 console.log(`첨부 ${rows.reduce((n, r) => n + r.attachments.length, 0)}개 · 매핑 안 된 게시판: ${[...new Set(skipped)].join(', ') || '없음'}`);
 if (dry) { console.log('\n--dry 이므로 보내지 않았습니다.'); process.exit(0); }
+
+if (!(await checkSupabase())) process.exit(1);
 
 const CHUNK = 100;
 let done = 0;
