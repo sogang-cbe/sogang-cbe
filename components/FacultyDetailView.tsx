@@ -46,10 +46,10 @@ export default function FacultyDetailView({ f, locale: l }: { f: any; locale: Lo
   );
 
   return (<>
-    <PageHero locale={l} section="faculty" current={kind} title={`${t(f, 'name', l)} ${t(f, 'title', l)}`} />
-    <div className="container-site py-12 md:py-16">
+    <PageHero locale={l} section="faculty" current={kind} title={`${t(f, 'name', l)} ${t(f, 'title', l)}`} narrow />
+    <div className="container-narrow py-12 md:py-16">
       {/* 프로필: 모바일은 사진+이름을 나란히, md 이상은 사진 열 + 정보 열 */}
-      <section className="md:grid md:grid-cols-[300px_minmax(0,1fr)] lg:grid-cols-[400px_minmax(0,1fr)] md:gap-12 lg:gap-14 items-start">
+      <section className="md:grid md:grid-cols-[280px_minmax(0,1fr)] lg:grid-cols-[340px_minmax(0,1fr)] md:gap-10 lg:gap-12 items-start">
         <div className="flex gap-5 md:block">
           {/* 사진: 4:5 고정. 사진이 없으면 성함 첫 글자를 옅게 넣어 칸이 비어 보이지 않게 한다 */}
           <div className="relative w-[128px] sm:w-[170px] md:w-full shrink-0 aspect-[4/5] bg-white border border-sg-line overflow-hidden">

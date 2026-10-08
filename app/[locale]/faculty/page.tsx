@@ -14,10 +14,10 @@ export default async function Faculty({ params }: { params: { locale: Locale } }
     getFaculty(false).then((rows: any[]) => rows.filter((f) => f.field !== 'staff')),
     getChair(),
   ]);
-  const grid = 'grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+  const grid = 'grid gap-x-6 gap-y-10 grid-cols-2 lg:grid-cols-3';
   return (<>
-    <PageHero locale={l} section="faculty" current="professors" />
-    <div className="container-site py-12">
+    <PageHero locale={l} section="faculty" current="professors" narrow />
+    <div className="container-narrow py-12">
       {all.length === 0
         ? <p className="text-sg-gray9">{ko ? '교수진 정보가 아직 등록되지 않았습니다.' : 'No faculty records yet.'}</p>
         : <div className={grid}>

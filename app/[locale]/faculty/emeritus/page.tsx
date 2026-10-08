@@ -9,9 +9,9 @@ export const revalidate = 86400; // 관리자 저장 때 즉시 갱신되므로 
 export default async function Emeritus({ params }: { params: { locale: Locale } }) {
   const list = await getFaculty(true);
   return (<>
-    <PageHero locale={params.locale} section="faculty" current="emeritus" />
-    <div className="container-site py-12">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <PageHero locale={params.locale} section="faculty" current="emeritus" narrow />
+    <div className="container-narrow py-12">
+      <div className="grid gap-4 md:grid-cols-2">
         {list.map((f: any) => <FacultyCardRow key={f.id} f={f} locale={params.locale} />)}
       </div>
     </div>
