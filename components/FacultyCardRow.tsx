@@ -11,7 +11,8 @@ export default function FacultyCardRow({ f, locale, emailOnly }: { f: any; local
   const kw: string[] = (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean).slice(0, 3);
   return (
     <Link href={`/${locale}/faculty/${f.id}`} className="card group relative flex min-w-0 gap-5 p-5 md:p-6 overflow-hidden">
-      <span className="absolute left-0 top-0 h-full w-1.5" style={{ background: f.is_emeritus ? 'var(--sg-gray5)' : 'var(--sg-cardinal)' }} />
+      {/* 왼쪽 세로 선은 명예교수·석학교수 구분 없이 카디널색으로 통일(2026-10-09) */}
+      <span className="absolute left-0 top-0 h-full w-1.5 bg-sg-cardinal" />
       <div className="w-[104px] h-[124px] shrink-0 bg-sg-mist overflow-hidden relative">
         {f.photo_url
           ? <img src={f.photo_url} alt="" className="w-full h-full object-cover" loading="lazy" />
