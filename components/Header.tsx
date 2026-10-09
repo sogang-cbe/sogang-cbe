@@ -48,7 +48,9 @@ export default function Header({ locale }: { locale: Locale }) {
         <nav className="hidden xl:flex items-center h-full" aria-label="Main">
           {nav.map((item) => (
             <Link key={item.id} href={`/${locale}${item.href}`} onMouseEnter={(e) => openAt(item.id, e.currentTarget)} onFocus={(e) => openAt(item.id, e.currentTarget)}
-              className="relative px-2.5 min-[1536px]:px-4 h-full flex items-center text-[16px] min-[1536px]:text-[16.5px] font-semibold text-sg-ink hover:text-sg-cardinal after:absolute after:left-2.5 after:right-2.5 min-[1536px]:after:left-4 min-[1536px]:after:right-4 after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:scale-x-0 after:origin-left after:transition-transform hover:after:scale-x-100">
+              // 하위 메뉴가 펼쳐져 있는 동안에는 그 메뉴 이름과 밑줄을 켜 둔다 — 마우스가 아래 목록으로 내려가도 어느 메뉴인지 보이게.
+              // 밑줄은 transform 전환이라 다른 메뉴로 옮기면 지금처럼 스르르 접힌다.
+              className={`relative px-2.5 min-[1536px]:px-4 h-full flex items-center text-[16px] min-[1536px]:text-[16.5px] font-semibold transition-colors after:absolute after:left-2.5 after:right-2.5 min-[1536px]:after:left-4 min-[1536px]:after:right-4 after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:origin-left after:transition-transform hover:text-sg-cardinal hover:after:scale-x-100 ${mega?.id === item.id ? 'text-sg-cardinal after:scale-x-100' : 'text-sg-ink after:scale-x-0'}`}>
               {label(item, locale)}
             </Link>
           ))}
