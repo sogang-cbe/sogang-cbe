@@ -64,7 +64,8 @@ body { @apply bg-sg-paper text-sg-ink font-sans antialiased; word-break: keep-al
 .prose-sg .tbl-scroll > table { @apply my-0; }
 .prose-sg :where(p, div, figure, img, iframe, video, embed, object) { max-width: 100%; }   /* 옛 글의 인라인 width(예: 700px) 방지 */
 .prose-sg [style*="white-space: pre"], .prose-sg [style*="white-space:pre"] { white-space: pre-wrap !important; }   /* 옛 글의 줄바꿈 금지 서식 */
-.card { @apply bg-white border border-sg-line transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-16px_rgba(26,26,26,0.22)]; }
+/* 카드: 마우스를 올리면 살짝 떠오르면서 바탕이 옅은 회색으로 바뀐다(2026-10-09 책임자 요청) */
+.card { @apply bg-white border border-sg-line transition-all duration-300 hover:-translate-y-1 hover:bg-sg-mist hover:border-sg-gray4 hover:shadow-[0_18px_40px_-16px_rgba(26,26,26,0.22)]; }
 .btn { @apply inline-flex items-center gap-2 px-6 py-3.5 text-[15px] font-semibold transition-colors; }
 .btn-primary { @apply btn bg-sg-cardinal text-white hover:bg-sg-deep; }
 .btn-ghost { @apply btn border border-sg-ink hover:bg-sg-ink hover:text-white; }
