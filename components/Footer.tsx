@@ -19,7 +19,8 @@ export default function Footer({ locale }: { locale: Locale }) {
         </div>
       </div>
       <div className="container-site py-10 flex flex-col md:flex-row md:items-center gap-8">
-        <img src="/images/brand/signature-kor-eng-white.png" alt="서강대학교 Sogang University" className="h-12 w-auto opacity-95" />
+        {/* self-start 가 없으면 세로 배치(모바일)에서 flex 가 이미지를 칸 너비만큼 늘려 로고가 납작해진다 */}
+        <img src="/images/brand/signature-kor-eng-white.png" alt="서강대학교 Sogang University" className="h-12 w-auto shrink-0 self-start md:self-center opacity-95" />
         <div className="md:border-l md:border-white/20 md:pl-8 text-[13.5px] leading-relaxed text-white/80">
           <p className="font-semibold text-white text-[15px]">{ko ? '화공생명공학과' : 'Department of Chemical and Biomolecular Engineering'}</p>
           <p>{ko ? '04107 서울특별시 마포구 백범로 35 (신수동) 리치과학관 521호' : 'Ricci Hall 521, 35 Baekbeom-ro, Mapo-gu, Seoul 04107, Republic of Korea'}</p>

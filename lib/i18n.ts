@@ -31,7 +31,7 @@ export const ui = {
     officeHours: '학과사무실', address: '주소', fax: '팩스', privacy: '개인정보처리방침', terms: '이용약관', emailPolicy: '이메일무단수집거부',
     hero1: '서강대학교 화공생명공학과', hero2: '',
     // 홈 히어로 설명 — 두 문장을 각각 한 줄로 둔다(heroSub / heroSub2)
-    heroSub: '화학공학은 정유·석유화학에서 출발해 바이오·의약, 신소재, 반도체, 에너지, 환경으로 영역을 넓혀 왔습니다.',
+    heroSub: '화학공학은 정유·석유화학에서 출발해 바이오·의약, 신소재, 반도체, 에너지, 환경으로 영역을 넓혀왔습니다.',
     heroSub2: '서강대학교 화공생명공학과는 탄탄한 기초 교육과 최전선의 연구로 그 변화를 이끌어 갈 인재를 길러냅니다.',
     since: '1976년 설립', labs: '개 연구실', profs: '명 전임교수', bk21: '4단계 BK21 교육연구팀',
     newsTitle: '학과 소식', programsTitle: '교육 프로그램', galleryTitle: '갤러리', areasTitle: '연구 분야',
