@@ -1,5 +1,6 @@
 import Link from '@/components/Link';
 import StaticPage from '@/components/StaticPage';
+import Reveal from '@/components/Reveal';
 import { history } from '@/content/courses';
 import { areas } from '@/content/areas';
 import { getFaculty } from '@/lib/data';
@@ -100,8 +101,10 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
     return (
       <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug}>
         <div className="grid gap-4 md:grid-cols-2">
-          {labs.map((f: any) => (
-            <div key={f.id} className="card group relative flex flex-col p-6 md:p-7">
+          {/* 스크롤에 맞춰 한 장씩 떠오르게 — 두 칸씩 보이므로 지연은 줄(2개) 단위로 준다 */}
+          {labs.map((f: any, i: number) => (
+            <Reveal key={f.id} delay={Math.min(Math.floor(i / 2), 6) * 90} className="h-full">
+            <div className="card group relative flex h-full flex-col p-6 md:p-7">
               {/* 카드 전체가 교수 상세로 간다. 연구실 홈페이지(↗)만 그 위에 따로 올려 둔다
                   (<a> 안에 <a> 를 넣을 수 없어 겹쳐 놓는 방식을 쓴다) */}
               <Link href={`/${l}/faculty/${f.id}`} className="absolute inset-0 z-0">
@@ -132,6 +135,7 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
                 </span>
               </div>
             </div>
+            </Reveal>
           ))}
         </div>
         {labs.length === 0 && (
