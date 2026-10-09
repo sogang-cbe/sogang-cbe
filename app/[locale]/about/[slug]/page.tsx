@@ -101,12 +101,18 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
       <StaticPage locale={l} section={sectionOf[slug] || 'about'} slug={slug}>
         <div className="grid gap-4 md:grid-cols-2">
           {labs.map((f: any) => (
-            <div key={f.id} className="card flex flex-col p-6 md:p-7">
+            <div key={f.id} className="card group relative flex flex-col p-6 md:p-7">
+              {/* 카드 전체가 교수 상세로 간다. 연구실 홈페이지(↗)만 그 위에 따로 올려 둔다
+                  (<a> 안에 <a> 를 넣을 수 없어 겹쳐 놓는 방식을 쓴다) */}
+              <Link href={`/${l}/faculty/${f.id}`} className="absolute inset-0 z-0">
+                <span className="sr-only">{ko ? `${f.name_ko} 교수 상세` : `${f.name_en || f.name_ko} details`}</span>
+              </Link>
               {/* 국문명 뒤의 영문 괄호는 떼고 영문은 아래 줄로 — 한 줄에 두 번 적히지 않게 */}
-              <h2 className="text-[19px] md:text-[20px] font-bold leading-snug break-keep !mt-0">
-                {f.lab_url
-                  ? <a href={f.lab_url} target="_blank" rel="noreferrer" className="hover:text-sg-cardinal">{shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)} <span aria-hidden className="text-[13px] text-sg-cardinal">↗</span></a>
-                  : shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)}
+              <h2 className="text-[19px] md:text-[20px] font-bold leading-snug break-keep !mt-0 transition-colors group-hover:text-sg-cardinal">
+                {shortLab(ko ? f.lab_ko : f.lab_en || f.lab_ko, ko)}
+                {f.lab_url && <a href={f.lab_url} target="_blank" rel="noreferrer"
+                  className="relative z-10 ml-1 inline-block align-middle text-[13px] text-sg-cardinal hover:text-sg-deep"
+                  title={ko ? '연구실 홈페이지 (새 창)' : 'Lab website (opens in new window)'}>↗<span className="sr-only">{ko ? ' 연구실 홈페이지 (새 창)' : ' Lab website (opens in new window)'}</span></a>}
               </h2>
               {ko && f.lab_en && <p className="mt-1.5 text-[13px] leading-snug text-sg-gray9">{f.lab_en}</p>}
 
@@ -117,10 +123,10 @@ export default async function AboutPage({ params }: { params: { locale: Locale; 
               )}
 
               <div className="mt-auto pt-4 border-t border-sg-line flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <Link href={`/${l}/faculty/${f.id}`} className="font-bold text-[15.5px] hover:text-sg-cardinal">
+                <span className="font-bold text-[15.5px] transition-colors group-hover:text-sg-cardinal">
                   {ko ? f.name_ko : f.name_en || f.name_ko}
                   <span className="ml-1.5 text-[12.5px] font-medium text-sg-gray9">{ko ? f.title_ko : f.title_en}</span>
-                </Link>
+                </span>
                 <span className="ml-auto text-[12.5px] text-sg-gray9">
                   {[f.room ? (ko ? `${f.room}호` : `Room ${f.room}`) : '', f.email].filter(Boolean).join(' · ')}
                 </span>
