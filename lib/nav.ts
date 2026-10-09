@@ -16,7 +16,7 @@ export const nav: NavItem[] = [
   { id: 'research', ko: '연구', en: 'Research', href: '/about/labs', sub: [
     { id: 'labs', ko: '연구실', en: 'Laboratories', href: '/about/labs' },
     { id: 'centers', ko: '연구센터', en: 'Research Centers', href: '/about/centers' },
-    { id: 'results', ko: '연구성과', en: 'Research Highlights', href: '/board/research' },
+    { id: 'results', ko: '연구성과', en: 'Research Highlights', href: '/board/research?sec=research' },
   ]},
   { id: 'undergraduate', ko: '학부과정', en: 'Undergraduate', href: '/undergraduate/curriculum', sub: [
     { id: 'curriculum', ko: '교과과정', en: 'Curriculum', href: '/undergraduate/curriculum' },
@@ -57,8 +57,15 @@ export const isExternal = (href: string) => href.startsWith('http');
 export const boards = ['academic', 'scholarship', 'research', 'seminar', 'gallery', 'archive', 'grad_intro', 'internal'] as const;
 /** Which nav section/sub a board belongs to (for hero + tabs). */
 export const boardSection: Record<string, [string, string]> = {
-  research: ['research', 'results'], grad_intro: ['graduate', 'students'],
+  grad_intro: ['graduate', 'students'],
 };
+/** 연구성과(/board/research)는 '학과게시판'과 '연구' 두 메뉴에 함께 걸려 있다.
+ *  '연구' 메뉴로 들어오면 주소에 ?sec=research 가 붙어 연구 탭(연구실·연구센터·연구성과)을 보여 주고,
+ *  학과게시판으로 들어오면 게시판 탭을 그대로 보여 준다. 글 상세·쪽 번호까지 이 표시를 달고 다닌다. */
+export function boardHero(board: string, sec?: string): [string, string] {
+  if (board === 'research' && sec === 'research') return ['research', 'results'];
+  return boardSection[board] || ['board', board];
+}
 /** 관리자 전용 게시판 — 메뉴에 노출하지 않는다. 옛 교수게시판·학과회의록·공문서 92건의 보존처. */
 export const adminOnlyBoards = ['internal'] as const;
 /** 로그인(구성원) 전용 게시판. */

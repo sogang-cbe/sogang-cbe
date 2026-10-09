@@ -2,7 +2,7 @@ import Link from '@/components/Link';
 import PageHero from '@/components/PageHero';
 import PostCard, { fmtDate } from '@/components/PostCard';
 import { getPosts } from '@/lib/data';
-import { boards, boardSection, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
+import { boards, boardHero, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
 import { t, T, authorLabel, type Locale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
 import { facultyNames, peopleEn } from '@/lib/names';
@@ -21,7 +21,7 @@ const intros: Record<string, [string, string]> = {
   internal: ['교수회의록·공문서 등 학과 내부 기록입니다. 관리자만 볼 수 있습니다.', 'Internal departmental records. Administrators only.'],
 };
 
-export default async function BoardList({ params, searchParams }: { params: { locale: Locale; board: string }; searchParams: { page?: string; q?: string; year?: string } }) {
+export default async function BoardList({ params, searchParams }: { params: { locale: Locale; board: string }; searchParams: { page?: string; q?: string; year?: string; sec?: string } }) {
   const { locale: l, board } = params; const ko = l === 'ko';
   if (!(boards as readonly string[]).includes(board)) notFound();
   // 내부 기록(교수회의록·공문서)은 메뉴에도 없고 관리자 화면에서만 본다 — 주소를 알아도 열리지 않게 404
@@ -46,8 +46,10 @@ export default async function BoardList({ params, searchParams }: { params: { lo
   const names = people ? await facultyNames() : [];
   const posts = people ? raw.map((p) => ({ ...p, advisor: p.advisor && peopleEn(names, p.advisor), members: p.members && peopleEn(names, p.members) })) : raw;
   const pages = Math.max(1, Math.ceil(total / PER));
-  const [section, current] = boardSection[board] || ['board', board];
-  const href = (p: number) => `/${l}/board/${board}?page=${p}${q ? `&q=${encodeURIComponent(q)}` : ''}`;
+  const sec = searchParams.sec;
+  const [section, current] = boardHero(board, sec);
+  const keep = sec ? `&sec=${encodeURIComponent(sec)}` : '';   // 어느 메뉴로 들어왔는지 쪽 번호·글 상세까지 달고 다닌다
+  const href = (p: number) => `/${l}/board/${board}?page=${p}${q ? `&q=${encodeURIComponent(q)}` : ''}${keep}`;
   return (<>
     <PageHero locale={l} section={section} current={current} narrow />
     <div className="container-narrow py-12">
@@ -55,7 +57,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
       {(
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <p className="text-[13px] text-sg-gray9">{ko ? `총 ${total}건` : `${total} posts`}</p>
-          <form className="flex" action={`/${l}/board/${board}`}><input name="q" defaultValue={q} placeholder={T(l, 'search')} className="input !w-56" /><button className="btn-primary !py-2">{T(l, 'search')}</button></form>
+          <form className="flex" action={`/${l}/board/${board}`}>{sec && <input type="hidden" name="sec" value={sec} />}<input name="q" defaultValue={q} placeholder={T(l, 'search')} className="input !w-56" /><button className="btn-primary !py-2">{T(l, 'search')}</button></form>
         </div>
       )}
       {posts.length === 0 ? <p className="py-16 text-center text-sg-gray9 border border-dashed border-sg-line">{T(l, 'noPosts')}</p>
@@ -70,7 +72,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
               <tr key={p.id} className="border-b border-sg-line">
                 <td className="py-3.5 pr-2 text-[13px] text-sg-gray9 hidden md:table-cell">{total - (page - 1) * PER - i}</td>
                 <td className="py-3.5 pr-3">
-                  <Link href={`/${l}/board/${board}/${p.id}`} className="font-medium hover:text-sg-cardinal line-clamp-2">
+                  <Link href={`/${l}/board/${board}/${p.id}${sec ? `?sec=${encodeURIComponent(sec)}` : ''}`} className="font-medium hover:text-sg-cardinal line-clamp-2">
                     {t(p, 'title', l)}
                     {(p.attachments?.length ?? 0) > 0 && <span className="ml-2 text-[12px] text-sg-gray9">📎</span>}{p.video_url && <span className="ml-2 text-[12px] text-sg-cardinal">▶</span>}
                   </Link>
