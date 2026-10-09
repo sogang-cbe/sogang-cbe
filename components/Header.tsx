@@ -10,18 +10,29 @@ import type { Locale } from '@/lib/i18n';
 export default function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  // 가리킨 메뉴 하나의 하위 항목만, 그 메뉴 글자 바로 아래로 세로로 펼친다(2026-10-09 책임자 결정).
-  // 메뉴 위치는 창 폭에 따라 달라지므로 가리킨 순간 실제로 재서 쓴다.
-  const [mega, setMega] = useState<{ id: string; x: number } | null>(null);
+  // 하위 메뉴(데스크톱) — 여덟 칸을 한 번에 펼치되 각 칸을 자기 메뉴 글자 아래에 세운다(2026-10-09 책임자 결정, A안).
+  // 평소에는 작은 글씨라 좁은 칸끼리도 부딪히지 않고, 가리킨 칸만 흰 카드로 떠오르며 커져 읽기 쉽다.
+  // 메뉴 위치는 창 폭·글꼴에 따라 달라지므로 실제로 재서 쓴다.
+  const [mega, setMega] = useState(false);
+  const [hot, setHot] = useState<string | null>(null);
+  const [xs, setXs] = useState<Record<string, number>>({});
   const barRef = useRef<HTMLDivElement>(null);
-  const openAt = (id: string, el: HTMLElement | null) => {
-    const bar = barRef.current;
-    if (!el || !bar) { setMega({ id, x: 0 }); return; }
+  const navRef = useRef<HTMLElement>(null);
+  const measure = () => {
+    const bar = barRef.current, nv = navRef.current;
+    if (!bar || !nv) return;
     // 펼침 칸도 같은 container(좌우 여백 포함) 안에 있으므로 그 여백만큼 빼야 글자끼리 맞는다
     const barLeft = bar.getBoundingClientRect().left + (parseFloat(getComputedStyle(bar).paddingLeft) || 0);
-    const textLeft = el.getBoundingClientRect().left + (parseFloat(getComputedStyle(el).paddingLeft) || 0);
-    setMega({ id, x: Math.max(0, Math.round(textLeft - barLeft)) });
+    const next: Record<string, number> = {};
+    nav.forEach((item, i) => {
+      const el = nv.children[i] as HTMLElement | undefined;
+      if (!el) return;
+      next[item.id] = Math.max(0, Math.round(el.getBoundingClientRect().left + (parseFloat(getComputedStyle(el).paddingLeft) || 0) - barLeft));
+    });
+    setXs(next);
   };
+  useEffect(() => { measure(); window.addEventListener('resize', measure); return () => window.removeEventListener('resize', measure); }, [locale]);
+  const openMega = (id: string) => { if (!mega) measure(); setMega(true); setHot(id); };
   const [mobile, setMobile] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const other: Locale = locale === 'ko' ? 'en' : 'ko';
@@ -36,18 +47,18 @@ export default function Header({ locale }: { locale: Locale }) {
     window.location.href = pathname.replace(/^\/(ko|en)/, `/${other}`) + `?${q.toString()}`;
   };
   useEffect(() => { const f = () => setScrolled(window.scrollY > 10); f(); window.addEventListener('scroll', f, { passive: true }); return () => window.removeEventListener('scroll', f); }, []);
-  useEffect(() => { setOpen(false); setMega(null); }, [pathname]);
+  useEffect(() => { setOpen(false); setMega(false); setHot(null); }, [pathname]);
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 backdrop-blur-xl transition-[background-color,box-shadow] duration-300 ${scrolled || mega || open ? 'bg-white/90 shadow-[0_2px_20px_rgba(0,0,0,.08)]' : 'bg-white/85 supports-[backdrop-filter]:bg-white/60'}`} onMouseLeave={() => setMega(null)}>
+    <header className={`fixed inset-x-0 top-0 z-50 backdrop-blur-xl transition-[background-color,box-shadow] duration-300 ${scrolled || mega || open ? 'bg-white/90 shadow-[0_2px_20px_rgba(0,0,0,.08)]' : 'bg-white/85 supports-[backdrop-filter]:bg-white/60'}`} onMouseLeave={() => { setMega(false); setHot(null); }}>
       <div className="h-1 bg-sg-cardinal" />
       <div ref={barRef} className="container-site h-[76px] flex items-center justify-between gap-6">
         <Logo locale={locale} />
         {/* 전체 메뉴는 1280px 이상에서만: 1024~1365px에서 메뉴가 넘쳐 오른쪽 언어 전환 버튼이 화면 밖으로 잘리던 문제(2026-09-25 전체 점검).
             1280~1439px은 메뉴 간격을 줄이고, 그보다 좁으면 햄버거 메뉴 */}
-        <nav className="hidden xl:flex items-center h-full" aria-label="Main">
+        <nav ref={navRef} className="hidden xl:flex items-center h-full" aria-label="Main">
           {nav.map((item) => (
-            <Link key={item.id} href={`/${locale}${item.href}`} onMouseEnter={(e) => openAt(item.id, e.currentTarget)} onFocus={(e) => openAt(item.id, e.currentTarget)}
+            <Link key={item.id} href={`/${locale}${item.href}`} onMouseEnter={() => openMega(item.id)} onFocus={() => openMega(item.id)}
               className="relative px-2.5 min-[1536px]:px-4 h-full flex items-center text-[16px] min-[1536px]:text-[16.5px] font-semibold text-sg-ink hover:text-sg-cardinal after:absolute after:left-2.5 after:right-2.5 min-[1536px]:after:left-4 min-[1536px]:after:right-4 after:bottom-0 after:h-[3px] after:bg-sg-cardinal after:scale-x-0 after:origin-left after:transition-transform hover:after:scale-x-100">
               {label(item, locale)}
             </Link>
@@ -64,15 +75,24 @@ export default function Header({ locale }: { locale: Locale }) {
           </button>
         </div>
       </div>
-      {/* 하위 메뉴(데스크톱) — 가리킨 메뉴의 항목만, 늘 같은 자리에서 가로로. 빨간 글씨로 어느 메뉴인지 알려 준다. */}
-      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[360px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="container-site pt-6 pb-7">
-          <div style={{ marginLeft: mega?.x ?? 0 }}>
-          <p className="font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega?.id) ? label(nav.find((n) => n.id === mega?.id)!, locale) : ''}</p>
-          <ul className="mt-3 space-y-0.5">{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
-            ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
-            : <Link href={`/${locale}${sub.href}`} className="block py-[5px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
-          </div>
+      {/* 하위 메뉴(데스크톱) — 여덟 칸을 한 번에, 각 칸은 자기 메뉴 글자 아래. 가리킨 칸만 떠올라 커진다. */}
+      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="container-site relative h-[268px]">
+          {nav.map((item) => {
+            const up = hot === item.id;
+            return (
+              <div key={item.id} onMouseEnter={() => setHot(item.id)}
+                className={up ? 'absolute z-20 bg-white border border-sg-line shadow-[0_14px_34px_-14px_rgba(26,26,26,.3)] px-4 pt-3.5 pb-4' : 'absolute z-10'}
+                style={{ left: (xs[item.id] ?? 0) - (up ? 16 : 0), top: up ? 14 : 28 }}>
+                <p className="font-bold whitespace-nowrap" style={{ fontSize: up ? 15.5 : 12.5, color: up ? '#af272f' : 'rgba(175,39,47,.72)' }}>{label(item, locale)}</p>
+                <ul className="mt-2.5">{item.sub?.map((sub) => (
+                  <li key={sub.id} style={{ fontSize: up ? 15 : 12.5, lineHeight: up ? 1.95 : 1.85 }}>{isExternal(sub.href)
+                    ? <a href={sub.href} target="_blank" rel="noreferrer" className="block whitespace-nowrap hover:text-sg-cardinal" style={{ color: up ? '#2b2b2b' : '#8b8d8f' }}>{label(sub, locale)} ↗</a>
+                    : <Link href={`/${locale}${sub.href}`} className="block whitespace-nowrap hover:text-sg-cardinal" style={{ color: up ? '#2b2b2b' : '#8b8d8f' }}>{label(sub, locale)}</Link>}</li>
+                ))}</ul>
+              </div>
+            );
+          })}
         </div>
       </div>
       {open && (
