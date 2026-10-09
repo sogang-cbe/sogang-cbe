@@ -21,5 +21,5 @@ export const areas = [
     descKo: '반도체·디스플레이·배터리에 쓰이는 첨단소재를 연구합니다. 반도체 공정 장비와 전기화학 분석 인프라를 갖추고 국내외 연구기관과 학술 교류를 추진합니다.',
     descEn: 'Advanced materials for semiconductors, displays and batteries, supported by process equipment and electrochemical analysis infrastructure.',
     keywordsKo: ['반도체 소재', '디스플레이', '배터리', '전기화학 분석'], keywordsEn: ['Semiconductor materials', 'Displays', 'Batteries', 'Electrochemical analysis'],
-    lead: '강문성', members: ['이종석'], url: '' },
+    lead: '강문성', members: ['이종석', '김형준', '박제영'], url: '' },
 ];
