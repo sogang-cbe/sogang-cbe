@@ -5,7 +5,8 @@ import { formatOffice } from '@/lib/buildings';
 /** 가로형 카드 — 사진을 작게 쓰는 화면용.
  *  명예교수는 옛 홈페이지 사진이 100px 안팎이라 세로형(FacultyCard)의 290px 자리에 올리면
  *  뭉개진다. 사진을 다시 받을 수 없으므로 이 화면만 가로형을 유지한다. */
-export default function FacultyCardRow({ f, locale }: { f: any; locale: Locale }) {
+/** emailOnly: 연구실·연구분야·위치·전화를 빼고 이메일만 적는다(석학교수 화면). */
+export default function FacultyCardRow({ f, locale, emailOnly }: { f: any; locale: Locale; emailOnly?: boolean }) {
   const ko = locale === 'ko';
   const kw: string[] = (f.keywords || '').split(',').map((x: string) => x.trim()).filter(Boolean).slice(0, 3);
   return (
@@ -24,15 +25,15 @@ export default function FacultyCardRow({ f, locale }: { f: any; locale: Locale }
           )}
         </h3>
         {f.name_en && ko && <p className="text-[12.5px] text-sg-gray9 tracking-wide">{f.name_en}</p>}
-        {t(f, 'lab', locale) && <p className="mt-2 text-[14.5px] font-medium leading-snug break-keep">{t(f, 'lab', locale)}</p>}
-        {kw.length > 0 && (
+        {!emailOnly && t(f, 'lab', locale) && <p className="mt-2 text-[14.5px] font-medium leading-snug break-keep">{t(f, 'lab', locale)}</p>}
+        {!emailOnly && kw.length > 0 && (
           <ul className="mt-2 flex flex-wrap gap-1">
             {kw.map((k) => <li key={k} className="text-[11.5px] px-1.5 py-0.5 border border-sg-line text-sg-gray11">{k}</li>)}
           </ul>
         )}
         <dl className="mt-3 space-y-0.5 text-[13px] text-sg-gray11">
-          {formatOffice(f, ko) && <div className="flex gap-2"><dt className="w-10 shrink-0 text-sg-gray9">{T(locale, 'office')}</dt><dd className="truncate">{formatOffice(f, ko)}</dd></div>}
-          {f.tel && <div className="flex gap-2"><dt className="w-10 shrink-0 text-sg-gray9">{T(locale, 'tel')}</dt><dd>{f.tel}</dd></div>}
+          {!emailOnly && formatOffice(f, ko) && <div className="flex gap-2"><dt className="w-10 shrink-0 text-sg-gray9">{T(locale, 'office')}</dt><dd className="truncate">{formatOffice(f, ko)}</dd></div>}
+          {!emailOnly && f.tel && <div className="flex gap-2"><dt className="w-10 shrink-0 text-sg-gray9">{T(locale, 'tel')}</dt><dd>{f.tel}</dd></div>}
           {f.email && <div className="flex gap-2"><dt className="w-10 shrink-0 text-sg-gray9">{T(locale, 'email')}</dt><dd className="truncate">{f.email}</dd></div>}
         </dl>
       </div>
