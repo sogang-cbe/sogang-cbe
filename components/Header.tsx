@@ -64,12 +64,12 @@ export default function Header({ locale }: { locale: Locale }) {
           </button>
         </div>
       </div>
-      {/* 하위 메뉴(데스크톱) — 가리킨 메뉴의 항목만, 늘 같은 자리에서 가로로. 빨간 글씨로 어느 메뉴인지 알려 준다. */}
-      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[320px] opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="container-site pt-5 pb-6">
+      {/* 하위 메뉴(데스크톱) — 가리킨 메뉴의 항목만 그 메뉴 글자 바로 아래에 세로로.
+          메뉴 이름은 따로 적지 않는다 — 바로 위에 그 메뉴가 빨갛게 켜져 있어 두 번 적는 셈이었다(2026-10-09). */}
+      <div className={`hidden xl:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-xl border-t border-sg-line overflow-hidden transition-[max-height,opacity] duration-200 ${mega ? 'max-h-[300px] opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="container-site pt-6 pb-6">
           <div style={{ marginLeft: mega?.x ?? 0 }}>
-          <p className="font-bold text-[15px] text-sg-cardinal">{nav.find((n) => n.id === mega?.id) ? label(nav.find((n) => n.id === mega?.id)!, locale) : ''}</p>
-          <ul className="mt-2.5">{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
+          <ul>{nav.find((n) => n.id === mega?.id)?.sub?.map((sub) => <li key={sub.id}>{isExternal(sub.href)
             ? <a href={sub.href} target="_blank" rel="noreferrer" className="block py-[3px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)} ↗</a>
             : <Link href={`/${locale}${sub.href}`} className="block py-[3px] text-[15px] text-sg-gray11 hover:text-sg-cardinal whitespace-nowrap">{label(sub, locale)}</Link>}</li>)}</ul>
           </div>
