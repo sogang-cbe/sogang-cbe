@@ -21,8 +21,9 @@ export default function Header({ locale }: { locale: Locale }) {
   const measure = () => {
     const bar = barRef.current, nv = navRef.current;
     if (!bar || !nv) return;
-    // 펼침 칸도 같은 container(좌우 여백 포함) 안에 있으므로 그 여백만큼 빼야 글자끼리 맞는다
-    const barLeft = bar.getBoundingClientRect().left + (parseFloat(getComputedStyle(bar).paddingLeft) || 0);
+    // 칸은 position:absolute 라 기준이 container 의 '패딩 바깥' 모서리다 — 좌우 여백을 빼면 그만큼 왼쪽으로 밀린다.
+    // 머리글 줄과 펼침 줄이 같은 container 를 쓰므로 모서리끼리 그대로 빼면 맞는다.
+    const barLeft = bar.getBoundingClientRect().left;
     const next: Record<string, number> = {};
     nav.forEach((item, i) => {
       const el = nv.children[i] as HTMLElement | undefined;
