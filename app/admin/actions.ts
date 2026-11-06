@@ -352,3 +352,8 @@ export async function addAdmin(fd: FormData) {
   redirect(`${base()}/settings`);
 }
 
+
+/** 대시보드 「사이트 새로고침」 — SQL Editor로 DB를 직접 고친 뒤 캐시를 바로 비운다(저장 동작이 없어 자동 갱신이 안 되는 경우). */
+export async function refreshNow() {
+  await admin(); refreshSite(); redirect(`${base()}?refreshed=1`);
+}

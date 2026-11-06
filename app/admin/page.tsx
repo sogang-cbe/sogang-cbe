@@ -6,8 +6,9 @@ import { ui } from '@/lib/i18n';
 import { r2Enabled } from '@/lib/r2';
 import { getBackupStatus } from '@/lib/backup';
 import { serviceClient } from '@/lib/vault';
+import { refreshNow } from './actions';
 
-export default async function Dashboard() {
+export default async function Dashboard({ searchParams }: { searchParams?: { refreshed?: string } }) {
   const sb = createClient(); const b = adminBase();
   const counts = await Promise.all(boards.map(async (bd) => { const { count } = await sb.from('posts').select('id', { count: 'exact', head: true }).eq('board', bd); return [bd, count || 0] as const; }));
   const { count: pending } = await sb.from('reservations').select('id', { count: 'exact', head: true }).eq('status', 'pending');
@@ -24,6 +25,10 @@ export default async function Dashboard() {
         <Link href={`${b}/equipment`} className={`card p-5 ${eqPending ? 'border-sg-red' : ''}`}><p className="eyebrow">장비 예약 승인 대기</p><p className="mt-2 font-mono text-3xl">{eqPending || 0}</p></Link>
         <Link href={`${b}/faculty`} className="card p-5"><p className="eyebrow">교수진</p><p className="mt-2 font-mono text-3xl">{fac || 0}</p></Link>
         <Link href={`${b}/posts/new`} className="card p-5 !bg-sg-cardinal !border-sg-cardinal text-white"><p className="eyebrow !text-white/60">빠른 작업</p><p className="mt-2 font-semibold">+ 새 게시글 작성</p></Link>
+        <form action={refreshNow} className="card p-5 flex flex-col justify-between gap-3">
+          <div><p className="eyebrow">사이트 새로고침</p><p className="mt-2 text-[13px] text-sg-steel break-keep">SQL로 DB를 직접 고친 뒤 누르면 사이트에 바로 반영됩니다.{searchParams?.refreshed && <span className="block mt-1 text-sg-cardinal font-semibold">새로고침했습니다.</span>}</p></div>
+          <button className="btn-ghost self-start !px-4 !py-2">지금 새로고침</button>
+        </form>
       </div>
       <h2 className="mt-10 font-bold">게시판별 글 수</h2>
       <div className="mt-3 grid gap-2 sm:grid-cols-3">{counts.map(([bd, c]) => <Link key={bd} href={`${b}/posts?board=${bd}`} className="card p-4 flex justify-between"><span>{ui.ko[bd]}</span><span className="font-mono">{c}</span></Link>)}</div>

@@ -126,7 +126,7 @@
 - `supabase/add_scholar_and_replies_2026-11.sql`: Google Scholar 칸(`faculty.scholar_url`) 추가 + 11/6까지 회신 7명(이종석·강문성·류재건·이성현·김충익·박제영·조현석) 반영. 받은 항목만 바꾼다.
 - Google Scholar: 학과장 요청(QS 평가 대응). 상세 페이지 연락처·버튼, 관리자 교수진 편집에 칸 추가. **SQL을 먼저 실행해야 관리자 저장이 된다**(칸이 없으면 저장 오류).
 - 사진은 김형준 교수가 직접 배경 정리 후 올림. 김형준 교수 본인 페이지는 `supabase/update_faculty_hjunkim.sql`로 갱신 완료.
-- 관리자 계정: Supabase Auth `chemeng.sogang@gmail.com` + `admins` 테이블(2026-11-03 생성). 대시보드에는 캐시 새로고침 버튼이 없다 — SQL로 고친 뒤에는 해당 교수 편집 화면에서 저장을 한 번 누른다.
+- 관리자 계정: Supabase Auth `chemeng.sogang@gmail.com` + `admins` 테이블(2026-11-03 생성). SQL로 DB를 고친 뒤에는 대시보드의 「지금 새로고침」을 누른다(2026-11-06 추가).
 
 ## 다음 할 일 (순서대로)
 
