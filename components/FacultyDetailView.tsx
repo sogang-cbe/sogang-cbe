@@ -30,6 +30,8 @@ export default function FacultyDetailView({ f, locale: l }: { f: any; locale: Lo
   if (f.tel) contacts.push({ k: T(l, 'tel'), v: <a href={`tel:${f.tel.replace(/[^\d+]/g, '')}`} className="font-mono hover:text-sg-cardinal">{f.tel}</a> });
   if (f.email) contacts.push({ k: T(l, 'email'), v: <a href={`mailto:${f.email}`} className="break-all hover:text-sg-cardinal">{f.email}</a> });
   if (f.lab_url) contacts.push({ k: T(l, 'website'), v: <a href={f.lab_url} target="_blank" rel="noreferrer" className="break-all text-sg-cardinal underline underline-offset-4">{host} ↗<span className="sr-only">{ko ? ' (새 창)' : ' (opens in new window)'}</span></a> });
+  // Google Scholar — 학과장 요청(QS 평가 대응, 2026-11): 연구성과 접근성을 위해 교수마다 링크를 건다
+  if (f.scholar_url) contacts.push({ k: 'Google Scholar', v: <a href={f.scholar_url} target="_blank" rel="noreferrer" className="break-all text-sg-cardinal underline underline-offset-4">{ko ? '연구성과 보기' : 'View profile'} ↗<span className="sr-only">{ko ? ' (새 창)' : ' (opens in new window)'}</span></a> });
 
   const chip = 'font-sans text-[12px] font-semibold text-sg-cardinal border border-sg-cardinal px-1.5 py-[2px] leading-none whitespace-nowrap';
   const Head = () => (
@@ -92,6 +94,7 @@ export default function FacultyDetailView({ f, locale: l }: { f: any; locale: Lo
 
           <div className="mt-7 flex flex-wrap gap-3">
             {f.lab_url && <a href={f.lab_url} target="_blank" rel="noreferrer" className="btn-primary !px-6 !py-3">{ko ? '연구실 홈페이지' : 'Lab website'} <span aria-hidden>↗</span></a>}
+            {f.scholar_url && <a href={f.scholar_url} target="_blank" rel="noreferrer" className="btn-ghost !px-6 !py-3">Google Scholar <span aria-hidden>↗</span></a>}
             {f.email && <a href={`mailto:${f.email}`} className="btn-ghost !px-6 !py-3">{ko ? '이메일 보내기' : 'Send email'}</a>}
             <Link href={listHref} className="btn !px-6 !py-3 border border-sg-line text-sg-gray11 hover:border-sg-ink hover:text-sg-ink">← {T(l, 'list')}</Link>
           </div>

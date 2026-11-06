@@ -175,6 +175,7 @@ export async function saveFaculty(fd: FormData) {
   const row: any = {};
   for (const k of ['name_ko', 'name_en', 'title_ko', 'title_en', 'email', 'tel', 'lab_ko', 'lab_en', 'lab_url', 'photo_url', 'field', 'research_ko', 'research_en', 'bio_ko', 'bio_en']) row[k] = nul(str(fd, k));
   row.building = nul(str(fd, 'building')); row.room = nul(str(fd, 'room'));
+  if (fd.has('scholar_url')) row.scholar_url = nul(str(fd, 'scholar_url'));   // supabase/add_scholar_and_replies_2026-11.sql 로 추가한 칸
   const bdg = buildingOf(row.building);
   row.office = bdg ? (row.room ? `${bdg.ko}(${bdg.code}) ${row.room}호` : `${bdg.ko}(${bdg.code})`) : null;
   row.name_ko = str(fd, 'name_ko'); row.sort_order = Number(str(fd, 'sort_order') || 100);
