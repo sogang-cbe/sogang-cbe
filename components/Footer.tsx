@@ -16,6 +16,7 @@ export default function Footer({ locale }: { locale: Locale }) {
           <a href="http://bk21cheme.sogang.ac.kr" target="_blank" rel="noreferrer" className="hover:underline">{ko ? 'BK21 교육연구팀' : 'BK21 FOUR'}</a>
           <a href="https://saint.sogang.ac.kr" target="_blank" rel="noreferrer" className="hover:underline">SAINT</a>
           <a href="https://library.sogang.ac.kr" target="_blank" rel="noreferrer" className="hover:underline">{ko ? '로욜라도서관' : 'Loyola Library'}</a>
+          <Link href={`/${locale}/my`} className="hover:underline">{ko ? '교수 로그인' : 'Faculty sign-in'}</Link>
         </div>
       </div>
       <div className="container-site py-10 flex flex-col md:flex-row md:items-center gap-8">
