@@ -136,6 +136,7 @@
 - 연구성과 글은 `posts.owner_email`로 주인을 표시. 삭제는 휴지통(30일). 수정 전 내용은 수정 이력에 남는다.
 - 명단에 있는 교수님은 첫 로그인 때 members 역할이 바로 '교수'로 승인된다(공용장비도 열림).
 - 실행 순서: ① Supabase Google 로그인 설정 ② `supabase/faculty_self_edit.sql` 실행 ③ 배포. 푸터에 「교수 로그인」 링크.
+- 2026-11-07 설정 완료: Google Cloud 프로젝트 `sogang-cbe-web`(학과 Gmail 소유, 2단계 인증·백업 코드 보관 필요), OAuth 클라이언트(웹) → Supabase Google provider. Supabase 프로젝트 ref `pvbjbvsnuwccfyauajpe` (SQL Editor: https://supabase.com/dashboard/project/pvbjbvsnuwccfyauajpe/sql/new). Site URL·Redirect `https://sogang-cbe.vercel.app/**`. 공식 도메인을 붙이면 Redirect URLs에 새 도메인을 추가해야 한다.
 
 ## 다음 할 일 (순서대로)
 
