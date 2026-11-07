@@ -130,6 +130,14 @@
 - 사진은 김형준 교수가 직접 배경 정리 후 올림. 김형준 교수 본인 페이지는 `supabase/update_faculty_hjunkim.sql`로 갱신 완료.
 - 관리자 계정: Supabase Auth `chemeng.sogang@gmail.com` + `admins` 테이블(2026-11-03 생성). SQL로 DB를 고친 뒤에는 대시보드의 「지금 새로고침」을 누른다(2026-11-06 추가).
 
+## 진행 중 — 교수 본인 편집 (2026-11, 브랜치 feature/faculty-self-edit)
+- 교수님이 학교 구글 계정으로 `/ko/my`에 로그인 → 자기 교수진 페이지(사진·약력·연구 소개·논문·연구실·Scholar·키워드·호실·전화)와 자기 연구성과 글만 고친다. 이름·직함·정렬·보직·공개 여부는 관리자만.
+- 본인 확인: 로그인 메일의 아이디 부분 = 교수진 명단 메일의 아이디 부분(`lib/faculty-self.ts`, u.sogang.ac.kr 허용). 쓰기는 서버에서 service key로, 매번 다시 확인.
+- 연구성과 글은 `posts.owner_email`로 주인을 표시. 삭제는 휴지통(30일). 수정 전 내용은 수정 이력에 남는다.
+- 명단에 있는 교수님은 첫 로그인 때 members 역할이 바로 '교수'로 승인된다(공용장비도 열림).
+- 실행 순서: ① Supabase Google 로그인 설정 ② `supabase/faculty_self_edit.sql` 실행 ③ 배포. 푸터에 「교수 로그인」 링크.
+- 2026-11-07 설정 완료: Google Cloud 프로젝트 `sogang-cbe-web`(학과 Gmail 소유, 2단계 인증·백업 코드 보관 필요), OAuth 클라이언트(웹) → Supabase Google provider. Supabase 프로젝트 ref `pvbjbvsnuwccfyauajpe` (SQL Editor: https://supabase.com/dashboard/project/pvbjbvsnuwccfyauajpe/sql/new). Site URL·Redirect `https://sogang-cbe.vercel.app/**`. 공식 도메인을 붙이면 Redirect URLs에 새 도메인을 추가해야 한다.
+
 ## 다음 할 일 (순서대로)
 
 0. **Supabase SQL 실행** — 아직 안 돌린 것: `supabase/fix_faculty_text.sql`(본문 정리 + 연구분야 키워드),

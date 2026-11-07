@@ -1,5 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@/lib/supabase-server';
+import { facultyByEmail } from '@/lib/faculty-self';
+import { serviceClient } from '@/lib/vault';
 
 /** 구글 로그인 뒤 돌아오는 자리. 코드를 세션으로 바꾸고, 처음 온 사람은 members에 'pending'으로 등록한다. */
 export async function GET(req: NextRequest) {
@@ -27,5 +29,11 @@ export async function GET(req: NextRequest) {
       role: 'pending',
     });
   }
+  // 교수진 명단의 교수님이면 승인 대기 없이 바로 '교수'로 (공용장비·자료실·내 페이지 수정이 바로 열린다)
+  try {
+    if (await facultyByEmail(email)) {
+      await serviceClient().from('members').update({ role: 'faculty', approved_at: new Date().toISOString() }).eq('email', email).eq('role', 'pending');
+    }
+  } catch (e: any) { console.error('faculty auto-approve', e?.message); }
   return NextResponse.redirect(`${origin}${next}`);
 }
