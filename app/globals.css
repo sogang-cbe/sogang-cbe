@@ -106,6 +106,14 @@ body { @apply bg-sg-paper text-sg-ink font-sans antialiased; word-break: keep-al
 .floaty { animation: floaty 5s ease-in-out infinite; }
 @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 .marquee { animation: marquee 40s linear infinite; }
+/* 연구성과 「최근 연구성과」 띠 — 올리거나 포커스하면 멈춤, 움직임 줄이기면 가로 스크롤 */
+.strip-track { animation: marquee 60s linear infinite; }
+.strip-wrap:hover .strip-track, .strip-wrap:focus-within .strip-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .strip-wrap { overflow-x: auto; }
+  .strip-track { animation: none; }
+  .strip-track > [aria-hidden] { display: none; }
+}
 /* 홈 히어로 포스터 슬라이드쇼 (JS 폴백) — N장 × 5.5초 주기(duration·delay는 인라인 지정).
    12장 기준 창 8.3%: 0~8% 표시, 12%까지 페이드아웃, 95%부터 페이드인 */
 @keyframes heroFade { 0% { opacity: 1 } 8% { opacity: 1 } 13% { opacity: 0 } 94% { opacity: 0 } 100% { opacity: 1 } }

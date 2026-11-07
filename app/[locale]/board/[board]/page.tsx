@@ -1,7 +1,8 @@
 import Link from '@/components/Link';
 import PageHero from '@/components/PageHero';
 import PostCard, { fmtDate } from '@/components/PostCard';
-import { getPosts } from '@/lib/data';
+import { getPosts, getResearchStrip } from '@/lib/data';
+import ResearchStrip from '@/components/ResearchStrip';
 import { boards, boardHero, adminOnlyBoards, memberOnlyBoards } from '@/lib/nav';
 import { t, T, authorLabel, type Locale } from '@/lib/i18n';
 import { notFound } from 'next/navigation';
@@ -46,6 +47,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
   const names = people ? await facultyNames() : [];
   const posts = people ? raw.map((p) => ({ ...p, advisor: p.advisor && peopleEn(names, p.advisor), members: p.members && peopleEn(names, p.members) })) : raw;
   const pages = Math.max(1, Math.ceil(total / PER));
+  const strip = board === 'research' && page === 1 && !q ? await getResearchStrip() : [];
   const sec = searchParams.sec;
   const [section, current] = boardHero(board, sec);
   const keep = sec ? `&sec=${encodeURIComponent(sec)}` : '';   // 어느 메뉴로 들어왔는지 쪽 번호·글 상세까지 달고 다닌다
@@ -54,6 +56,7 @@ export default async function BoardList({ params, searchParams }: { params: { lo
     <PageHero locale={l} section={section} current={current} narrow />
     <div className="container-narrow py-12">
       {intros[board] && <p className="mb-8 max-w-3xl text-[16px] leading-relaxed text-sg-gray11">{ko ? intros[board][0] : intros[board][1]}</p>}
+      {strip.length > 0 && <ResearchStrip items={strip} locale={l} />}
       {(
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <p className="text-[13px] text-sg-gray9">{ko ? `총 ${total}건` : `${total} posts`}</p>
