@@ -49,6 +49,19 @@ export const glossary: [string, string][] = [
  *  (2026-09-25 전체 점검에서 발견: 인지컨트롤스 → "Cognitive Controls", "26년 하반기" → "the 26th year", "전기 일반대학원" → "Electric General Graduate School")
  *  한글 낱말만 바꾸므로 번역 단위의 서식 표지(⟦n⟧)에는 영향이 없다. 긴 이름을 먼저 적는다. */
 const preKoRules: [RegExp, string][] = [
+  // 교수 약력 소제목(번역 단위가 제목 한 줄일 때만) — 무료 번역기가 'personal history', 'main thesis'로 옮기던 것(2026-11-07)
+  [/^\s*학력\s*$/, 'Education'],
+  [/^\s*(주요\s*)?경력\s*$/, 'Experience'],
+  [/^\s*주요\s*수상(\s*경력)?\s*$/, 'Selected Awards'],
+  [/^\s*(주요\s*)?학회\s*활동\s*$/, 'Professional Service'],
+  [/^\s*주요\s*학술활동\s*및\s*보직\s*$/, 'Service & Appointments'],
+  [/^\s*(주요|대표)\s*논문\s*$/, 'Selected Publications'],
+  // 교내 상 이름 — '리치'를 'Rich'로 옮기던 것
+  [/서강\s*리치\s*공학\s*강의상/g, 'Sogang Ricci Excellence in Teaching Award'],
+  [/서강\s*리치\s*공학\s*영펠로우/g, 'Sogang Ricci Engineering Young Fellow'],
+  [/서강\s*리치/g, 'Sogang Ricci'],
+  [/(서강)?\s*알바트로스\s*학술상/g, 'Sogang Albatross Academic Award'],
+  [/도레이\s*펠로우?십/g, 'Korea Toray Fellowship'],
   // 두 자리 연도: "26년 하반기", "26년도" → 2026 (번역기가 '26번째 해'로 옮김)
   [/(^|[^0-9])(2\d)년\s*(상반기|하반기)/g, '$120$2년 $3'],
   [/(^|[^0-9])(2\d)년도/g, '$120$2년도'],

@@ -47,7 +47,7 @@ export function researchBody(html: string): string {
 export function splitBio(html: string): { vita: string; pubs: string[] } {
   const s = (html || '').trim();
   if (!s) return { vita: '', pubs: [] };
-  const m = s.match(/<h[2-4][^>]*>[^<]*(?:논문|Publications?)[^<]*<\/h[2-4]>/i);   // 영문 약력은 'Selected Publications'
+  const m = s.match(/<h[2-4][^>]*>[^<]*(?:논문|Publications?|[Tt]hes[ie]s|[Pp]apers)[^<]*<\/h[2-4]>/i);   // 영문 약력은 'Selected Publications'
   if (!m || m.index === undefined) return { vita: s, pubs: [] };
   const rest = s.slice(m.index + m[0].length);
   const raw = rest.match(/<li\b[^>]*>[\s\S]*?<\/li>/gi) || rest.match(/<p\b[^>]*>[\s\S]*?<\/p>/gi) || [];
