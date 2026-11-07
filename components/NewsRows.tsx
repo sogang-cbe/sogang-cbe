@@ -59,21 +59,31 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   const update = () => { const el = ref.current; if (!el) return; setPos({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8 }); };
   useEffect(() => { update(); const el = ref.current; el?.addEventListener('scroll', update, { passive: true }); window.addEventListener('resize', update); return () => { el?.removeEventListener('scroll', update); window.removeEventListener('resize', update); }; }, []);
   const step = (d: number) => { const el = ref.current; if (!el) return; const card = el.querySelector<HTMLElement>('[data-card]'); const w = card ? card.offsetWidth + 20 : 320; el.scrollBy({ left: d * w, behavior: 'smooth' }); };
-  /* 연구성과 줄만 천천히 옆으로 넘어간다(2026-11-07 책임자). 5초마다 카드 한 장, 끝에 닿으면 처음으로.
-   * 마우스를 올리거나·포커스·터치 중이면 멈추고, 화살표를 누르면 10초 쉬었다가 다시 간다. 움직임 줄이기·탭 숨김이면 멈춤. */
+  /* 연구성과 줄만 물 흐르듯 계속 옆으로 흐른다(2026-11-07 책임자: 5초마다 한 칸씩은 어색하다).
+   * 카드를 두 번 이어 붙이고, 앞 묶음 너비만큼 흐르면 그만큼 되돌려 끊김 없이 돈다.
+   * 마우스를 올리거나·포커스·터치 중이면 멈추고, 화살표를 누르면 잠시 쉰다. 움직임 줄이기·탭 숨김이면 멈춤. */
+  const loop = board === 'research' && posts.length >= 2;
   const hold = useRef(0);
   useEffect(() => {
-    if (board !== 'research' || posts.length < 2) return;
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-    const id = window.setInterval(() => {
+    if (!loop || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0, last = 0, acc = -1;
+    const SPEED = 28;   // px/초
+    const tick = (t: number) => {
       const el = ref.current;
-      if (!el || document.hidden || Date.now() < hold.current) return;
-      if (el.matches(':hover') || el.contains(document.activeElement)) return;
-      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) el.scrollTo({ left: 0, behavior: 'smooth' });
-      else step(1);
-    }, 5000);
-    return () => window.clearInterval(id);
-  }, [board, posts.length]);
+      const dt = last ? Math.min(t - last, 64) : 0; last = t;
+      if (el && !document.hidden && Date.now() >= hold.current && !el.matches(':hover') && !el.contains(document.activeElement)) {
+        if (acc < 0 || Math.abs(acc - el.scrollLeft) > 2) acc = el.scrollLeft;   // 화살표·손으로 옮긴 자리에서 이어 간다
+        acc += (SPEED * dt) / 1000;
+        const cards = el.querySelectorAll<HTMLElement>('[data-card]');
+        const half = cards.length > posts.length ? cards[posts.length].offsetLeft - cards[0].offsetLeft : el.scrollWidth / 2;   // 앞 묶음 한 바퀴 너비(간격 포함)
+        if (acc >= half) acc -= half;
+        el.scrollLeft = acc;
+      } else acc = -1;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [loop, posts.length]);
   const pause = (ms: number) => { hold.current = Date.now() + ms; };
   const titles: Record<string, [string, string]> = { research: ['연구성과', 'Research Highlights'], seminar: ['세미나', 'Seminars'] };
   const subs: Record<string, [string, string]> = { research: ['논문·수상·연구 소식', 'Papers, awards and research news'], seminar: ['학과 세미나와 초청 강연', 'Department seminars and invited talks'] };
@@ -90,16 +100,17 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
         </div>
         <div className="flex items-center gap-2">
           <Link href={`/${locale}/board/${board}`} className="hidden sm:inline-flex items-center gap-1 mr-2 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal">{T(locale, 'more')} <span aria-hidden>+</span></Link>
-          <Arrow dir="l" onClick={() => { pause(10000); step(-1); }} disabled={pos.start} /><Arrow dir="r" onClick={() => { pause(10000); step(1); }} disabled={pos.end} />
+          <Arrow dir="l" onClick={() => { pause(1500); step(-1); }} disabled={!loop && pos.start} /><Arrow dir="r" onClick={() => { pause(1500); step(1); }} disabled={!loop && pos.end} />
         </div>
       </div>
       {posts.length === 0 ? <p className="py-10 text-center text-sg-gray9 border border-dashed border-sg-line">{T(locale, 'noPosts')}</p> : (
-        <div ref={ref} onTouchStart={() => pause(10000)} className="flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
-          {posts.map((p, i) => {
+        <div ref={ref} onTouchStart={() => pause(6000)} className={`flex gap-5 overflow-x-auto no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 ${loop ? '' : 'snap-x snap-mandatory'}`}>
+          {(loop ? [...posts, ...posts] : posts).map((p, i) => {
+            const dup = loop && i >= posts.length;
             const img = p.thumbnail_url || (p.images && p.images[0]?.url);
             const cover = img || youtubeThumb(p.video_url) || coverFor(board, t(p, 'title', locale), p.id);
             return (
-              <Link key={p.id} data-card href={`/${locale}/board/${board}/${p.id}`} className="card group snap-start shrink-0 w-[78vw] sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] flex flex-col overflow-hidden">
+              <Link key={`${p.id}-${i}`} data-card href={`/${locale}/board/${board}/${p.id}`} tabIndex={dup ? -1 : undefined} aria-hidden={dup || undefined} className="card group snap-start shrink-0 motion-reduce:[&[aria-hidden]]:hidden w-[78vw] sm:w-[calc(50%-10px)] lg:w-[calc(25%-15px)] flex flex-col overflow-hidden">
                 {variant === 'image' ? (
                   <div className="aspect-[16/10] overflow-hidden bg-sg-mist"><img src={cover} alt="" loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.06]" /></div>
                 ) : (
