@@ -78,6 +78,9 @@ async function legacyRedirect(req: NextRequest): Promise<NextResponse | null> {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // 로그인 콜백(/auth/callback)은 언어 접두어를 붙이면 안 된다 — /en/auth/callback 404 (2026-11-07 첫 구글 로그인에서 발견)
+  if (pathname === '/auth' || pathname.startsWith('/auth/')) return NextResponse.next();
+
   const legacy = await legacyRedirect(req);
   if (legacy) return legacy;
 
@@ -137,7 +140,7 @@ export const config = {
   matcher: [
     // /ko·/en 아래 경로는 미들웨어가 할 일이 없어(언어 전환 ?setlang 제외) 뺀다 — 방문·링크 프리페치마다 함수 호출이 1회씩 더 나가던 것을 없애
     // Vercel 무료(Hobby) 한도(함수 호출 월 100만 회) 안에서 운영하기 위함(2026-09-26)
-    '/((?!api|_next/static|_next/image|images|ko(?:/|$)|en(?:/|$)|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
+    '/((?!api|auth/|_next/static|_next/image|images|ko(?:/|$)|en(?:/|$)|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)',
     { source: '/(ko|en)/:path*', has: [{ type: 'query', key: 'setlang' }] },
     // 옛 사이트 리다이렉트 대상 (점(.)이 들어간 경로는 위 일반 매처에서 제외되므로 명시)
     '/kor/:path*', '/eng/:path*', '/index.php',

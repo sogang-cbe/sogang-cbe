@@ -16,7 +16,7 @@ export default async function Equipment({ params, searchParams }: { params: { lo
 
   if (!me) return (
     <Gate locale={l}>
-      {searchParams.login === 'domain' && <p className="mb-5 border-l-4 border-sg-cardinal bg-white px-4 py-3 text-[14px] break-keep">{ko ? '서강대학교 계정(@sogang.ac.kr)으로만 로그인할 수 있습니다.' : 'Only @sogang.ac.kr accounts can sign in.'}</p>}
+      {searchParams.login === 'domain' && <p className="mb-5 border-l-4 border-sg-cardinal bg-white px-4 py-3 text-[14px] break-keep">{ko ? '서강대학교 계정(@sogang.ac.kr · @u.sogang.ac.kr)으로만 로그인할 수 있습니다.' : 'Only Sogang accounts (@sogang.ac.kr, @u.sogang.ac.kr) can sign in.'}</p>}
       {searchParams.login === 'failed' && <p className="mb-5 border-l-4 border-sg-cardinal bg-white px-4 py-3 text-[14px] break-keep">{ko ? '로그인이 완료되지 않았습니다. 다시 시도해 주세요.' : 'Sign-in did not complete. Please try again.'}</p>}
       <MemberLogin next={`/${l}/equipment`} locale={l} />
     </Gate>

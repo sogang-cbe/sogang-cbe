@@ -14,7 +14,8 @@ export default function MemberLogin({ next, locale }: { next: string; locale: 'k
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
-        queryParams: { hd: 'sogang.ac.kr', prompt: 'select_account' },
+        // hd(학교 도메인 힌트)는 넣지 않는다 — sogang.ac.kr 하나만 받아 u.sogang.ac.kr 계정이 목록에서 빠진다. 도메인 확인은 콜백에서
+        queryParams: { prompt: 'select_account' },
       },
     });
     if (error) { setErr(error.message); setBusy(false); }

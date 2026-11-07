@@ -16,8 +16,9 @@ export async function GET(req: NextRequest) {
 
   const { data: { user } } = await sb.auth.getUser();
   const email = (user?.email || '').toLowerCase();
-  // 학교 계정만 받는다. (Supabase 쪽에서도 도메인 제한을 걸지만 여기서 한 번 더 확인한다)
-  if (!email.endsWith('@sogang.ac.kr')) {
+  // 학교 계정만 받는다(sogang.ac.kr · u.sogang.ac.kr). (Supabase 쪽에서도 도메인 제한을 걸지만 여기서 한 번 더 확인한다)
+  // 교직원 @sogang.ac.kr, 학생·일부 교수 @u.sogang.ac.kr 둘 다 학교 계정
+  if (!/@(u\.)?sogang\.ac\.kr$/.test(email)) {
     await sb.auth.signOut();
     return NextResponse.redirect(`${origin}${next}?login=domain`);
   }
