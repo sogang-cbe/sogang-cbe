@@ -76,8 +76,11 @@ export async function saveMyPost(fd: FormData) {
     author: f.name_ko, owner_email: email, published: true, updated_at: new Date().toISOString(),
   };
   if (!row.title_ko) throw new Error('제목을 입력해 주세요.');
-  // 표지: 본문 첫 사진
-  row.thumbnail_url = (content.match(/<img[^>]+src="([^"]+)"/i) || [])[1] || null;
+  // 대표 그림: 올린 그림 → 없으면 본문 첫 사진. 예전에 본문 첫 사진으로 자동으로 채워졌던 값이 그대로 넘어오면 새 본문 기준으로 다시 고른다
+  const firstImg = (html: string) => (String(html || '').match(/<img[^>]+src="([^"]+)"/i) || [])[1] || null;
+  const picked = nul(str(fd, 'thumbnail_url'));
+  const wasAuto = !!prev?.thumbnail_url && picked === prev.thumbnail_url && String(prev.content_ko || '').includes(prev.thumbnail_url);
+  row.thumbnail_url = picked && !wasAuto ? picked : firstImg(content);
   // 작성일: 날짜를 바꿨을 때만 반영
   const created = str(fd, 'created_at'); const today = kstNowIso().slice(0, 10);
   if (!id) row.created_at = !created || created === today ? kstNowIso() : `${created}T09:00:00+00:00`;

@@ -46,11 +46,12 @@ async function getPostsRaw(board: string, page = 1, per = 15, q = '') {
 /** 게시판 목록은 ?page=·?q= 때문에 요청마다 새로 그려지므로 조회 결과를 10분 캐시한다(저장 시 refreshSite로 즉시 비움).
  *  2026-09-25: 페이지·조회 캐시가 없어 방문마다 DB를 읽던 것이 Supabase 전송량(무료 5GB의 67%)의 주원인이었다. */
 export const getPosts = unstable_cache(getPostsRaw, ['getPosts'], { revalidate: 600, tags: ['site'] });
-/** 연구성과 게시판 위 「최근 연구성과」 띠 — 대표 그림이 있는 최근 글(2026-11-07). 목록과 같은 10분 캐시·저장 시 즉시 비움 */
+/** 연구성과 게시판 위 「최근 연구성과」 띠 — 최근 3개월, 대표 그림이 있는 글(2026-11-07). 목록과 같은 10분 캐시·저장 시 즉시 비움 */
 async function getResearchStripRaw(n = 14) {
   const sb = createPublicClient();
+  const since = new Date(Date.now() - 92 * 864e5).toISOString().slice(0, 10);   // 최근 3개월(2026-11-07 책임자)
   const { data } = await sb.from('posts').select('id,title_ko,title_en,thumbnail_url,images,created_at')
-    .eq('board', 'research').eq('published', true).order('created_at', { ascending: false }).limit(40);
+    .eq('board', 'research').eq('published', true).gte('created_at', since).order('created_at', { ascending: false }).limit(40);
   return ((data || []) as any[])
     .map((p) => ({ id: p.id as number, title_ko: p.title_ko as string, title_en: p.title_en as string | null, created_at: p.created_at as string, img: (p.thumbnail_url || p.images?.[0]?.url || '') as string }))
     .filter((p) => p.img).slice(0, n);
