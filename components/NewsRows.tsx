@@ -59,6 +59,22 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   const update = () => { const el = ref.current; if (!el) return; setPos({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8 }); };
   useEffect(() => { update(); const el = ref.current; el?.addEventListener('scroll', update, { passive: true }); window.addEventListener('resize', update); return () => { el?.removeEventListener('scroll', update); window.removeEventListener('resize', update); }; }, []);
   const step = (d: number) => { const el = ref.current; if (!el) return; const card = el.querySelector<HTMLElement>('[data-card]'); const w = card ? card.offsetWidth + 20 : 320; el.scrollBy({ left: d * w, behavior: 'smooth' }); };
+  /* 연구성과 줄만 천천히 옆으로 넘어간다(2026-11-07 책임자). 5초마다 카드 한 장, 끝에 닿으면 처음으로.
+   * 마우스를 올리거나·포커스·터치 중이면 멈추고, 화살표를 누르면 10초 쉬었다가 다시 간다. 움직임 줄이기·탭 숨김이면 멈춤. */
+  const hold = useRef(0);
+  useEffect(() => {
+    if (board !== 'research' || posts.length < 2) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setInterval(() => {
+      const el = ref.current;
+      if (!el || document.hidden || Date.now() < hold.current) return;
+      if (el.matches(':hover') || el.contains(document.activeElement)) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) el.scrollTo({ left: 0, behavior: 'smooth' });
+      else step(1);
+    }, 5000);
+    return () => window.clearInterval(id);
+  }, [board, posts.length]);
+  const pause = (ms: number) => { hold.current = Date.now() + ms; };
   const titles: Record<string, [string, string]> = { research: ['연구성과', 'Research Highlights'], seminar: ['세미나', 'Seminars'] };
   const subs: Record<string, [string, string]> = { research: ['논문·수상·연구 소식', 'Papers, awards and research news'], seminar: ['학과 세미나와 초청 강연', 'Department seminars and invited talks'] };
   const title = titles[board] || [board, board];
@@ -74,11 +90,11 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
         </div>
         <div className="flex items-center gap-2">
           <Link href={`/${locale}/board/${board}`} className="hidden sm:inline-flex items-center gap-1 mr-2 text-[14px] font-semibold text-sg-gray11 hover:text-sg-cardinal">{T(locale, 'more')} <span aria-hidden>+</span></Link>
-          <Arrow dir="l" onClick={() => step(-1)} disabled={pos.start} /><Arrow dir="r" onClick={() => step(1)} disabled={pos.end} />
+          <Arrow dir="l" onClick={() => { pause(10000); step(-1); }} disabled={pos.start} /><Arrow dir="r" onClick={() => { pause(10000); step(1); }} disabled={pos.end} />
         </div>
       </div>
       {posts.length === 0 ? <p className="py-10 text-center text-sg-gray9 border border-dashed border-sg-line">{T(locale, 'noPosts')}</p> : (
-        <div ref={ref} className="flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
+        <div ref={ref} onTouchStart={() => pause(10000)} className="flex gap-5 overflow-x-auto snap-x snap-mandatory no-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
           {posts.map((p, i) => {
             const img = p.thumbnail_url || (p.images && p.images[0]?.url);
             const cover = img || youtubeThumb(p.video_url) || coverFor(board, t(p, 'title', locale), p.id);
