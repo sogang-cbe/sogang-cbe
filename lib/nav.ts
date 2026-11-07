@@ -16,7 +16,7 @@ export const nav: NavItem[] = [
   { id: 'research', ko: '연구', en: 'Research', href: '/about/labs', sub: [
     { id: 'labs', ko: '연구실', en: 'Laboratories', href: '/about/labs' },
     { id: 'centers', ko: '연구센터', en: 'Research Centers', href: '/about/centers' },
-    { id: 'results', ko: '연구성과', en: 'Research Highlights', href: '/board/research?sec=research' },
+    { id: 'results', ko: '연구성과', en: 'Research Highlights', href: '/board/research' },
   ]},
   { id: 'undergraduate', ko: '학부과정', en: 'Undergraduate', href: '/undergraduate/curriculum', sub: [
     { id: 'curriculum', ko: '교과과정', en: 'Curriculum', href: '/undergraduate/curriculum' },
@@ -36,10 +36,8 @@ export const nav: NavItem[] = [
   { id: 'board', ko: '학과게시판', en: 'Board', href: '/board/academic', sub: [
     { id: 'academic', ko: '학사공지', en: 'Academic Notice', href: '/board/academic' },
     { id: 'scholarship', ko: '장학·취업', en: 'Scholarship & Careers', href: '/board/scholarship' },
-    { id: 'research', ko: '연구성과', en: 'Research', href: '/board/research' },
     { id: 'seminar', ko: '세미나', en: 'Seminar', href: '/board/seminar' },
     { id: 'gallery', ko: '갤러리', en: 'Gallery', href: '/board/gallery' },
-    { id: 'archive', ko: '자료실', en: 'Downloads', href: '/board/archive' },
   ]},
   { id: 'facility', ko: '예약', en: 'Reservation', href: '/equipment', sub: [
     { id: 'equipment', ko: '공용장비', en: 'Shared Instruments', href: '/equipment' },
@@ -58,18 +56,17 @@ export const boards = ['academic', 'scholarship', 'research', 'seminar', 'galler
 /** Which nav section/sub a board belongs to (for hero + tabs). */
 export const boardSection: Record<string, [string, string]> = {
   grad_intro: ['graduate', 'students'],
+  research: ['research', 'results'],   // 연구성과는 '연구' 메뉴에만(2026-11-07 책임자: 학과게시판에서 뺌)
 };
-/** 연구성과(/board/research)는 '학과게시판'과 '연구' 두 메뉴에 함께 걸려 있다.
- *  '연구' 메뉴로 들어오면 주소에 ?sec=research 가 붙어 연구 탭(연구실·연구센터·연구성과)을 보여 주고,
- *  학과게시판으로 들어오면 게시판 탭을 그대로 보여 준다. 글 상세·쪽 번호까지 이 표시를 달고 다닌다. */
-export function boardHero(board: string, sec?: string): [string, string] {
-  if (board === 'research' && sec === 'research') return ['research', 'results'];
+/** 게시판이 속한 메뉴(상단 이미지·탭). sec 인자는 예전 ?sec=research 주소 호환용으로만 남겨 두고 쓰지 않는다. */
+export function boardHero(board: string, _sec?: string): [string, string] {
   return boardSection[board] || ['board', board];
 }
-/** 관리자 전용 게시판 — 메뉴에 노출하지 않는다. 옛 교수게시판·학과회의록·공문서 92건의 보존처. */
-export const adminOnlyBoards = ['internal'] as const;
-/** 로그인(구성원) 전용 게시판. */
-export const memberOnlyBoards = ['archive'] as const;
+/** 관리자 전용 게시판 — 메뉴에 노출하지 않고 주소로도 열지 않는다. 옛 교수게시판·학과회의록·공문서 92건의 보존처(internal),
+ *  자료실(archive, 2026-11-07 책임자 결정으로 공개 메뉴에서 없앰 — 글은 관리자 화면에 그대로 남는다). */
+export const adminOnlyBoards = ['internal', 'archive'] as const;
+/** 로그인(구성원) 전용 게시판 — 지금은 없음(자료실을 닫으면서 비움). */
+export const memberOnlyBoards: readonly string[] = [];
 export type Board = (typeof boards)[number];
 /** 예약 대상 시설. 화공과는 현재 학과회의실(R521A) 하나. 공용장비는 별도 모듈(/equipment)에서 다룬다. */
 export const facilities = [

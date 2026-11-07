@@ -25,7 +25,7 @@ export default async function MyPage({ params, searchParams }: { params: { local
       {searchParams.login === 'failed' && <p className="mb-5 border-l-4 border-sg-cardinal bg-sg-mist px-4 py-3 text-[14px] break-keep">{ko ? '로그인이 완료되지 않았습니다. 다시 시도해 주세요.' : 'Sign-in did not complete. Please try again.'}</p>}
       <h2 className="font-brand text-[1.4rem]">{ko ? '교수님 로그인' : 'Faculty sign-in'}</h2>
       <p className="mt-3 text-[15px] text-sg-gray11 break-keep leading-relaxed">
-        {ko ? '학교 구글 계정으로 로그인하시면 교수님 소개 페이지(사진·약력·연구 소개·주요 논문·연구실 정보)를 직접 고치고, 학과 게시판 「연구성과」에 글을 올리실 수 있습니다. 별도 아이디·비밀번호는 없습니다.'
+        {ko ? '학교 구글 계정으로 로그인하시면 교수님 소개 페이지(사진·약력·연구 소개·주요 논문·연구실 정보)를 직접 고치고, 연구 메뉴의 「연구성과」에 글을 올리실 수 있습니다. 별도 아이디·비밀번호는 없습니다.'
             : 'Sign in with your Sogang Google account to edit your faculty profile and post to Research Highlights.'}
       </p>
       <div className="mt-6"><MemberLogin next={`/${l}/my`} locale={l} /></div>
@@ -70,7 +70,7 @@ export default async function MyPage({ params, searchParams }: { params: { local
       </section>
       <section className={box}>
         <h3 className="font-brand text-[1.25rem]">{ko ? '연구성과 글' : 'Research highlights'}</h3>
-        <p className="mt-2 text-[14px] text-sg-gray11 break-keep leading-relaxed">학과 게시판 「연구성과」에 연구실 소식(논문 게재, 수상, 언론 보도 등)을 올립니다. 연구 메뉴의 연구성과에도 함께 보입니다.</p>
+        <p className="mt-2 text-[14px] text-sg-gray11 break-keep leading-relaxed">연구 메뉴의 「연구성과」에 연구실 소식(논문 게재, 수상, 언론 보도 등)을 올립니다. 첫 화면 연구성과 줄에도 함께 보입니다.</p>
         <div className="mt-5"><Link href={`/${l}/my/posts/new`} className="btn-primary !px-5 !py-2.5">+ {ko ? '새 글 쓰기' : 'New post'}</Link></div>
       </section>
     </div>
