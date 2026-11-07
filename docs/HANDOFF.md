@@ -138,6 +138,10 @@
 - 실행 순서: ① Supabase Google 로그인 설정 ② `supabase/faculty_self_edit.sql` 실행 ③ 배포. 푸터에 「교수 로그인」 링크.
 - 2026-11-07 설정 완료: Google Cloud 프로젝트 `sogang-cbe-web`(학과 Gmail 소유, 2단계 인증·백업 코드 보관 필요), OAuth 클라이언트(웹) → Supabase Google provider. Supabase 프로젝트 ref `pvbjbvsnuwccfyauajpe` (SQL Editor: https://supabase.com/dashboard/project/pvbjbvsnuwccfyauajpe/sql/new). Site URL·Redirect `https://sogang-cbe.vercel.app/**`. 공식 도메인을 붙이면 Redirect URLs에 새 도메인을 추가해야 한다.
 
+## 보류 — 나중에 결정 (2026-11-07)
+- 학과 직원 관리자 계정: 마스터 아이디 공유 대신 직원 본인 메일로 Supabase Auth 사용자 + `admins` 행을 따로 만드는 안을 제안함(수정 이력 구분, 인계 시 그 계정만 삭제).
+- 학생 연구성과 작성: 학생 작성 → 지도교수 승인 → 게시 흐름을 제안함(posts에 작성 학생·지도교수·승인 상태 칸). 당분간은 교수님만 작성.
+
 ## 다음 할 일 (순서대로)
 
 0. **Supabase SQL 실행** — 아직 안 돌린 것: `supabase/fix_faculty_text.sql`(본문 정리 + 연구분야 키워드),
