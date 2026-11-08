@@ -30,7 +30,6 @@ export const nav: NavItem[] = [
     { id: 'admission', ko: '입학안내', en: 'Admission', href: '/graduate/admission' },
     { id: 'curriculum', ko: '교과과정', en: 'Curriculum', href: '/graduate/curriculum' },
     { id: 'rules', ko: '학사규정', en: 'Academic Regulations', href: '/graduate/rules' },
-    { id: 'students', ko: '재학생 소개', en: 'Graduate Students', href: '/board/grad_intro' },
     { id: 'bk21', ko: 'BK21 교육연구팀', en: 'BK21 FOUR Program', href: 'http://bk21cheme.sogang.ac.kr' },   // 외부 사이트
   ]},
   { id: 'board', ko: '학과게시판', en: 'Board', href: '/board/academic', sub: [
@@ -64,7 +63,7 @@ export function boardHero(board: string, _sec?: string): [string, string] {
 }
 /** 관리자 전용 게시판 — 메뉴에 노출하지 않고 주소로도 열지 않는다. 옛 교수게시판·학과회의록·공문서 92건의 보존처(internal),
  *  자료실(archive, 2026-11-07 책임자 결정으로 공개 메뉴에서 없앰 — 글은 관리자 화면에 그대로 남는다). */
-export const adminOnlyBoards = ['internal', 'archive'] as const;
+export const adminOnlyBoards = ['internal', 'archive', 'grad_intro'] as const;
 /** 로그인(구성원) 전용 게시판 — 지금은 없음(자료실을 닫으면서 비움). */
 export const memberOnlyBoards: readonly string[] = [];
 export type Board = (typeof boards)[number];

@@ -17,7 +17,7 @@ const LEGACY_PAGES: Record<string, string> = {
   '06_01': '/undergraduate/activities', '06_02': '/undergraduate/activities', '06_03': '/board/gallery',
   '07_01': '/alumni/intro', '07_02': '/alumni/intro', '07_03': '/alumni/intro', '07_04': '/board/gallery',
   '07_05': '/alumni/officers', '07_06': '/alumni/dues', '07_07': '/alumni/intro',
-  '08_01': '/reservation', '08_02': '/board/grad_intro',
+  '08_01': '/reservation', '08_02': '/graduate/admission',
   'sitemap': '',
 };
 /** 글 하나로 들어오는 주소(?mode=view&idx=)의 옛 페이지 → 옛 게시판 코드. 이관 때 넣은 legacy_id 로 새 글을 찾는다. */
@@ -27,7 +27,7 @@ const LEGACY_BOARD_OF: Record<string, string> = {
   '05_05': 'bbs08', '05_06': 'bbs09', '04_0502': 'bbs01', '04_0504': 'bbs03',
 };
 /** 메뉴에 노출하지 않는 옛 게시판(교수게시판·회의록·공문서·건의) → 글 주소로도 열지 않고 홈으로 */
-const LEGACY_PRIVATE = new Set(['bbs01', 'bbs03', 'bbs06', 'bbs09']);
+const LEGACY_PRIVATE = new Set(['bbs01', 'bbs03', 'bbs06', 'bbs09', 'bbs14']);
 
 async function legacyRedirect(req: NextRequest): Promise<NextResponse | null> {
   const { pathname, searchParams } = req.nextUrl;
