@@ -67,7 +67,7 @@ function Row({ locale, board, posts, variant }: { locale: Locale; board: string;
   useEffect(() => {
     if (!loop || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     let raf = 0, last = 0, acc = -1;
-    const SPEED = 28;   // px/초
+    const SPEED = 55;   // px/초 (28 → 55, 2026-11-08 책임자: 너무 느리다)
     const tick = (t: number) => {
       const el = ref.current;
       const dt = last ? Math.min(t - last, 64) : 0; last = t;
